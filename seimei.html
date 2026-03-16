@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>姓名判断・源氏名診断｜Latir</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a84c;--gl:#e8c96a;--gd:#8a6a1a;--bg:#0f0c08;--tx:#f0e6c8;--dm:#a89060;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:"Noto Serif JP",serif;min-height:100vh;}
+header{text-align:center;padding:30px 20px 16px;border-bottom:1px solid rgba(201,168,76,.2);}
+h1{font-family:"Cinzel Decorative",serif;font-size:clamp(1rem,4vw,1.6rem);color:var(--gold);letter-spacing:.12em;animation:shimmer 4s infinite;}
+.sub{margin-top:5px;font-size:.78rem;color:var(--dm);letter-spacing:.1em;}
+.dv{width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:8px auto;}
+@keyframes shimmer{0%,100%{text-shadow:0 0 15px rgba(201,168,76,.3);}50%{text-shadow:0 0 35px rgba(201,168,76,.7);}}
+.wrap{max-width:640px;margin:0 auto;padding:24px 16px 60px;}
+
+/* タブ */
+.tabs{display:flex;gap:0;margin-bottom:24px;border-radius:8px;overflow:hidden;border:1px solid rgba(201,168,76,.25);}
+.tab{flex:1;padding:12px 8px;text-align:center;cursor:pointer;font-size:.82rem;font-weight:700;letter-spacing:.1em;transition:all .3s;background:transparent;border:none;color:var(--dm);font-family:"Noto Serif JP",serif;}
+.tab.active{background:linear-gradient(135deg,var(--gd),var(--gold));color:#0a0a0a;}
+.tab:not(.active):hover{background:rgba(201,168,76,.08);color:var(--tx);}
+
+/* 入力エリア */
+.input-area{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:22px;margin-bottom:20px;}
+.input-area h2{color:var(--gold);font-size:.82rem;letter-spacing:.15em;margin-bottom:16px;text-align:center;}
+.row{display:flex;gap:12px;margin-bottom:12px;}
+.field{flex:1;}
+label{display:block;font-size:.73rem;color:var(--dm);margin-bottom:5px;letter-spacing:.1em;}
+input[type=text]{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:10px 12px;color:var(--tx);font-family:"Noto Serif JP",serif;font-size:.93rem;outline:none;transition:border .3s;}
+input[type=text]:focus{border-color:var(--gold);}
+.hint-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:6px;padding:10px 14px;margin-top:10px;font-size:.73rem;color:var(--dm);line-height:1.7;}
+.calc-btn{width:100%;background:linear-gradient(135deg,var(--gd),var(--gold));color:#0a0a0a;border:none;cursor:pointer;font-family:"Noto Serif JP",serif;font-weight:700;padding:13px;border-radius:6px;letter-spacing:.15em;font-size:.92rem;margin-top:10px;transition:all .3s;}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,168,76,.4);}
+.error{color:#d09090;font-size:.78rem;text-align:center;margin-top:8px;display:none;}
+
+/* 結果 */
+.result{display:none;}
+.name-display{text-align:center;margin-bottom:20px;}
+.name-display .fname{font-size:1.7rem;color:var(--gold);letter-spacing:.3em;font-weight:700;}
+.name-display .ftype{display:inline-block;margin-top:6px;padding:3px 14px;border-radius:12px;font-size:.72rem;background:rgba(201,168,76,.15);border:1px solid var(--gold);color:var(--gl);letter-spacing:.1em;}
+.kaku-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.kaku-card{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.18);border-radius:8px;padding:14px;text-align:center;}
+.kaku-card.main{grid-column:1/-1;background:rgba(201,168,76,.08);border-color:var(--gold);}
+.kaku-name{font-size:.7rem;color:var(--dm);letter-spacing:.12em;margin-bottom:5px;}
+.kaku-num{font-size:1.9rem;color:var(--gold);font-weight:700;line-height:1;}
+.kaku-label{font-size:.65rem;color:var(--dm);margin-top:2px;}
+.kaku-fortune{display:inline-block;margin:5px 0;padding:2px 10px;border-radius:12px;font-size:.7rem;letter-spacing:.1em;}
+.fortune-大吉{background:rgba(201,168,76,.2);color:var(--gold);border:1px solid var(--gold);}
+.fortune-吉{background:rgba(100,180,100,.15);color:#90d090;border:1px solid #60a060;}
+.fortune-凶{background:rgba(180,80,80,.15);color:#d09090;border:1px solid #a06060;}
+.kaku-desc{font-size:.74rem;color:var(--tx);line-height:1.7;margin-top:5px;text-align:left;}
+.total-msg{background:linear-gradient(135deg,rgba(40,20,5,.8),rgba(20,10,2,.8));border:1px solid var(--gold);border-radius:10px;padding:18px;text-align:center;margin-bottom:18px;}
+.total-msg h3{color:var(--gold);font-size:.8rem;letter-spacing:.15em;margin-bottom:8px;}
+.total-msg p{color:var(--tx);font-size:.86rem;line-height:1.9;}
+.reset-btn{width:100%;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:"Noto Serif JP",serif;font-size:.83rem;padding:11px;border-radius:6px;cursor:pointer;letter-spacing:.1em;transition:all .3s;}
+.reset-btn:hover{background:rgba(201,168,76,.08);}
+</style>
+</head>
+<body>
+<header>
+  <h1>姓名判断 / 源氏名診断</h1>
+  <div class="dv"></div>
+  <p class="sub">熊崎式・旧字体画数 ✦ Latir</p>
+</header>
+<div class="wrap">
+
+  <!-- タブ -->
+  <div class="tabs">
+    <button class="tab active" id="tab1" onclick="switchTab(1)">✦ 姓名判断<br><small style="font-size:.62rem;font-weight:400">姓＋名で鑑定</small></button>
+    <button class="tab" id="tab2" onclick="switchTab(2)">✦ 源氏名・社名診断<br><small style="font-size:.62rem;font-weight:400">単名で鑑定</small></button>
+  </div>
+
+  <!-- 姓名判断入力 -->
+  <div id="seimeiInput">
+    <div class="input-area">
+      <h2>✦ お名前を入力してください ✦</h2>
+      <div class="row">
+        <div class="field"><label>姓（苗字）</label><input type="text" id="s_last" placeholder="例：山田" maxlength="10"></div>
+        <div class="field"><label>名（名前）</label><input type="text" id="s_first" placeholder="例：太郎" maxlength="10"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>姓（ふりがな）</label><input type="text" id="s_lastKana" placeholder="例：やまだ" maxlength="20"></div>
+        <div class="field"><label>名（ふりがな）</label><input type="text" id="s_firstKana" placeholder="例：たろう" maxlength="20"></div>
+      </div>
+      <div class="hint-box">✦ 熊崎式・旧字体の画数で鑑定します<br>✦ 旧字体（「齋」「辨」など）はそのまま入力ください</div>
+      <p class="error" id="s_err">姓と名の両方を入力してください</p>
+      <button class="calc-btn" onclick="calcSeimei()">✦ 鑑定する ✦</button>
+    </div>
+  </div>
+
+  <!-- 源氏名・社名入力 -->
+  <div id="tanmeInput" style="display:none">
+    <div class="input-area">
+      <h2>✦ 源氏名・社名を入力してください ✦</h2>
+      <div class="row">
+        <div class="field"><label>名前（源氏名・社名）</label><input type="text" id="t_name" placeholder="例：蘭　/ Latir" maxlength="15"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>種別（任意）</label>
+          <select id="t_type" style="width:100%;background:#1a1208;border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:10px 12px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:.93rem;outline:none;-webkit-appearance:none;appearance:none;">
+            <option value="源氏名">源氏名</option>
+            <option value="芸名">芸名</option>
+            <option value="社名・店名">社名・店名</option>
+            <option value="ペンネーム">ペンネーム</option>
+            <option value="活動名">活動名</option>
+          </select>
+        </div>
+      </div>
+      <div class="hint-box">✦ 熊崎式・旧字体の画数で鑑定します<br>✦ 漢字・ひらがな・カタカナ・アルファベット対応<br>✦ アルファベットは1文字1画で計算します</div>
+      <p class="error" id="t_err">名前を入力してください</p>
+      <button class="calc-btn" onclick="calcTanmei()">✦ 鑑定する ✦</button>
+    </div>
+  </div>
+
+  <!-- 結果エリア -->
+  <div class="result" id="resultArea">
+    <div class="name-display">
+      <div class="fname" id="r_name"></div>
+      <div class="ftype" id="r_type"></div>
+    </div>
+    <div class="kaku-grid" id="r_grid"></div>
+    <div class="total-msg" id="r_total"></div>
+    <button class="reset-btn" onclick="resetAll()">← もう一度鑑定する</button>
+  </div>
+
+</div>
+
+<textarea id="_nums" style="display:none">{"1": ["大吉", "独立・開拓の数。リーダーシップがあり、自分の道を切り拓く強さを持ちます。"], "2": ["凶", "協調と対立の数。二面性があり、パートナーシップに課題が生じやすい傾向があります。"], "3": ["大吉", "才能・芸術の数。創造力と表現力に恵まれ、明るい未来が開けます。"], "4": ["凶", "苦労・変化の数。努力が実りにくい面もありますが、忍耐で道は開けます。"], "5": ["大吉", "統合・自由の数。行動力と変化への適応力があり、多方面で活躍できます。"], "6": ["吉", "調和・家庭の数。誠実で思いやりがあり、人間関係に恵まれます。"], "7": ["吉", "探究・独立の数。知性と探求心が強く、独自の道を歩む力があります。"], "8": ["大吉", "発展・財運の数。粘り強さと実行力で成功を掴む強運の数です。"], "9": ["凶", "知性・孤高の数。高い知性を持ちながらも孤独になりやすい面があります。"], "10": ["凶", "空虚・転落の数。一度の成功後に落ちやすく、慎重さが必要です。"], "11": ["大吉", "直感・閃きの数。豊かな感性と直感力で道を開く力があります。"], "12": ["凶", "薄幸・苦労の数。苦労が多い傾向がありますが、経験が人格を磨きます。"], "13": ["大吉", "才知・名声の数。知恵と才能で名声を得る力を持っています。"], "14": ["凶", "離散・変動の数。変化が多く不安定になりやすい面がありますが、柔軟性が武器です。"], "15": ["大吉", "徳望・統率の数。人望が厚く、多くの人を引きつけるカリスマ性があります。"], "16": ["大吉", "将の格・統率の数。人の上に立つ器があり、リーダーとして活躍できます。"], "17": ["吉", "強運・突破力の数。強い意志と行動力で困難を突破する力があります。"], "18": ["大吉", "雄略・発展の数。大きな志を持ち、着実に成功を積み上げる力があります。"], "19": ["凶", "苦難・波乱の数。波乱が多い人生ですが、強い精神力で乗り越えられます。"], "20": ["凶", "虚数・空虚の数。努力が空回りしやすい面がありますが、精神修養で開運します。"], "21": ["大吉", "頭領・独立の数。リーダーシップと決断力で道を切り拓く強運の数です。"], "22": ["凶", "秋草・中途挫折の数。才能はあるものの成功しにくい面がありますが、継続が鍵です。"], "23": ["大吉", "大功・名声の数。努力が実り、社会的に高い地位と名声を得る吉数です。"], "24": ["大吉", "財運・家庭の数。金運と家庭運に恵まれ、幸福な人生を歩む吉数です。"], "25": ["吉", "健康・協調の数。バランス感覚があり、着実に運気を上げていきます。"], "26": ["凶", "変化・英雄の数。波乱万丈ですが、英雄的な活躍をすることもあります。"], "27": ["凶", "中断・批判の数。批判を受けやすい傾向がありますが、信念を持ち続けることで道が開けます。"], "28": ["凶", "波乱・離別の数。人間関係での苦労が多いですが、経験が豊かな人生を作ります。"], "29": ["大吉", "成功・知略の数。知恵と策略で成功をつかむ力を持っています。"], "30": ["凶", "吉凶混合の数。運気の浮き沈みが激しく、慎重な判断が必要です。"], "31": ["大吉", "隆盛・幸運の数。人望と実力を兼ね備え、周囲から愛される幸運の数です。"], "32": ["大吉", "幸運・繁栄の数。思わぬところから援助が現れ、運勢が開けていきます。"], "33": ["大吉", "昇天・隆盛の数。才能と運気が花開き、高い地位へ昇りつめる強運の数です。"], "34": ["凶", "災難・破壊の数。困難が多い傾向がありますが、精神力で乗り越えられます。"], "35": ["吉", "温和・学術の数。温かい人柄と学識で、着実な成功を収める吉数です。"], "36": ["凶", "波乱・英雄の数。波乱はありますが、英雄的な生き方で人生を切り拓きます。"], "37": ["吉", "独立・実力の数。自立心が強く、実力で道を切り拓く力があります。"], "38": ["吉", "芸能・才能の数。芸術的才能と表現力に恵まれています。"], "39": ["大吉", "大将・隆盛の数。大きな成功を収め、多くの人に慕われる吉数です。"], "40": ["凶", "無常・変化の数。変化が多く落ち着かない面がありますが、柔軟性が強みです。"], "41": ["大吉", "統率・名誉の数。人望があり、名誉ある地位を得る力を持っています。"], "42": ["凶", "苦労・艱難の数。苦労が多いですが、経験が豊かな人格を育てます。"], "43": ["凶", "散財・不安の数。金銭面での苦労が多い傾向がありますが、精神的豊かさで補えます。"], "44": ["凶", "大凶・難関の数。多くの困難がありますが、強い精神力で道は開けます。"], "45": ["大吉", "大物・順調の数。大きな器と実力で、着実に成功を積み上げる吉数です。"], "46": ["凶", "不安・変動の数。安定しにくい面がありますが、柔軟な適応力が武器です。"], "47": ["吉", "開運・幸福の数。運気が開け、幸福な人生へと導かれる吉数です。"], "48": ["大吉", "知恵・名声の数。知恵と実力で社会的な名声を得る力があります。"], "49": ["凶", "凶変・苦難の数。苦難が多い傾向がありますが、精神修養で乗り越えられます。"], "50": ["凶", "吉凶混合の数。運気の浮き沈みがあります。慎重な行動が大切です。"], "51": ["凶", "盛衰交互の数。成功と失敗が繰り返される傾向があります。"], "52": ["大吉", "堅実・発展の数。着実な努力が実り、大きな成功を収める吉数です。"], "53": ["凶", "内外不一致の数。外見と内面のギャップがありますが、誠実さで信頼を得られます。"], "54": ["凶", "不運・失意の数。努力が報われにくい面がありますが、精神力が人生を支えます。"], "55": ["凶", "不安定・変動の数。変化が多く不安定ですが、経験が豊かな人生を作ります。"], "56": ["凶", "意思薄弱の数。優柔不断になりやすいですが、信念を持てば道が開けます。"], "57": ["吉", "努力・実力の数。粘り強い努力で着実に成功を積み上げます。"], "58": ["吉", "後半開運の数。前半は苦労しますが、後半から運気が開けてきます。"], "59": ["凶", "苦難・不遇の数。苦労が多いですが、精神的な強さが磨かれます。"], "60": ["凶", "動揺・不安の数。精神的な不安定さがありますが、信仰心が支えになります。"], "61": ["大吉", "名誉・財運の数。名誉と財運に恵まれ、幸福な人生を歩む吉数です。"], "62": ["凶", "衰退・失敗の数。努力が実りにくい面がありますが、地道な積み重ねが大切です。"], "63": ["大吉", "吉祥・繁栄の数。幸運に恵まれ、繁栄する人生を歩む吉数です。"], "64": ["凶", "不運・停滞の数。停滞しやすい傾向がありますが、忍耐で必ず道は開けます。"], "65": ["大吉", "長寿・幸福の数。健康と幸福に恵まれ、安定した人生を歩む吉数です。"], "66": ["凶", "誤解・不和の数。誤解を受けやすいですが、誠実さで信頼を築けます。"], "67": ["吉", "誠実・信頼の数。誠実な人柄で信頼を集め、着実に成功する吉数です。"], "68": ["大吉", "財運・実力の数。実力と財運を兼ね備えた強運の数です。"], "69": ["凶", "苦難・波乱の数。波乱が多いですが、強い精神力で乗り越えられます。"], "70": ["凶", "空虚・不安の数。精神的な充実を求める傾向がありますが、信仰心が救いになります。"], "71": ["吉", "独立・発展の数。独立心が強く、自分の力で道を開く力があります。"], "72": ["凶", "停滞・苦労の数。苦労が多いですが、経験が豊かな人格を育てます。"], "73": ["吉", "平和・安定の数。穏やかな人柄で、平和な人生を歩む吉数です。"], "74": ["凶", "不運・困難の数。困難が多いですが、精神力で乗り越えられます。"], "75": ["吉", "平静・安定の数。安定した運気の中で、着実に成長していきます。"], "76": ["凶", "停滞・波乱の数。波乱はありますが、信念を持つことで道が開けます。"], "77": ["吉", "幸運・隆盛の数。幸運に恵まれ、隆盛する人生を歩む吉数です。"], "78": ["吉", "財運・繁栄の数。財運と繁栄に恵まれた吉数です。"], "79": ["凶", "不遇・苦難の数。苦難が多いですが、精神修養で道は開けます。"], "80": ["凶", "空虚・変動の数。変化が多く不安定ですが、精神力が人生を支えます。"], "81": ["大吉", "還元・大成の数。1に戻る完成の数。大きな成功と名声を得る最強の吉数です。"]}</textarea>
+<textarea id="_kaku" style="display:none">{"亜": 8, "唖": 11, "娃": 9, "阿": 8, "哀": 9, "愛": 13, "挨": 10, "逢": 14, "葵": 15, "茜": 11, "悪": 11, "握": 12, "旭": 6, "梓": 11, "圧": 5, "扱": 6, "宛": 8, "飴": 16, "絢": 12, "綾": 14, "花": 10, "華": 14, "歌": 14, "家": 10, "火": 4, "夏": 10, "加": 5, "佳": 8, "可": 5, "嘉": 14, "果": 8, "賀": 12, "我": 7, "画": 8, "雅": 13, "介": 4, "快": 7, "戒": 7, "改": 7, "貝": 7, "概": 13, "涯": 11, "崖": 11, "街": 12, "核": 10, "格": 10, "確": 15, "覚": 12, "学": 8, "岳": 8, "楽": 13, "勘": 11, "幹": 13, "寛": 13, "漢": 13, "感": 13, "歓": 15, "完": 7, "官": 8, "管": 14, "観": 18, "関": 14, "館": 16, "丸": 3, "岩": 8, "顔": 18, "願": 19, "企": 6, "危": 6, "機": 16, "気": 6, "記": 10, "帰": 10, "基": 11, "奇": 8, "規": 11, "期": 12, "貴": 12, "幾": 12, "輝": 15, "季": 8, "喜": 12, "器": 15, "義": 13, "技": 7, "宜": 8, "吉": 6, "菊": 14, "鬼": 10, "亀": 11, "久": 3, "旧": 5, "求": 7, "球": 11, "究": 7, "泣": 8, "級": 9, "宮": 10, "弓": 3, "給": 12, "牛": 4, "去": 5, "拒": 8, "挙": 10, "虚": 11, "居": 8, "許": 11, "協": 8, "強": 11, "境": 14, "橋": 16, "鏡": 19, "響": 20, "共": 6, "恐": 10, "凶": 4, "胸": 10, "競": 20, "業": 13, "極": 12, "曲": 6, "局": 7, "玉": 5, "金": 8, "均": 7, "近": 7, "筋": 12, "空": 8, "敬": 12, "警": 19, "経": 11, "形": 7, "恵": 10, "継": 13, "迎": 7, "芸": 10, "欠": 4, "決": 7, "潔": 15, "血": 6, "月": 4, "結": 12, "健": 11, "建": 9, "憲": 16, "検": 12, "権": 15, "研": 9, "見": 7, "賢": 16, "幻": 4, "源": 13, "現": 11, "限": 9, "個": 10, "固": 8, "古": 5, "故": 9, "湖": 12, "虎": 8, "語": 14, "誤": 14, "護": 20, "公": 4, "工": 3, "光": 6, "功": 5, "広": 5, "考": 6, "行": 6, "好": 6, "孝": 7, "更": 7, "江": 6, "幸": 8, "高": 10, "豪": 14, "剛": 10, "合": 6, "国": 8, "黒": 11, "根": 10, "左": 5, "佐": 7, "砂": 9, "差": 10, "査": 9, "沙": 7, "才": 3, "再": 6, "最": 12, "彩": 11, "済": 11, "斎": 11, "歳": 13, "細": 11, "妻": 8, "作": 7, "咲": 9, "桜": 10, "三": 3, "山": 3, "参": 8, "散": 12, "産": 11, "賛": 15, "士": 3, "史": 5, "司": 5, "四": 5, "市": 5, "矢": 5, "始": 8, "姉": 8, "思": 9, "紫": 12, "視": 11, "詩": 13, "試": 13, "資": 13, "示": 5, "次": 6, "字": 6, "耳": 6, "事": 8, "似": 7, "自": 6, "辞": 13, "式": 6, "識": 19, "七": 2, "質": 15, "実": 8, "写": 5, "社": 8, "射": 10, "車": 7, "尺": 4, "若": 11, "弱": 10, "主": 5, "守": 6, "朱": 6, "取": 8, "手": 4, "秀": 7, "周": 8, "州": 6, "修": 10, "収": 4, "就": 12, "宗": 8, "秋": 9, "春": 9, "勝": 12, "昇": 8, "松": 8, "商": 11, "焼": 12, "笑": 10, "上": 3, "城": 9, "情": 11, "常": 11, "場": 12, "色": 6, "食": 9, "信": 9, "新": 13, "心": 4, "身": 7, "真": 10, "神": 9, "深": 11, "臣": 7, "森": 12, "星": 9, "生": 5, "性": 8, "正": 5, "成": 6, "政": 9, "清": 11, "精": 14, "声": 7, "静": 14, "石": 5, "積": 16, "赤": 7, "切": 4, "節": 13, "雪": 11, "説": 14, "絶": 12, "川": 3, "先": 6, "戦": 16, "善": 12, "全": 6, "然": 12, "染": 9, "組": 11, "素": 10, "想": 13, "創": 12, "相": 9, "草": 12, "装": 13, "奏": 9, "総": 14, "村": 7, "存": 6, "尊": 12, "太": 4, "体": 7, "大": 3, "代": 5, "台": 5, "多": 6, "打": 5, "他": 5, "田": 5, "谷": 7, "達": 12, "男": 7, "短": 12, "断": 11, "知": 8, "地": 6, "竹": 6, "茶": 12, "着": 12, "中": 4, "忠": 8, "朝": 12, "超": 12, "頂": 11, "鳥": 11, "調": 15, "直": 8, "通": 10, "低": 7, "鉄": 13, "天": 4, "典": 8, "殿": 13, "転": 11, "都": 11, "度": 9, "土": 3, "道": 12, "動": 11, "童": 12, "同": 6, "得": 11, "独": 9, "読": 14, "内": 4, "奈": 8, "名": 6, "何": 7, "南": 9, "日": 4, "入": 2, "任": 6, "念": 8, "農": 13, "能": 10, "配": 10, "背": 9, "波": 8, "白": 5, "博": 12, "八": 2, "発": 9, "反": 4, "番": 12, "晩": 11, "飯": 12, "彼": 8, "比": 4, "美": 9, "必": 5, "百": 6, "評": 12, "表": 8, "品": 9, "普": 12, "複": 14, "福": 13, "藤": 18, "文": 4, "分": 4, "平": 5, "別": 7, "保": 9, "豊": 13, "歩": 8, "母": 5, "方": 4, "法": 8, "本": 5, "舞": 15, "毎": 7, "万": 3, "味": 8, "未": 5, "命": 8, "面": 9, "木": 4, "目": 5, "問": 11, "紋": 10, "役": 7, "夜": 8, "野": 11, "由": 5, "勇": 9, "友": 4, "有": 6, "夢": 13, "明": 8, "陽": 12, "様": 14, "来": 7, "立": 5, "里": 7, "利": 7, "流": 10, "留": 10, "龍": 16, "令": 5, "例": 8, "礼": 5, "麗": 19, "歴": 14, "恋": 10, "連": 10, "路": 13, "和": 8, "話": 13, "湾": 12, "腕": 12, "一": 1, "二": 2, "五": 5, "六": 6, "九": 2, "十": 2, "口": 3, "足": 7, "頭": 16, "東": 8, "西": 6, "北": 5, "府": 8, "県": 9, "町": 7, "海": 9, "風": 9, "雨": 8, "年": 6, "時": 10, "希": 7, "望": 11, "康": 11, "智": 12, "誠": 13, "鳳": 14, "鶴": 21, "伶": 7, "受": 8, "慎": 14, "林": 8, "長": 8, "永": 5, "安": 6, "岡": 8, "島": 10, "池": 6, "浜": 10, "井": 4, "原": 10, "梅": 10, "鈴": 13, "渡": 12, "小": 3, "齊": 14, "齋": 17, "人": 2, "女": 3, "子": 3, "父": 4, "兄": 5, "弟": 7, "王": 4, "糸": 6, "犬": 4, "馬": 10, "下": 3, "右": 5, "前": 9, "後": 9, "青": 8, "黄": 12, "々": 3, "梨": 11, "香": 9, "桃": 10, "葉": 15, "芽": 10, "瑠": 14, "璃": 17, "珠": 10, "翠": 14, "煌": 13, "晴": 12, "澄": 15, "凛": 15, "楓": 13, "蘭": 19, "菫": 12, "莉": 13, "蓮": 16, "椿": 13, "杏": 7, "桂": 10, "柚": 9, "橙": 16, "萌": 14, "悠": 11, "那": 7, "乃": 2, "之": 4, "也": 3, "哉": 9, "弥": 8, "依": 8, "衣": 6, "以": 5, "維": 14, "緯": 16, "唯": 11, "佑": 7, "裕": 12, "優": 17, "湧": 12, "涌": 10, "祐": 9, "雄": 12, "捷": 11, "翔": 12, "颯": 14, "蒼": 13, "碧": 14, "瑛": 12, "玲": 9, "凌": 10, "稜": 13, "陵": 11, "嶺": 17, "峻": 10, "駿": 17, "俊": 9, "隼": 10, "鷹": 24, "鷲": 23, "凰": 11, "麟": 23, "瑞": 13}</textarea>
+
+<script>
+var NUMS, KAKU;
+var currentTab = 1;
+
+window.onload = function(){
+  NUMS = JSON.parse(document.getElementById('_nums').value);
+  KAKU = JSON.parse(document.getElementById('_kaku').value);
+};
+
+function switchTab(n){
+  currentTab = n;
+  document.getElementById('tab1').className = n===1 ? 'tab active' : 'tab';
+  document.getElementById('tab2').className = n===2 ? 'tab active' : 'tab';
+  document.getElementById('seimeiInput').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('tanmeInput').style.display = n===2 ? 'block' : 'none';
+  document.getElementById('resultArea').style.display = 'none';
+}
+
+function getK(c){
+  if(KAKU[c]) return KAKU[c];
+  var code = c.charCodeAt(0);
+  if((code >= 65 && code <= 90)||(code >= 97 && code <= 122)) return 1;
+  if(code >= 0x3040 && code <= 0x309F) return 1; // ひらがな
+  if(code >= 0x30A0 && code <= 0x30FF) return 1; // カタカナ
+  if(code >= 0x4E00 && code <= 0x9FFF) return 5;
+  return 1;
+}
+
+function getMeaning(n){
+  if(n===0) return {luck:"−", desc:"未入力"};
+  var n2 = n % 81;
+  if(n2===0) n2=81;
+  var k = String(n2);
+  if(NUMS[k]) return {luck:NUMS[k][0], desc:NUMS[k][1]};
+  return {luck:"吉", desc:n+"画。特別な数です。"};
+}
+
+function makeCard(name, n, desc, isMain){
+  var m = getMeaning(n);
+  var fc = 'fortune-' + m.luck;
+  var div = document.createElement('div');
+  div.className = 'kaku-card' + (isMain ? ' main' : '');
+  div.innerHTML = '<div class="kaku-name">'+name+'</div>'
+    + '<div class="kaku-num">'+n+'</div>'
+    + '<div class="kaku-label">画</div>'
+    + '<span class="kaku-fortune '+fc+'">'+m.luck+'</span>'
+    + '<div class="kaku-desc">'+desc+'<br><small style="color:var(--dm);font-size:.7rem">'+m.desc+'</small></div>';
+  return div;
+}
+
+function showResult(nameDisp, typeDisp, cards, totalHTML){
+  document.getElementById('seimeiInput').style.display = 'none';
+  document.getElementById('tanmeInput').style.display = 'none';
+  document.getElementById('r_name').textContent = nameDisp;
+  document.getElementById('r_type').textContent = typeDisp;
+  var grid = document.getElementById('r_grid');
+  grid.innerHTML = '';
+  cards.forEach(function(c){ grid.appendChild(makeCard(c.name, c.n, c.desc, c.main)); });
+  document.getElementById('r_total').innerHTML = totalHTML;
+  document.getElementById('resultArea').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function calcSeimei(){
+  var last = document.getElementById('s_last').value.trim();
+  var first = document.getElementById('s_first').value.trim();
+  var lk = document.getElementById('s_lastKana').value.trim();
+  var fk = document.getElementById('s_firstKana').value.trim();
+  if(!last||!first){ document.getElementById('s_err').style.display='block'; return; }
+  document.getElementById('s_err').style.display='none';
+
+  var lastN=0, firstN=0;
+  for(var i=0;i<last.length;i++) lastN+=getK(last[i]);
+  for(var i=0;i<first.length;i++) firstN+=getK(first[i]);
+  var ten=lastN, chi=firstN;
+  var jin=getK(last[last.length-1])+getK(first[0]);
+  var gai=getK(last[0])+getK(first[first.length-1]);
+  var so=lastN+firstN;
+
+  var cards=[
+    {name:'天格', n:ten, desc:'先祖から受け継いだ宿命。姓の画数の合計。', main:false},
+    {name:'地格', n:chi, desc:'幼少期〜青年期の運勢・才能・素質。名の画数の合計。', main:false},
+    {name:'人格 ★主運', n:jin, desc:'最重要の格。中年期の運勢・人柄・対人関係。姓末尾＋名先頭。', main:true},
+    {name:'外格', n:gai, desc:'社会運・対外的な運勢。姓先頭＋名末尾。', main:false},
+    {name:'総格 ★晩年運', n:so, desc:'人生全体の総合的な運勢。全画数の合計。', main:true},
+  ];
+
+  var soM=getMeaning(so), jinM=getMeaning(jin);
+  var total='<h3>✦ 総合鑑定 ✦</h3><p>'
+    +last+' '+first+' さんの主運（人格）は <strong style="color:var(--gold)">'+jin+'画</strong> — '+jinM.luck+'。'
+    +jinM.desc+'<br><br>'
+    +'晩年運（総格）は <strong style="color:var(--gold)">'+so+'画</strong> — '+soM.luck+'。'
+    +soM.desc+'</p>';
+
+  showResult(last+' '+first, (lk||last)+' '+(fk||first), cards, total);
+}
+
+function calcTanmei(){
+  var name = document.getElementById('t_name').value.trim();
+  var type = document.getElementById('t_type').value;
+  if(!name){ document.getElementById('t_err').style.display='block'; return; }
+  document.getElementById('t_err').style.display='none';
+
+  var total=0;
+  for(var i=0;i<name.length;i++) total+=getK(name[i]);
+
+  var ten = getK(name[0]);
+  var chi = total;
+  var jin = name.length===1 ? total : getK(name[0])+getK(name[name.length-1]);
+  var gai = 1; // 単名の外格は固定値1
+  var so = total;
+
+  var cards=[
+    {name:'天格', n:ten, desc:'名前の第一印象・最初の文字が持つ力。', main:false},
+    {name:'地格', n:chi, desc:'名前全体のエネルギー・内面の素質。', main:false},
+    {name:'人格 ★主運', n:jin, desc:'最重要の格。対人関係・人柄・主運を表す。', main:true},
+    {name:'外格', n:gai, desc:'社会的な印象・外から見た運勢（単名固定値）。', main:false},
+    {name:'総格 ★総合運', n:so, desc:'名前全体の総合的な運勢・晩年運。', main:true},
+  ];
+
+  var soM=getMeaning(so), jinM=getMeaning(jin);
+  var total_html='<h3>✦ 総合鑑定 ✦</h3><p>'
+    +'「'+name+'」（'+type+'）の主運（人格）は <strong style="color:var(--gold)">'+jin+'画</strong> — '+jinM.luck+'。'
+    +jinM.desc+'<br><br>'
+    +'総合運（総格）は <strong style="color:var(--gold)">'+so+'画</strong> — '+soM.luck+'。'
+    +soM.desc+'</p>';
+
+  showResult('「 '+name+' 」', type+' 画数鑑定', cards, total_html);
+}
+
+function resetAll(){
+  document.getElementById('resultArea').style.display='none';
+  if(currentTab===1){
+    document.getElementById('seimeiInput').style.display='block';
+  } else {
+    document.getElementById('tanmeInput').style.display='block';
+  }
+}
+</script>
+</body>
+</html>
