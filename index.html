@@ -128,6 +128,15 @@ h1{font-family:"Cinzel Decorative",serif;font-size:clamp(1.1rem,4vw,1.8rem);colo
     <div class="drg"><h4>✦ 龍神様からのメッセージ ✦</h4><p id="mDrg"></p></div>
   </div>
   <button class="btn bo" id="bAgain" style="display:none;font-size:.82rem;">✦ もう一度引く ✦</button>
+<!-- タロット誘導・予約ボタン -->
+<div style="background:linear-gradient(135deg,rgba(74,32,96,.5),rgba(20,10,20,.95));border:1px solid #7a40a0;border-radius:8px;padding:22px 16px;margin:16px 0;text-align:center;">
+  <div style="font-size:.86rem;color:#e8d8b0;line-height:2;">龍神タロットで引いたカードをさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、<br>あなたの今と未来をより具体的にお伝えします。</div>
+  <div style="font-size:.88rem;font-weight:700;color:#f0d080;margin-top:8px;letter-spacing:.1em;">◈ 伶受　サイキックタロット・霊視鑑定 ◈</div>
+  <a href="https://form.run/@latir" target="_blank" style="display:inline-block;margin-top:14px;padding:13px 36px;background:linear-gradient(135deg,#8a6a1a,#c9a84c,#8a6a1a);color:#0a0a0a;font-family:'Noto Serif JP',serif;font-size:.92rem;font-weight:700;letter-spacing:.18em;text-decoration:none;border-radius:4px;">ご予約はこちら</a>
+</div>
+<div style="font-size:.72rem;color:#a09070;line-height:1.9;text-align:center;padding:0 8px 16px;">
+  ※ タロットの結果はあくまで参考としてお楽しみください。<br>
+</div>
 </div>
 </div>
 <div id="sOracle" class="screen">
@@ -171,13 +180,6 @@ function revealCard(){if(done)return;done=true;$('flipIn').classList.add("flip")
 function showOracleMsg(){var orb=$('oOrb');orb.classList.add("spin");$('oRes').style.display="none";$('oAgain').style.display="none";$('oBack').style.display="none";setTimeout(function(){orb.classList.remove("spin");var all=[];for(var i=0;i<CARDS.length;i++){if(CARDS[i].dragon)all.push({text:CARDS[i].dragon,from:CARDS[i].name});}for(var j=0;j<ORACLE.length;j++)all.push({text:ORACLE[j],from:"龍神様からのメッセージ"});var c=all[Math.floor(Math.random()*all.length)];$('oTxt').textContent=c.text;$('oFrom').textContent="― "+c.from+" ―";$('oRes').style.display="block";$('oAgain').style.display="inline-block";$('oBack').style.display="inline-block";},2800);}
 function resetAll(){setLayerBacks(["tL1","tL2","tL3","shL1","shL2","shL3","dL1","dL2","dL3"]);showScreen("sTop");cnt=0;}
 </script>
-
-<!-- タロット誘導・予約ボタン -->
-<div style="background:linear-gradient(135deg,rgba(74,32,96,.5),rgba(20,10,20,.95));border:1px solid #7a40a0;border-radius:8px;padding:22px 16px;margin:16px 16px 0;text-align:center;position:relative;">
-  <div style="font-size:.86rem;color:#e8d8b0;line-height:2;">龍神タロットで引いたカードをさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、<br>あなたの今と未来をより具体的にお伝えします。</div>
-  <div style="font-size:.88rem;font-weight:700;color:#f0d080;margin-top:8px;letter-spacing:.1em;">◈ 伶受　サイキックタロット・霊視鑑定 ◈</div>
-  <a href="https://form.run/@latir" target="_blank" style="display:inline-block;margin-top:14px;padding:13px 36px;background:linear-gradient(135deg,#8a6a1a,#c9a84c,#8a6a1a);color:#0a0a0a;font-family:'Noto Serif JP',serif;font-size:.92rem;font-weight:700;letter-spacing:.18em;text-decoration:none;border-radius:4px;box-shadow:0 0 16px rgba(201,168,76,.25);">ご予約はこちら</a>
-</div>
 
 <!-- 免責 -->
 <div style="background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.12);border-radius:6px;padding:14px;margin:14px 16px 30px;font-size:.72rem;color:#a09070;line-height:1.9;text-align:center;">
