@@ -56,6 +56,28 @@ input[type=text]:focus{border-color:var(--gold);}
 .total-msg p{color:var(--tx);font-size:.86rem;line-height:1.9;}
 .reset-btn{width:100%;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:"Noto Serif JP",serif;font-size:.83rem;padding:11px;border-radius:6px;cursor:pointer;letter-spacing:.1em;transition:all .3s;}
 .reset-btn:hover{background:rgba(201,168,76,.08);}
+
+/* アロマ */
+.aroma-wrap{background:linear-gradient(135deg,rgba(74,32,96,.3),rgba(20,10,20,.9));border:1px solid #7a40a0;border-radius:8px;padding:20px;margin-top:16px;position:relative;}
+.aroma-wrap::before{content:'🌿';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--bg);padding:0 8px;font-size:18px;}
+.aroma-wrap h3{font-size:.78rem;color:#a8b0c0;letter-spacing:.25em;text-align:center;margin-bottom:14px;}
+.aroma-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.aroma-card{background:rgba(74,32,96,.2);border:1px solid rgba(122,64,160,.4);border-radius:6px;padding:12px;text-align:center;}
+.aroma-oil-name{font-size:.95rem;font-weight:700;color:#a8b0c0;margin-bottom:3px;}
+.aroma-oil-en{font-size:.68rem;color:var(--dm);letter-spacing:.08em;margin-bottom:6px;}
+.aroma-reason{font-size:.76rem;color:var(--tx);line-height:1.7;}
+.aroma-note{font-size:.76rem;color:var(--dm);text-align:center;margin-top:10px;line-height:1.9;}
+
+/* タロット誘導 */
+.tarot-cta{background:linear-gradient(135deg,rgba(74,32,96,.5),rgba(20,10,20,.95));border:1px solid #7a40a0;border-radius:8px;padding:22px 16px;margin-top:16px;text-align:center;position:relative;}
+.tarot-cta::before{content:'✦';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--bg);color:var(--gold);padding:0 10px;font-size:14px;}
+.tarot-cta-text{font-size:.86rem;color:var(--tx);line-height:2;}
+.tarot-cta-name{font-size:.88rem;font-weight:700;color:var(--gl);margin-top:8px;letter-spacing:.1em;}
+.btn-reserve{display:inline-block;margin-top:14px;padding:13px 36px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));color:#0a0a0a;font-family:"Noto Serif JP",serif;font-size:.92rem;font-weight:700;letter-spacing:.18em;text-decoration:none;border-radius:4px;transition:all .3s;box-shadow:0 0 16px rgba(201,168,76,.25);}
+.btn-reserve:hover{box-shadow:0 0 26px rgba(201,168,76,.55);transform:translateY(-2px);}
+
+/* 免責 */
+.disclaimer{background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.12);border-radius:6px;padding:14px;margin-top:14px;font-size:.72rem;color:var(--dm);line-height:1.9;text-align:center;}
 </style>
 </head>
 <body>
@@ -123,6 +145,31 @@ input[type=text]:focus{border-color:var(--gold);}
     <div class="kaku-grid" id="r_grid"></div>
     <div class="total-msg" id="r_total"></div>
     <button class="reset-btn" onclick="resetAll()">← もう一度鑑定する</button>
+
+    <!-- アロマ -->
+    <div class="aroma-wrap">
+      <h3>◈ あなたの運勢に合うdōTERRAオイル ◈</h3>
+      <div class="aroma-cards" id="r_aroma"></div>
+      <div class="aroma-note">✦ サロンLatirでは本格アロマオイルを使った、あなただけのオリジナルブレンドスプレーや香水をお作りいただけます</div>
+    </div>
+
+    <!-- タロット誘導 -->
+    <div class="tarot-cta">
+      <div class="tarot-cta-text">
+        この名前が示す運命をさらに深く読み解きたい方へ。<br>
+        伶受のサイキックタロット・霊視鑑定では、<br>
+        あなたの今と未来をより具体的にお伝えします。
+      </div>
+      <div class="tarot-cta-name">◈ 伶受　サイキックタロット・霊視鑑定 ◈</div>
+      <a href="https://form.run/@latir" target="_blank" class="btn-reserve">ご予約はこちら</a>
+    </div>
+
+    <!-- 免責 -->
+    <div class="disclaimer">
+      ※ 本ツールは簡易版としてお使いください。<br>
+      ※ 鑑定結果はあくまで統計学に基づく目安であり、個人の行動・選択を保証するものではありません。<br>
+      ※ 入力された情報はサーバーに送信・保存されません。
+    </div>
   </div>
 
 </div>
@@ -133,6 +180,22 @@ input[type=text]:focus{border-color:var(--gold);}
 <script>
 var NUMS, KAKU;
 var currentTab = 1;
+
+// 吉凶別アロマデータ（dōTERRA）
+var AROMA_BY_LUCK = {
+  '大吉': [
+    {name:'ワイルドオレンジ', en:'Wild Orange', reason:'大吉の運勢をさらに輝かせ、豊かさと喜びのエネルギーを高めます。'},
+    {name:'フランキンセンス', en:'Frankincense', reason:'高い運気を守り、精神的な豊かさと深い洞察力をサポートします。'}
+  ],
+  '吉': [
+    {name:'ベルガモット', en:'Bergamot', reason:'吉の運勢を安定させ、自信と前向きなエネルギーを引き出します。'},
+    {name:'ラベンダー', en:'Lavender', reason:'心を穏やかに整え、吉運を着実に引き寄せる力をサポートします。'}
+  ],
+  '凶': [
+    {name:'フランキンセンス', en:'Frankincense', reason:'困難な運勢を浄化し、精神的な強さと保護のエネルギーをもたらします。'},
+    {name:'セダーウッド', en:'Cedarwood', reason:'大地に根ざした安定感で、逆境を乗り越える力を与えます。'}
+  ]
+};
 
 window.onload = function(){
   NUMS = JSON.parse(document.getElementById('_nums').value);
@@ -189,6 +252,15 @@ function showResult(nameDisp, typeDisp, cards, totalHTML){
   grid.innerHTML = '';
   cards.forEach(function(c){ grid.appendChild(makeCard(c.name, c.n, c.desc, c.main)); });
   document.getElementById('r_total').innerHTML = totalHTML;
+
+  // アロマ表示（主運の吉凶で選択）
+  var jinCard = cards.find(function(c){ return c.main; });
+  var jinM = jinCard ? getMeaning(jinCard.n) : {luck:'吉'};
+  var aromaData = AROMA_BY_LUCK[jinM.luck] || AROMA_BY_LUCK['吉'];
+  document.getElementById('r_aroma').innerHTML =
+    '<div class="aroma-card"><div class="aroma-oil-name">'+aromaData[0].name+'</div><div class="aroma-oil-en">'+aromaData[0].en+'</div><div class="aroma-reason">'+aromaData[0].reason+'</div></div>' +
+    '<div class="aroma-card"><div class="aroma-oil-name">'+aromaData[1].name+'</div><div class="aroma-oil-en">'+aromaData[1].en+'</div><div class="aroma-reason">'+aromaData[1].reason+'</div></div>';
+
   document.getElementById('resultArea').style.display = 'block';
   window.scrollTo(0,0);
 }

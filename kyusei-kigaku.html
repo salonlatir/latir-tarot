@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九星気学｜伶受監修</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
+
+:root {
+  --gold: #c9a84c;
+  --gold-light: #f0d080;
+  --gold-dark: #8a6a20;
+  --silver: #a8b0c0;
+  --purple: #4a2060;
+  --purple-light: #7a40a0;
+  --purple-bright: #9b59d0;
+  --pink: #d060a0;
+  --pink-light: #f0a0d0;
+  --black: #0a0808;
+  --black2: #120f0f;
+  --black3: #1e1818;
+  --text: #e8d8b0;
+  --text-dim: #a09070;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Noto Serif JP', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(74,32,96,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.1) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+
+.container {
+  position: relative; z-index: 1;
+  max-width: 800px; margin: 0 auto;
+  padding: 20px 16px 60px;
+}
+
+.header { text-align: center; padding: 30px 0 20px; }
+.title-jp {
+  font-size: clamp(26px, 7vw, 42px); font-weight: 900;
+  color: var(--gold); letter-spacing: 0.3em;
+  text-shadow: 0 0 30px rgba(201,168,76,0.4);
+}
+.title-main {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(12px, 3vw, 18px); color: var(--gold-light);
+  letter-spacing: 0.2em; margin: 6px 0;
+}
+.subtitle { font-size: 14px; color: var(--text-dim); letter-spacing: 0.2em; }
+
+.divider {
+  display: flex; align-items: center; gap: 12px; margin: 24px 0;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+}
+.divider-diamond {
+  width: 8px; height: 8px; background: var(--gold);
+  transform: rotate(45deg); box-shadow: 0 0 8px var(--gold);
+}
+.divider-heart {
+  color: var(--pink); font-size: 16px;
+  text-shadow: 0 0 10px rgba(208,96,160,0.6);
+}
+
+/* タブ */
+.tab-wrap {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px 4px 0 0; overflow: hidden;
+}
+.tab-btn {
+  padding: 16px; background: rgba(10,8,8,0.8);
+  border: none; color: var(--text-dim);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: 0.1em; cursor: pointer;
+  transition: all 0.3s; text-align: center;
+  line-height: 1.5;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(30,24,24,0.95), rgba(20,16,16,0.95));
+  color: var(--gold); border-bottom: 2px solid var(--gold);
+}
+.tab-btn.love-tab.active {
+  background: linear-gradient(135deg, rgba(74,20,60,0.95), rgba(40,10,40,0.95));
+  color: var(--pink-light); border-bottom: 2px solid var(--pink);
+}
+.tab-btn:hover:not(.active) { background: rgba(201,168,76,0.05); color: var(--text); }
+
+/* フォームカード */
+.form-card {
+  background: linear-gradient(135deg, rgba(30,24,24,0.9), rgba(20,16,16,0.95));
+  border: 1px solid var(--gold-dark); border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 28px 20px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+.form-card.love-card {
+  background: linear-gradient(135deg, rgba(50,10,50,0.9), rgba(20,8,30,0.95));
+  border-color: var(--purple-light);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.form-section-title {
+  font-size: 13px; color: var(--gold);
+  letter-spacing: 0.3em; margin-bottom: 16px; text-align: center;
+}
+.form-section-title.love { color: var(--pink-light); }
+
+.privacy-note {
+  font-size: 12px; color: var(--text-dim);
+  text-align: center; margin-bottom: 18px;
+  padding: 8px 12px;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 3px; line-height: 1.7;
+}
+
+.person-block {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px; padding: 16px; margin-bottom: 14px;
+}
+.person-block.person2 {
+  border-color: rgba(208,96,160,0.3);
+  background: rgba(74,32,96,0.1);
+}
+.person-label {
+  font-size: 12px; color: var(--gold);
+  letter-spacing: 0.2em; margin-bottom: 12px;
+  text-align: center;
+}
+.person-label.p2 { color: var(--pink-light); }
+
+.form-row { display: grid; gap: 10px; margin-bottom: 14px; }
+.cols-3 { grid-template-columns: 2fr 1fr 1fr; }
+.cols-2 { grid-template-columns: 1fr 1fr; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 12px; color: var(--text-dim); letter-spacing: 0.15em; }
+.form-group input, .form-group select {
+  background: rgba(10,8,8,0.8);
+  border: 1px solid var(--gold-dark);
+  color: var(--text); padding: 10px 12px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 15px; border-radius: 2px;
+  outline: none; transition: border-color 0.3s; width: 100%;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: var(--gold); box-shadow: 0 0 8px rgba(201,168,76,0.2);
+}
+.form-group select option { background: var(--black2); }
+
+.btn-divination {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  border: none; color: var(--black);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px; font-weight: 700;
+  letter-spacing: 0.3em; cursor: pointer;
+  border-radius: 2px; transition: all 0.3s; margin-top: 4px;
+}
+.btn-divination:hover { box-shadow: 0 0 20px rgba(201,168,76,0.5); transform: translateY(-1px); }
+.btn-divination::before { content: '◈'; margin-right: 10px; }
+.btn-divination::after { content: '◈'; margin-left: 10px; }
+
+.btn-divination.love-btn {
+  background: linear-gradient(135deg, #6a1050, var(--pink), #6a1050);
+  color: #fff;
+}
+.btn-divination.love-btn:hover { box-shadow: 0 0 20px rgba(208,96,160,0.5); }
+
+/* 結果 */
+.result-area { display: none; margin-top: 30px; animation: fadeIn 0.8s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 本命星・月命星表示 */
+.stars-display {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 24px;
+}
+.star-card {
+  background: linear-gradient(180deg, rgba(30,24,24,0.95), rgba(15,12,12,0.95));
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px; padding: 20px 12px; text-align: center;
+}
+.star-card-label { font-size: 12px; color: var(--gold); letter-spacing: 0.2em; margin-bottom: 10px; }
+.star-number {
+  font-size: clamp(36px, 10vw, 56px); font-weight: 900;
+  color: var(--gold-light); line-height: 1;
+  font-family: 'Cinzel Decorative', serif;
+  text-shadow: 0 0 30px rgba(240,208,128,0.4);
+  margin-bottom: 6px;
+}
+.star-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.star-element {
+  font-size: 12px; padding: 3px 12px; border-radius: 20px;
+  display: inline-block; margin-top: 4px;
+}
+
+/* セクション共通 */
+.info-section {
+  background: linear-gradient(135deg, rgba(30,24,24,0.9), rgba(20,16,16,0.95));
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px; padding: 22px 20px; margin-bottom: 20px;
+}
+.info-section h3 {
+  font-size: 13px; color: var(--gold);
+  letter-spacing: 0.3em; text-align: center; margin-bottom: 16px;
+}
+.info-text { font-size: 15px; color: var(--text); line-height: 2.1; }
+
+/* 運勢 */
+.fortune-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; margin-bottom: 0;
+}
+.fortune-card {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 3px; padding: 14px;
+}
+.fortune-card-label { font-size: 11px; color: var(--gold); letter-spacing: 0.2em; margin-bottom: 8px; }
+.fortune-level {
+  font-size: 18px; font-weight: 700; margin-bottom: 8px;
+}
+.fortune-text { font-size: 13px; color: var(--text); line-height: 1.8; }
+.level-great { color: #f0d080; }
+.level-good  { color: #80d060; }
+.level-small { color: #70b0d0; }
+.level-bad   { color: #c06060; }
+
+/* 方位盤 */
+.houigaku-section {
+  background: linear-gradient(135deg, rgba(30,24,24,0.9), rgba(20,16,16,0.95));
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px; padding: 22px 20px; margin-bottom: 20px;
+}
+.houigaku-section h3 {
+  font-size: 13px; color: var(--gold);
+  letter-spacing: 0.3em; text-align: center; margin-bottom: 20px;
+}
+
+.compass {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 6px; max-width: 360px; margin: 0 auto 16px;
+}
+.compass-cell {
+  padding: 10px 6px; text-align: center; border-radius: 3px;
+  border: 1px solid rgba(201,168,76,0.15);
+  background: rgba(0,0,0,0.3);
+}
+.compass-cell.center {
+  background: rgba(201,168,76,0.1);
+  border-color: rgba(201,168,76,0.3);
+}
+.compass-dir { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+.compass-kichi { font-size: 13px; font-weight: 700; }
+.compass-star { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+.kichi-great { color: #f0d080; background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3) !important; }
+.kichi-good  { color: #80d060; background: rgba(60,150,40,0.1); }
+.kichi-bad   { color: #c06060; background: rgba(180,60,40,0.1); }
+.kichi-five  { color: #ff6040; background: rgba(200,60,30,0.15); border-color: rgba(200,60,30,0.4) !important; }
+
+.houigo-note {
+  font-size: 13px; color: var(--text-dim);
+  text-align: center; line-height: 1.9; margin-top: 10px;
+}
+
+/* アロマ */
+.aroma-section {
+  background: linear-gradient(135deg, rgba(74,32,96,0.3), rgba(30,24,24,0.95));
+  border: 1px solid var(--purple-light);
+  border-radius: 4px; padding: 22px 20px; margin-bottom: 20px;
+  position: relative;
+}
+.aroma-section::before {
+  content: '🌿'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--black2); padding: 0 8px; font-size: 18px;
+}
+.aroma-section h3 { font-size: 13px; color: var(--silver); letter-spacing: 0.3em; text-align: center; margin-bottom: 16px; }
+.aroma-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.aroma-card {
+  background: rgba(74,32,96,0.2); border: 1px solid rgba(122,64,160,0.4);
+  border-radius: 4px; padding: 14px; text-align: center;
+}
+.aroma-oil-name { font-size: 16px; font-weight: 700; color: var(--silver); margin-bottom: 4px; }
+.aroma-oil-en { font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 8px; }
+.aroma-reason { font-size: 13px; color: var(--text); line-height: 1.7; }
+.aroma-note { font-size: 13px; color: var(--text-dim); text-align: center; margin-top: 12px; line-height: 1.9; }
+
+/* ===== 相性セクション ===== */
+.ai-result {
+  display: none; margin-top: 30px; animation: fadeIn 0.8s ease;
+}
+
+.ai-header {
+  text-align: center; margin-bottom: 28px;
+  background: linear-gradient(135deg, rgba(74,20,60,0.6), rgba(40,10,50,0.8));
+  border: 1px solid var(--pink);
+  border-radius: 4px; padding: 36px 20px 28px;
+  position: relative;
+}
+.ai-header::before {
+  content: '✦ 相 性 鑑 定 ✦';
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  background: var(--black2); color: var(--pink);
+  padding: 2px 16px; font-size: 12px; letter-spacing: 0.3em;
+  white-space: nowrap; border: 1px solid var(--pink);
+  border-radius: 20px;
+}
+.ai-names {
+  font-size: clamp(16px, 4vw, 22px); font-weight: 700;
+  color: var(--pink-light); margin-bottom: 16px;
+}
+.ai-names span { color: var(--gold-light); }
+
+.ai-score-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ai-score-label { font-size: 12px; color: var(--pink-light); letter-spacing: 0.2em; }
+.ai-score {
+  font-size: clamp(56px, 16vw, 88px); font-weight: 900;
+  font-family: 'Cinzel Decorative', serif;
+  line-height: 1;
+  text-shadow: 0 0 40px rgba(208,96,160,0.6);
+}
+.ai-score-unit { font-size: 20px; color: var(--pink-light); }
+.ai-grade { font-size: 18px; font-weight: 700; margin-top: 8px; letter-spacing: 0.2em; }
+
+.ai-stars-compare {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: 12px; align-items: center; margin-bottom: 24px;
+}
+.ai-star-box {
+  background: linear-gradient(135deg, rgba(50,10,50,0.8), rgba(20,8,30,0.9));
+  border: 1px solid var(--purple-light);
+  border-radius: 4px; padding: 16px 10px; text-align: center;
+}
+.ai-star-box-label { font-size: 11px; color: var(--pink-light); margin-bottom: 8px; }
+.ai-star-box-name { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+.ai-star-box-num {
+  font-size: clamp(28px, 8vw, 40px); font-weight: 900;
+  color: var(--pink-light); font-family: 'Cinzel Decorative', serif;
+  text-shadow: 0 0 20px rgba(208,96,160,0.4);
+}
+.ai-star-box-star { font-size: 13px; color: var(--silver); margin-top: 4px; }
+.ai-vs {
+  font-size: 20px; color: var(--gold); font-weight: 900;
+  text-align: center;
+}
+
+.ai-section {
+  background: linear-gradient(135deg, rgba(50,10,50,0.5), rgba(20,8,30,0.8));
+  border: 1px solid var(--purple-light);
+  border-radius: 4px; padding: 22px 20px; margin-bottom: 20px;
+}
+.ai-section h3 {
+  font-size: 13px; color: var(--pink-light);
+  letter-spacing: 0.3em; text-align: center; margin-bottom: 16px;
+}
+.ai-text { font-size: 15px; color: var(--text); line-height: 2.1; }
+
+/* ツインレイ誘導 */
+.twinray-cta {
+  background: linear-gradient(135deg, rgba(74,20,60,0.7), rgba(20,8,40,0.95));
+  border: 2px solid var(--pink);
+  border-radius: 4px; padding: 30px 20px; margin-bottom: 20px;
+  text-align: center; position: relative;
+  box-shadow: 0 0 30px rgba(208,96,160,0.2);
+}
+.twinray-cta::before {
+  content: '💫';
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--black2); padding: 0 10px; font-size: 20px;
+}
+.twinray-title {
+  font-size: 15px; font-weight: 700;
+  color: var(--pink-light); letter-spacing: 0.2em;
+  margin-bottom: 14px;
+}
+.twinray-text { font-size: 15px; color: var(--text); line-height: 2.1; margin-bottom: 16px; }
+.twinray-name {
+  font-size: 16px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 0.15em; margin-bottom: 18px;
+}
+.btn-twinray {
+  display: inline-block; padding: 16px 44px;
+  background: linear-gradient(135deg, #6a1050, var(--pink), #6a1050);
+  color: #fff; font-family: 'Noto Serif JP', serif;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.2em;
+  text-decoration: none; border-radius: 2px; transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(208,96,160,0.4);
+}
+.btn-twinray:hover { box-shadow: 0 0 40px rgba(208,96,160,0.7); transform: translateY(-2px); }
+
+/* タロット誘導（メイン用） */
+.tarot-cta {
+  background: linear-gradient(135deg, rgba(74,32,96,0.5), rgba(30,24,24,0.95));
+  border: 1px solid var(--purple-light);
+  border-radius: 4px; padding: 24px 20px; margin-bottom: 20px;
+  text-align: center; position: relative;
+}
+.tarot-cta::before {
+  content: '✦'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--black2); color: var(--gold); padding: 0 10px; font-size: 16px;
+}
+.tarot-cta-text { font-size: 15px; color: var(--text); line-height: 2; }
+.tarot-cta-name { font-size: 15px; font-weight: 700; color: var(--gold-light); margin-top: 10px; letter-spacing: 0.1em; }
+.btn-reserve {
+  display: inline-block; margin-top: 18px; padding: 14px 40px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  color: var(--black); font-family: 'Noto Serif JP', serif;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.2em;
+  text-decoration: none; border-radius: 2px; transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+.btn-reserve:hover { box-shadow: 0 0 30px rgba(201,168,76,0.6); transform: translateY(-2px); }
+
+.disclaimer {
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 4px; padding: 16px; margin-bottom: 20px;
+  font-size: 13px; color: var(--text-dim); line-height: 2; text-align: center;
+}
+
+.footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(201,168,76,0.2); }
+.footer-text { font-size: 12px; color: var(--text-dim); letter-spacing: 0.2em; }
+
+@media (max-width: 480px) {
+  .stars-display { grid-template-columns: 1fr; }
+  .fortune-grid { grid-template-columns: 1fr; }
+  .aroma-cards { grid-template-columns: 1fr; }
+  .ai-stars-compare { grid-template-columns: 1fr; }
+  .ai-vs { display: none; }
+  .cols-3 { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="title-jp">九星気学</div>
+    <div class="title-main">KYUSEI KIGAKU</div>
+    <div class="subtitle">九つの星が照らす、あなたの運命の道</div>
+  </div>
+
+  <div class="divider"><div class="divider-diamond"></div></div>
+
+  <!-- タブ -->
+  <div class="tab-wrap">
+    <button class="tab-btn active" onclick="switchTab('main', this)">運勢・方位鑑定</button>
+    <button class="tab-btn love-tab" onclick="switchTab('love', this)">💕 相性・ツインレイ鑑定</button>
+  </div>
+
+  <div id="form-main" class="form-card">
+    <div class="tab-content active" id="tab-main">
+      <div class="form-section-title">▶ 生年月日を入力してください ◀</div>
+      <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label>生年（西暦）</label>
+          <input type="number" id="m-year" placeholder="例: 1990" min="1900" max="2099">
+        </div>
+        <div class="form-group">
+          <label>月</label>
+          <select id="m-month">
+            <option value="">月</option>
+            <option value="1">1月</option><option value="2">2月</option>
+            <option value="3">3月</option><option value="4">4月</option>
+            <option value="5">5月</option><option value="6">6月</option>
+            <option value="7">7月</option><option value="8">8月</option>
+            <option value="9">9月</option><option value="10">10月</option>
+            <option value="11">11月</option><option value="12">12月</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>日</label>
+          <input type="number" id="m-day" placeholder="日" min="1" max="31">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>お名前（任意）</label>
+        <input type="text" id="m-name" placeholder="例: 山田 太郎">
+      </div>
+      <button class="btn-divination" onclick="calcMain()">鑑　定　開　始</button>
+    </div>
+  </div>
+
+  <div id="form-love" class="form-card love-card" style="display:none;">
+    <div class="tab-content active" id="tab-love">
+      <div class="form-section-title love">💕 お二人の生年月日を入力してください 💕</div>
+      <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+
+      <div class="person-block">
+        <div class="person-label">✦ おひとり目</div>
+        <div class="form-row cols-3">
+          <div class="form-group">
+            <label>生年（西暦）</label>
+            <input type="number" id="a-year" placeholder="例: 1990" min="1900" max="2099">
+          </div>
+          <div class="form-group">
+            <label>月</label>
+            <select id="a-month">
+              <option value="">月</option>
+              <option value="1">1月</option><option value="2">2月</option>
+              <option value="3">3月</option><option value="4">4月</option>
+              <option value="5">5月</option><option value="6">6月</option>
+              <option value="7">7月</option><option value="8">8月</option>
+              <option value="9">9月</option><option value="10">10月</option>
+              <option value="11">11月</option><option value="12">12月</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>日</label>
+            <input type="number" id="a-day" placeholder="日" min="1" max="31">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>お名前（任意）</label>
+          <input type="text" id="a-name" placeholder="例: 山田 花子">
+        </div>
+      </div>
+
+      <div class="person-block person2">
+        <div class="person-label p2">💕 おふたり目</div>
+        <div class="form-row cols-3">
+          <div class="form-group">
+            <label>生年（西暦）</label>
+            <input type="number" id="b-year" placeholder="例: 1992" min="1900" max="2099">
+          </div>
+          <div class="form-group">
+            <label>月</label>
+            <select id="b-month">
+              <option value="">月</option>
+              <option value="1">1月</option><option value="2">2月</option>
+              <option value="3">3月</option><option value="4">4月</option>
+              <option value="5">5月</option><option value="6">6月</option>
+              <option value="7">7月</option><option value="8">8月</option>
+              <option value="9">9月</option><option value="10">10月</option>
+              <option value="11">11月</option><option value="12">12月</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>日</label>
+            <input type="number" id="b-day" placeholder="日" min="1" max="31">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>お名前（任意）</label>
+          <input type="text" id="b-name" placeholder="例: 鈴木 太郎">
+        </div>
+      </div>
+
+      <button class="btn-divination love-btn" onclick="calcLove()">💕 相 性 鑑 定 開 始 💕</button>
+    </div>
+  </div>
+
+  <!-- 運勢・方位 結果 -->
+  <div class="result-area" id="result-main">
+    <div class="divider"><div class="divider-diamond"></div></div>
+
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:13px;color:var(--gold);letter-spacing:0.3em;margin-bottom:8px;">◈ あなたの星 ◈</div>
+      <div style="font-size:clamp(16px,4vw,22px);color:var(--text-dim);" id="rm-name"></div>
+    </div>
+
+    <div class="stars-display" id="rm-stars"></div>
+
+    <div class="info-section">
+      <h3>◈ 本命星の特徴 ◈</h3>
+      <div class="info-text" id="rm-honmei-text"></div>
+    </div>
+
+    <div class="info-section">
+      <h3>◈ 今年の運勢（<span id="rm-this-year"></span>年）◈</h3>
+      <div class="fortune-grid" id="rm-fortune-year"></div>
+    </div>
+
+    <div class="info-section">
+      <h3>◈ 今月の運勢（<span id="rm-this-month"></span>月）◈</h3>
+      <div class="fortune-grid" id="rm-fortune-month"></div>
+    </div>
+
+    <div class="houigaku-section">
+      <h3>◈ 今年の吉方位・凶方位 ◈</h3>
+      <div class="compass" id="rm-compass"></div>
+      <div class="houigo-note" id="rm-houigo-note"></div>
+    </div>
+
+    <div class="aroma-section">
+      <h3>◈ あなたに合うdōTERRAオイル ◈</h3>
+      <div class="aroma-cards" id="rm-aroma"></div>
+      <div class="aroma-note" id="rm-aroma-note"></div>
+    </div>
+
+    <div class="tarot-cta">
+      <div class="tarot-cta-text">
+        この運勢をさらに深く読み解きたい方へ。<br>
+        伶受のサイキックタロット・霊視鑑定では、<br>
+        あなたの今と未来をより具体的にお伝えします。
+      </div>
+      <div class="tarot-cta-name">◈ 伶受　サイキックタロット鑑定 ◈</div>
+      <a href="https://form.run/@latir" target="_blank" class="btn-reserve">ご予約はこちら</a>
+    </div>
+
+    <div class="disclaimer">
+      ※ 本ツールは簡易版としてお使いください。<br>
+      ※ 節分（2月3日）前生まれの方は前年の星で計算されます。<br>
+      ※ 鑑定結果はあくまで参考値です。個人の行動・選択を保証するものではありません。<br>
+      ※ 入力された情報はサーバーに送信・保存されません。
+    </div>
+  </div>
+
+  <!-- 相性 結果 -->
+  <div class="ai-result" id="result-love">
+    <div class="divider"><div class="divider-heart">♥</div></div>
+
+    <div class="ai-header">
+      <div class="ai-names" id="al-names"></div>
+      <div class="ai-score-wrap">
+        <div class="ai-score-label">相性スコア</div>
+        <div>
+          <span class="ai-score" id="al-score"></span>
+          <span class="ai-score-unit">点</span>
+        </div>
+        <div class="ai-grade" id="al-grade"></div>
+      </div>
+    </div>
+
+    <div class="ai-stars-compare" id="al-stars-compare"></div>
+
+    <div class="ai-section">
+      <h3>💕 ふたりの相性 ◈</h3>
+      <div class="ai-text" id="al-ai-text"></div>
+    </div>
+
+    <div class="ai-section">
+      <h3>💕 恋愛・パートナーシップ ◈</h3>
+      <div class="ai-text" id="al-love-text"></div>
+    </div>
+
+    <div class="ai-section">
+      <h3>💕 ふたりへのメッセージ ◈</h3>
+      <div class="ai-text" id="al-message"></div>
+    </div>
+
+    <!-- ツインレイ誘導 -->
+    <div class="twinray-cta">
+      <div class="twinray-title">✦ ツインレイ・ソウルメイト鑑定 ✦</div>
+      <div class="twinray-text">
+        あなたのパートナーは本当に運命の相手なのか。<br>
+        ツインレイ？ソウルメイト？カルマメイト？<br>
+        数字だけではわからない、ふたりの魂の繋がりを<br>
+        伶受がサイキックタロット・霊視で深く読み解きます。
+      </div>
+      <div class="twinray-name">◈ 伶受　ツインレイ・ソウルメイト鑑定 ◈</div>
+      <a href="https://form.run/@latir" target="_blank" class="btn-twinray">💕 ご予約はこちら 💕</a>
+    </div>
+
+    <div class="disclaimer" style="border-color:rgba(208,96,160,0.2);">
+      ※ 本ツールは簡易版としてお使いください。<br>
+      ※ 相性スコアは九星の関係性をもとにした参考値です。<br>
+      ※ 入力された情報はサーバーに送信・保存されません。
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">© 伶受監修｜Salon Latir</div>
+  </div>
+</div>
+
+<script>
+// ===== タブ切替 =====
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('form-main').style.display = tab === 'main' ? 'block' : 'none';
+  document.getElementById('form-love').style.display = tab === 'love' ? 'block' : 'none';
+  document.getElementById('result-main').style.display = 'none';
+  document.getElementById('result-love').style.display = 'none';
+}
+
+// ===== 九星データ =====
+const KYUSEI = {
+  1: {
+    name: '一白水星', element: '水', color: '#60a0ff',
+    element_class: 'element-water',
+    symbol: '1',
+    text: '知性と柔軟性を持つ、流れる水のような星です。深い洞察力と適応力があり、どんな状況でも自然に流れに乗る力を持っています。コミュニケーション能力が高く、人の心を読む才能があります。',
+    aroma: ['サンダルウッド', 'ジュニパーベリー'],
+    aroma_en: ['Sandalwood', 'Juniper Berry'],
+    aroma_reason: ['一白水星の深い知性と直感力を高め、流れを読む力をサポートします。', '水の気を浄化し、一白の透明な感受性をさらに磨きます。']
+  },
+  2: {
+    name: '二黒土星', element: '土', color: '#d4a840',
+    symbol: '2',
+    text: '大地のような包容力と忍耐力を持つ星です。勤勉で誠実、縁の下の力持ちとして周囲を支える力があります。母性的な愛情と粘り強さが最大の武器です。',
+    aroma: ['フランキンセンス', 'セダーウッド'],
+    aroma_en: ['Frankincense', 'Cedarwood'],
+    aroma_reason: ['二黒土星の大地のエネルギーを安定させ、グラウンディングを深めます。', '包容力と安定感をさらに強化し、二黒の本来の力を引き出します。']
+  },
+  3: {
+    name: '三碧木星', element: '木', color: '#80d060',
+    symbol: '3',
+    text: '若々しいエネルギーと行動力にあふれた星です。春の芽吹きのように新しいことへの挑戦を好み、積極的に道を切り開きます。発展・成長・革新の力があります。',
+    aroma: ['ティーツリー', 'ペパーミント'],
+    aroma_en: ['Tea Tree', 'Peppermint'],
+    aroma_reason: ['三碧木星の旺盛なエネルギーを整え、行動力と集中力を高めます。', '新鮮なエネルギーで三碧の躍動感と前進力をサポートします。']
+  },
+  4: {
+    name: '四緑木星', element: '木', color: '#60c060',
+    symbol: '4',
+    text: '風のような自由と信頼の星です。人との縁を大切にし、コミュニケーションで道を開きます。柔軟で社交的、広い人脈と縁を活かして発展していく力があります。',
+    aroma: ['ベルガモット', 'バジル'],
+    aroma_en: ['Bergamot', 'Basil'],
+    aroma_reason: ['四緑木星の縁と交流のエネルギーを高め、豊かな人間関係をサポートします。', '集中力と決断力を与え、四緑の風のような軽やかな行動力を後押しします。']
+  },
+  5: {
+    name: '五黄土星', element: '土', color: '#e0a020',
+    symbol: '5',
+    text: '九星の中心に位置する、最も力強い星です。強烈なカリスマ性と破壊・再生の力を持ちます。大きな変革をもたらす力がある一方、波乱も多い運命を持つ特別な星です。',
+    aroma: ['フランキンセンス', 'バランス（ブレンド）'],
+    aroma_en: ['Frankincense', 'Balance Blend'],
+    aroma_reason: ['五黄土星の強大なエネルギーをバランスよく整え、本来の力を最大限に発揮させます。', '中心の星としての安定と調和をサポートし、五黄のパワーを善に導きます。']
+  },
+  6: {
+    name: '六白金星', element: '金', color: '#d0d0a0',
+    symbol: '6',
+    text: '天のような高い理想と品格を持つ星です。リーダーシップと責任感が強く、組織を率いる力があります。完璧主義で誇り高く、高い目標に向かって努力し続けます。',
+    aroma: ['ベルガモット', 'ラベンダー'],
+    aroma_en: ['Bergamot', 'Lavender'],
+    aroma_reason: ['六白金星の高い精神性と品格をさらに磨き、リーダーシップを発揮する力をサポートします。', '完璧主義の六白の緊張を和らげ、心のバランスを整えます。']
+  },
+  7: {
+    name: '七赤金星', element: '金', color: '#ffb060',
+    symbol: '7',
+    text: '喜びと豊かさの星です。社交的で魅力的、人を楽しませる才能があります。弁舌が立ち、ビジネスセンスも抜群。恋愛運も強く、多くの出会いと縁に恵まれます。',
+    aroma: ['ワイルドオレンジ', 'シナモン'],
+    aroma_en: ['Wild Orange', 'Cinnamon'],
+    aroma_reason: ['七赤金星の喜びと豊かさのエネルギーをさらに輝かせます。', '情熱と活力を高め、七赤の魅力と運勢をサポートします。']
+  },
+  8: {
+    name: '八白土星', element: '土', color: '#c8a060',
+    symbol: '8',
+    text: '変革と蓄積の星です。山のような強固な意志と粘り強さを持ちます。変化の時期に強く、蓄えた力を一気に開花させる力があります。不動産・蓄財にも縁があります。',
+    aroma: ['セダーウッド', 'ベチバー'],
+    aroma_en: ['Cedarwood', 'Vetiver'],
+    aroma_reason: ['八白土星の山のような堅固な意志をサポートし、変革の力を後押しします。', '大地に根ざした安定感で、八白の蓄積と飛躍の基盤を築きます。']
+  },
+  9: {
+    name: '九紫火星', element: '火', color: '#ff8060',
+    symbol: '9',
+    text: '太陽のような輝きと知性を持つ星です。直感力が鋭く、美的センスと表現力に優れています。人目を引く華やかさがあり、名誉・名声・芸術の分野で才能を発揮します。',
+    aroma: ['ワイルドオレンジ', 'フランキンセンス'],
+    aroma_en: ['Wild Orange', 'Frankincense'],
+    aroma_reason: ['九紫火星の太陽のような輝きをさらに高め、直感力と表現力をサポートします。', '高い精神性と華やかさを統合し、九紫の才能を最大限に引き出します。']
+  }
+};
+
+// ===== 本命星計算 =====
+// 節分(2月3日)以前は前年扱い
+function getHonmei(year, month, day) {
+  let y = year;
+  if (month < 2 || (month === 2 && day <= 3)) y = year - 1;
+  // 本命星 = (11 - (y % 9)) % 9 → 0の場合は9
+  let n = (11 - (y % 9)) % 9;
+  if (n === 0) n = 9;
+  return n;
+}
+
+// ===== 月命星計算 =====
+// 節入り後の月命星（簡易版：節入り日は月初めとして扱う）
+function getTsukimei(year, month, day, honmei) {
+  // 月命星は本命星と月によって決まる
+  // 節入り前は前月扱い（簡易：5日以前は前月とする）
+  let m = month;
+  if (day <= 5) m = month - 1;
+  if (m <= 0) m = 12;
+
+  // 月命星テーブル（本命星1〜9 × 月1〜12）
+  // 各本命星の寅月（2月節後）の月命星を基準に計算
+  const base = [8, 5, 2, 8, 5, 2, 8, 5, 2]; // 本命星1〜9の寅月の月命星
+  const monthOffset = [1,2,3,4,5,6,7,8,9,10,11,0]; // 寅月=2月を基準
+  const offset = (m - 2 + 12) % 12;
+  let tsuki = base[honmei - 1] - offset;
+  while (tsuki <= 0) tsuki += 9;
+  return tsuki;
+}
+
+// ===== 年盤・月盤（今年・今月の中宮星）=====
+function getNenban(year) {
+  let n = (11 - (year % 9)) % 9;
+  if (n === 0) n = 9;
+  return n;
+}
+
+function getGetsban(year, month) {
+  // 月盤の中宮：年によって1月の中宮が決まり、月ごとに変化
+  const yearBase = [8, 5, 2, 8, 5, 2, 8, 5, 2];
+  const nenban = getNenban(year);
+  const base = yearBase[nenban - 1];
+  // 寅月(2月)基準で逆行
+  const offset = (month - 2 + 12) % 12;
+  let g = base - offset;
+  while (g <= 0) g += 9;
+  return g;
+}
+
+// ===== 運勢判定（本命星と年盤・月盤の関係）=====
+// 九星の相生・相剋関係
+const GOGYOU = { 水:1, 土:2, 木:3, 火:4, 金:5 };
+const ELEMENT_MAP = { 1:'水', 2:'土', 3:'木', 4:'木', 5:'土', 6:'金', 7:'金', 8:'土', 9:'火' };
+
+// 年回り（定位置からの宮位）
+const TEII = [5, 1, 8, 3, 4, 9, 2, 7, 6]; // 1〜9の定位置
+
+function getFortuneLevel(honmei, chukyu) {
+  // 同会（同じ宮）
+  if (honmei === chukyu) return { level: '大吉', color: 'level-great', text: '同会の年。あなたの星が中心に輝く特別な時期です。' };
+
+  const he = ELEMENT_MAP[honmei];
+  const ce = ELEMENT_MAP[chukyu];
+
+  // 五行相生相剋
+  const SEI = { 水:'木', 木:'火', 火:'土', 土:'金', 金:'水' }; // 相生（生じる方向）
+  const KOKU = { 水:'火', 木:'土', 火:'金', 土:'水', 金:'木' }; // 相剋
+
+  if (SEI[ce] === he) return { level: '大吉', color: 'level-great', text: '運気が大きく後押しされる年。積極的に新しいことに挑戦してください。' };
+  if (SEI[he] === ce) return { level: '吉', color: 'level-good', text: '安定した運気の流れ。着実に前進できる時期です。' };
+  if (KOKU[ce] === he) return { level: '要注意', color: 'level-bad', text: '試練の時期。慎重に行動し、内なる力を蓄える時期です。' };
+  if (KOKU[he] === ce) return { level: '小吉', color: 'level-small', text: '穏やかな運気。焦らず丁寧に取り組むことが大切。' };
+  return { level: '平', color: 'level-small', text: '特別な変化は少なく、日常を丁寧に積み重ねる時期です。' };
+}
+
+// ===== 方位盤 =====
+// 年盤の九宮配置（中宮が何かによって配置が決まる）
+// 定位置：坎(1)北、坤(2)南西、震(3)東、巽(4)南東、中(5)中、乾(6)北西、兌(7)西、艮(8)北東、離(9)南
+const POSITION_LABEL = ['北東','北','北西','東','中','西','南東','南','南西'];
+const POSITION_DIR   = ['NE','N','NW','E','C','W','SE','S','SW'];
+
+// 各中宮に対する九宮配置（グリッド順：左上から右下、中央=5番目）
+// 中宮=1の場合の配置
+const HAICHI_BASE = [4,9,2, 3,5,7, 8,1,6]; // 洛書（中宮5の定位置）
+
+function getHaichi(chukyu) {
+  // 中宮がchukyuのときの各宮の星
+  const offset = 5 - chukyu;
+  return HAICHI_BASE.map(n => {
+    let v = n + offset;
+    while (v <= 0) v += 9;
+    while (v > 9) v -= 9;
+    return v;
+  });
+}
+
+// 方位の吉凶判定（本命星と各宮の星の関係）
+function getHouiKichi(honmei, star) {
+  if (star === 5) return { label: '五黄殺', cls: 'kichi-five' };
+  if (star === honmei) return { label: '本命殺', cls: 'kichi-bad' };
+  // 本命星の反対方向（定位置の対角）
+  const he = ELEMENT_MAP[honmei];
+  const se = ELEMENT_MAP[star];
+  const SEI = { 水:'木', 木:'火', 火:'土', 土:'金', 金:'水' };
+  const KOKU = { 水:'火', 木:'土', 火:'金', 土:'水', 金:'木' };
+  if (SEI[se] === he) return { label: '大吉方', cls: 'kichi-great' };
+  if (SEI[he] === se) return { label: '吉方', cls: 'kichi-good' };
+  if (KOKU[se] === he) return { label: '凶方', cls: 'kichi-bad' };
+  return { label: '平方', cls: '' };
+}
+
+const DIR_LABEL_GRID = ['南西','南','南東','西','中','東','北西','北','北東'];
+const DIR_NAME_GRID  = ['南西','南','南東','西','—','東','北西','北','北東'];
+
+// ===== 相性データ =====
+const AI_DATA = {
+  '1-1': { score:70, text:'同じ水の気を持つふたり。深い共感と理解があります。似た感性が心地よい一方、互いの気持ちを言葉にしないまま流れてしまうことも。積極的なコミュニケーションが関係を深めます。', love:'知的な会話と精神的な繋がりが愛の土台。お互いの自由を尊重しながら深い絆を育めます。', message:'水は水を映す。ふたりの感性は鏡のように響き合います。深いところで繋がり合えるふたりです。' },
+  '1-2': { score:55, text:'水と土は相剋の関係。土は水を濁らせ、水は土を侵食します。意見の食い違いが起きやすいですが、それが互いを成長させる刺激にもなります。', love:'価値観の違いを乗り越えることで、より深い絆が生まれます。忍耐と理解が愛を育てます。', message:'違いこそが成長の源。互いの個性を認め合うことで、唯一無二のパートナーシップが生まれます。' },
+  '1-3': { score:85, text:'水は木を育てる相生の関係。一白の知性と柔軟性が三碧の行動力を豊かにします。自然な支え合いが生まれ、互いの長所を引き出す理想的な組み合わせです。', love:'深い信頼と自然な流れの恋愛。一白がそっと支え、三碧が明るく引っ張る絶妙なバランス。', message:'水が木を育てるように、ふたりは自然に互いを伸ばし合います。共に成長できる素敵な縁です。' },
+  '1-4': { score:82, text:'水が木を育てる相生。穏やかで自然な調和があります。一白の洞察力と四緑のコミュニケーション力が合わさり、豊かな関係性が築けます。', love:'風と水のように軽やかで自由な恋愛。お互いの空間を尊重しながら深く繋がれます。', message:'縁と流れを信じるふたり。自然に引き合う力があります。' },
+  '1-5': { score:45, text:'水と五黄土星は強い緊張関係。五黄の強大なエネルギーが一白の繊細さに圧力をかけることがあります。互いの強みを認め合う器の大きさが必要です。', love:'強烈な引力と摩擦が共存します。本物の愛かどうか、心の声に正直に向き合って。', message:'強い縁には試練が伴います。乗り越えた先に本物の絆があります。' },
+  '1-6': { score:60, text:'金は水を生む相生の逆方向。六白が一白を生む関係で安定感があります。六白のリーダーシップを一白が柔軟に受け入れることで良い関係が築けます。', love:'六白がリードし、一白が深く支える関係。頼り頼られる自然な流れがあります。', message:'天と水のように、高いところから流れ込む豊かな縁です。' },
+  '1-7': { score:65, text:'金は水を生む相生。七赤の明るさと一白の深さが補い合います。表面の違いの奥に深い共鳴があるふたりです。', love:'華やかな七赤と繊細な一白が引き合う、魅力的な組み合わせ。互いに足りないものを補い合えます。', message:'光と水のように、明るさと深さが調和するふたりです。' },
+  '1-8': { score:50, text:'水と土の相剋。八白の変革の力と一白の柔軟性が時にぶつかります。互いの持ち味を活かすことができれば、強力なパートナーシップが生まれます。', love:'安定を求める八白と自由を愛する一白。価値観の違いを越えた深い縁があります。', message:'山と水のように、違いがあるからこそ美しい景色が生まれます。' },
+  '1-9': { score:55, text:'水と火の相剋。一白と九紫は正反対の性質を持ちますが、引力も強いです。違いを超えた深い縁を持つ組み合わせで、魂レベルの繋がりを感じる場合も。', love:'水と火は消し合うようで、実は深く惹かれ合います。強烈な縁が秘められています。', message:'正反対だからこそ、完全になれるふたり。魂の学びがある深い縁です。' },
+  '2-3': { score:50, text:'木が土を剋す関係。三碧の行動力が二黒の安定を乱すことがあります。三碧がペースを合わせ、二黒が変化を受け入れることで関係が深まります。', love:'動と静、対照的なふたり。互いのペースを尊重することが愛を育てます。', message:'芽吹く力と育む力。違いを越えて補い合えるふたりです。' },
+  '2-4': { score:48, text:'木は土を剋します。意見や価値観がぶつかりやすい組み合わせですが、その摩擦が互いを成長させます。', love:'すれ違いもある関係ですが、それを乗り越えた時に本物の絆が生まれます。', message:'試練を乗り越えたふたりの絆は、誰にも壊せない強さを持ちます。' },
+  '2-5': { score:72, text:'同じ土の気を持つふたり。安定と信頼が自然に育まれます。互いの価値観が合いやすく、長期的な関係を築きやすい組み合わせです。', love:'ゆっくりと着実に深まる愛。派手さはなくても、確かな絆が育ちます。', message:'大地同士のふたり。揺るがない信頼と安心感が愛の土台になります。' },
+  '2-6': { score:80, text:'土は金を生む相生。二黒の包容力が六白の能力を引き出します。自然に役割分担ができ、互いを高め合える関係です。', love:'献身的な二黒と誠実な六白。お互いを深く尊重し合える理想的なパートナーシップ。', message:'大地が金を生むように、ふたりの愛は確かな価値を生み出します。' },
+  '2-7': { score:78, text:'土は金を生む相生。二黒の安定が七赤の魅力をさらに輝かせます。二黒がどっしりと支え、七赤が明るく彩る素敵な関係です。', love:'温かい安定と楽しい刺激のバランスが取れた関係。長く続く幸せな縁があります。', message:'豊かな土壌で宝石が輝くように、ふたりの縁は価値ある愛を育みます。' },
+  '2-8': { score:75, text:'同じ土の仲間。堅実で安定した関係が築けます。互いの真剣さと誠実さが共鳴し、信頼関係を深めます。', love:'地道で誠実な愛。言葉より行動で愛を示すふたりの関係は深く安定しています。', message:'山と大地のように、揺るぎない基盤の上に愛が育ちます。' },
+  '2-9': { score:65, text:'火は土を生む相生。九紫の情熱が二黒を活気づけます。九紫の輝きを二黒が温かく受け止める、バランスのよい関係です。', love:'輝きと温もりが合わさった関係。九紫がリードし二黒が支える自然な流れがあります。', message:'炎が大地を温めるように、ふたりの愛は互いを豊かにします。' },
+  '3-4': { score:88, text:'同じ木の気を持つ最高の相性。同じ方向を向いて共に成長できるふたりです。お互いの個性を認め合い、共に大きく伸びていける素晴らしい組み合わせ。', love:'同じ夢を共有できるふたり。一緒にいるだけで元気になれる、活力ある恋愛。', message:'ふたつの木が互いに支え合いながら、天高く伸びていく。最高の縁のふたりです。' },
+  '3-5': { score:40, text:'五黄の強大なエネルギーが三碧の勢いと正面衝突することがあります。強い引力と強い摩擦が共存する、ダイナミックな組み合わせです。', love:'激しい感情の動きがあります。本物の愛かを見極める眼が大切です。', message:'強い縁には必ず意味があります。学びの多い深い縁です。' },
+  '3-6': { score:55, text:'金は木を剋します。六白の価値観が三碧の自由な動きを制限することがあります。互いの個性を尊重することが大切です。', love:'違いを認め合えれば、互いの欠点を補い合える関係になれます。', message:'磨き合う縁。ぶつかり合いの先に、輝くふたりの姿があります。' },
+  '3-7': { score:52, text:'金と木の相剋。七赤の明るさと三碧の直進力がぶつかることもありますが、互いに認め合えれば刺激的な関係になります。', love:'ぶつかり合いながらも惹かれ合う、情熱的な縁です。', message:'違いがあるからこそ輝く。磨き合うふたりの縁です。' },
+  '3-8': { score:48, text:'木と土の相剋に加え、変革の八白との組み合わせ。大きな変化の中でふたりの関係が試されます。', love:'試練を共に乗り越えることで、深い絆が生まれます。', message:'変化の中で育つ愛は強い。共に乗り越えたふたりの絆は本物です。' },
+  '3-9': { score:85, text:'木は火を生む相生。三碧のエネルギーが九紫の才能を燃え立たせます。互いを高め合い、共に輝ける素晴らしい関係です。', love:'情熱と行動力が共鳴する、生き生きとした恋愛。共に輝き合えます。', message:'木が火を燃やすように、ふたりは互いの可能性を引き出し合います。' },
+  '4-5': { score:42, text:'五黄の力が四緑の縁の力に強い影響を与えます。大きな変化がふたりの関係を試す場面があるかもしれません。', love:'強い縁の中にある試練。乗り越えることで本物の愛に気づきます。', message:'嵐の後に虹が出るように、試練の先に美しい縁があります。' },
+  '4-6': { score:58, text:'金は木を剋します。六白の強さが四緑を圧迫することがあります。六白がうまくリードすることで、安定した関係が生まれます。', love:'力強い六白と柔軟な四緑。うまく噛み合えばとても良い組み合わせです。', message:'強い風と大きな木。互いの力を活かせば、大きな実を結びます。' },
+  '4-7': { score:60, text:'金と木の相剋ですが、四緑の柔軟性と七赤の社交性で乗り越えられます。楽しく明るい関係が自然に生まれます。', love:'社交的なふたりが共鳴する、楽しく賑やかな恋愛。', message:'風と金属が奏でるハーモニー。賑やかで楽しい縁です。' },
+  '4-8': { score:50, text:'木と土の相剋。価値観の違いがぶつかることがありますが、安定した八白が四緑をしっかり支えることもできます。', love:'違いを超えた深い縁があります。お互いを尊重することが大切。', message:'変化と安定のバランスを学ぶ、成長の縁です。' },
+  '4-9': { score:83, text:'木は火を生む相生。四緑の豊かな縁が九紫の輝きをさらに引き立てます。自然な流れの中で互いを高め合える関係です。', love:'縁と輝きが交わるふたり。自然に惹かれ合い、豊かな愛が育ちます。', message:'風が炎を大きくするように、ふたりは互いの輝きを引き出し合います。' },
+  '5-6': { score:62, text:'土は金を生む相生ですが、五黄の強大なパワーと六白の強いプライドがぶつかることもあります。互いの力を認め合うことが大切です。', love:'両者とも強い個性の持ち主。真剣に向き合えれば深い絆が生まれます。', message:'強者同士の縁。認め合った時、最強のパートナーシップが生まれます。' },
+  '5-7': { score:60, text:'土は金を生む相生。五黄のパワーが七赤の魅力を引き立てることがあります。強い縁が秘められています。', love:'強い引力があります。本物かどうかを見極める力が大切。', message:'大きな縁が秘められたふたりです。' },
+  '5-8': { score:68, text:'同じ土の仲間。五黄と八白は同じ変革の力を持つ、強力な組み合わせです。', love:'変革と安定が混在する関係。共に大きな変化を乗り越えられます。', message:'強い土の縁。共に世界を変えられるパワーがあります。' },
+  '5-9': { score:50, text:'火は土を生む相生ですが、五黄の特別なエネルギーが九紫の輝きと激しくぶつかることも。', love:'激しい感情の動きがある関係。情熱的な縁です。', message:'炎と嵐が出会うような、ダイナミックな縁のふたりです。' },
+  '6-7': { score:80, text:'同じ金の仲間。高い理想と品格を共有するふたりです。互いの才能を認め合い、上品で洗練された関係が築けます。', love:'品格と喜びが共鳴する恋愛。ハイセンスで豊かな愛が育ちます。', message:'金と金が共鳴するように、ふたりの魅力は互いを輝かせます。' },
+  '6-8': { score:72, text:'土は金を生む相生。八白の誠実さが六白の理想を支えます。お互いを深く尊重し合える、信頼ある関係です。', love:'誠実さと理想の高さが共鳴するふたり。深い信頼関係が愛の土台です。', message:'山が金を育てるように、ふたりの愛は時間をかけて豊かになります。' },
+  '6-9': { score:58, text:'火は金を剋します。九紫の情熱が六白の誇りを傷つけることがあります。九紫が六白を立てながら関係を育てることが大切です。', love:'熱情と誇りがぶつかる関係。互いを尊重することで深い愛になります。', message:'炎と金属。ぶつかり合いながら形を成すふたりの愛です。' },
+  '7-8': { score:75, text:'土は金を生む相生。八白の堅実さが七赤の魅力を支えます。楽しさと誠実さのバランスが取れた良い関係です。', love:'楽しさと安定が調和した幸せな恋愛。長く続く縁があります。', message:'大地の上で宝石が輝くように、ふたりの愛は豊かに輝きます。' },
+  '7-9': { score:55, text:'火は金を剋します。九紫の情熱が七赤の楽しい雰囲気を変えてしまうことがあります。', love:'情熱と楽しさが混在する恋愛。変化を楽しめれば素敵な関係に。', message:'炎と輝き。刺激的で楽しい縁のふたりです。' },
+  '8-9': { score:65, text:'火は土を生む相生。九紫の輝きが八白の変革を後押しします。情熱的な九紫と堅実な八白が補い合える関係です。', love:'変革と輝きが合わさったドラマチックな恋愛。共に大きなことを成し遂げられます。', message:'炎が大地を温めるように、ふたりは互いを活性化させます。' },
+  '9-9': { score:75, text:'同じ九紫火星同士。輝きと直感が共鳴するふたりです。お互いの才能を認め合い、共に輝ける素晴らしい縁です。', love:'情熱と感性が共鳴する恋愛。共に輝き合える、華やかな関係。', message:'ふたつの太陽が互いを照らし合う。輝きと輝きが出会う特別な縁です。' }
+};
+
+function getAiData(s1, s2) {
+  const k1 = Math.min(s1, s2);
+  const k2 = Math.max(s1, s2);
+  const key = `${k1}-${k2}`;
+  return AI_DATA[key] || {
+    score: 60,
+    text: 'ふたりの九星の組み合わせは、互いの個性が影響し合う関係です。違いを認め合うことで、互いの長所が引き立ちます。',
+    love: '違いを超えた深い縁があります。',
+    message: 'あなたたちだけの特別な縁が秘められています。'
+  };
+}
+
+function getScoreColor(score) {
+  if (score >= 80) return { color: '#f0d080', grade: '✦ 最高の相性 ✦' };
+  if (score >= 70) return { color: '#a0d070', grade: '◈ 良縁 ◈' };
+  if (score >= 55) return { color: '#70b0d0', grade: '◇ 縁あり ◇' };
+  return { color: '#d07060', grade: '△ 試練の縁 △' };
+}
+
+// ===== メイン鑑定 =====
+function calcMain() {
+  const year  = parseInt(document.getElementById('m-year').value);
+  const month = parseInt(document.getElementById('m-month').value);
+  const day   = parseInt(document.getElementById('m-day').value);
+  const name  = document.getElementById('m-name').value || 'あなた';
+
+  if (!year || !month || !day) { alert('生年月日を入力してください'); return; }
+
+  const honmei  = getHonmei(year, month, day);
+  const tsukimei = getTsukimei(year, month, day, honmei);
+  const hd = KYUSEI[honmei];
+  const td = KYUSEI[tsukimei];
+
+  const now = new Date();
+  const thisYear  = now.getFullYear();
+  const thisMonth = now.getMonth() + 1;
+
+  const nenban   = getNenban(thisYear);
+  const getsban  = getGetsban(thisYear, thisMonth);
+
+  const yearFortune  = getFortuneLevel(honmei, nenban);
+  const monthFortune = getFortuneLevel(honmei, getsban);
+
+  document.getElementById('rm-name').textContent = `${name} 様`;
+  document.getElementById('rm-this-year').textContent = thisYear;
+  document.getElementById('rm-this-month').textContent = thisMonth;
+
+  // 本命星・月命星
+  document.getElementById('rm-stars').innerHTML = `
+    <div class="star-card">
+      <div class="star-card-label">本命星</div>
+      <div class="star-number" style="color:${hd.color}">${hd.symbol}</div>
+      <div class="star-name">${hd.name}</div>
+      <span class="star-element" style="color:${hd.color};border:1px solid ${hd.color}40;background:${hd.color}15">${hd.element}</span>
+    </div>
+    <div class="star-card">
+      <div class="star-card-label">月命星</div>
+      <div class="star-number" style="color:${td.color}">${td.symbol}</div>
+      <div class="star-name">${td.name}</div>
+      <span class="star-element" style="color:${td.color};border:1px solid ${td.color}40;background:${td.color}15">${td.element}</span>
+    </div>
+  `;
+
+  document.getElementById('rm-honmei-text').textContent = hd.text;
+
+  // 今年・今月の運勢
+  const yf = yearFortune;
+  const mf = monthFortune;
+  const yd = KYUSEI[nenban];
+  const md = KYUSEI[getsban];
+
+  document.getElementById('rm-fortune-year').innerHTML = `
+    <div class="fortune-card">
+      <div class="fortune-card-label">今年の運勢</div>
+      <div class="fortune-level ${yf.color}">${yf.level}</div>
+      <div class="fortune-text">${yf.text}</div>
+    </div>
+    <div class="fortune-card">
+      <div class="fortune-card-label">年盤中宮</div>
+      <div class="fortune-level" style="color:${yd.color}">${yd.symbol} ${yd.name}</div>
+      <div class="fortune-text">${thisYear}年は${yd.name}が中宮に入る年です。</div>
+    </div>
+  `;
+
+  document.getElementById('rm-fortune-month').innerHTML = `
+    <div class="fortune-card">
+      <div class="fortune-card-label">${thisMonth}月の運勢</div>
+      <div class="fortune-level ${mf.color}">${mf.level}</div>
+      <div class="fortune-text">${mf.text}</div>
+    </div>
+    <div class="fortune-card">
+      <div class="fortune-card-label">月盤中宮</div>
+      <div class="fortune-level" style="color:${md.color}">${md.symbol} ${md.name}</div>
+      <div class="fortune-text">${thisMonth}月は${md.name}が中宮に入る月です。</div>
+    </div>
+  `;
+
+  // 方位盤
+  const haichi = getHaichi(nenban);
+  const cells = haichi.map((star, i) => {
+    if (i === 4) {
+      return `<div class="compass-cell center">
+        <div class="compass-dir">中央</div>
+        <div class="compass-kichi" style="color:${KYUSEI[star].color}">${KYUSEI[star].name}</div>
+      </div>`;
+    }
+    const k = getHouiKichi(honmei, star);
+    return `<div class="compass-cell ${k.cls}">
+      <div class="compass-dir">${DIR_LABEL_GRID[i]}</div>
+      <div class="compass-kichi">${k.label}</div>
+      <div class="compass-star">${KYUSEI[star].name}</div>
+    </div>`;
+  });
+  document.getElementById('rm-compass').innerHTML = cells.join('');
+
+  // 吉方位まとめ
+  const kichi_dirs = [];
+  const kyo_dirs = [];
+  haichi.forEach((star, i) => {
+    if (i === 4) return;
+    const k = getHouiKichi(honmei, star);
+    if (k.cls === 'kichi-great') kichi_dirs.push(DIR_NAME_GRID[i]);
+    if (k.cls === 'kichi-bad' || k.cls === 'kichi-five') kyo_dirs.push(DIR_NAME_GRID[i]);
+  });
+  document.getElementById('rm-houigo-note').innerHTML =
+    `✦ 大吉方：<strong>${kichi_dirs.join('・') || 'なし'}</strong>　引越し・旅行・新しい挑戦に最適<br>` +
+    `✦ 要注意方位：<strong>${kyo_dirs.join('・') || 'なし'}</strong>　重要な移動は控えめに`;
+
+  // アロマ
+  document.getElementById('rm-aroma').innerHTML = `
+    <div class="aroma-card"><div class="aroma-oil-name">${hd.aroma[0]}</div><div class="aroma-oil-en">${hd.aroma_en[0]}</div><div class="aroma-reason">${hd.aroma_reason[0]}</div></div>
+    <div class="aroma-card"><div class="aroma-oil-name">${hd.aroma[1]}</div><div class="aroma-oil-en">${hd.aroma_en[1]}</div><div class="aroma-reason">${hd.aroma_reason[1]}</div></div>
+  `;
+  document.getElementById('rm-aroma-note').innerHTML =
+    `✦ ${hd.name}のあなたには <strong>${hd.aroma[0]}</strong> が特に合います<br>` +
+    `✦ サロンLatirでは本格アロマオイルを使った、あなただけのオリジナルブレンドスプレーや香水をお作りいただけます`;
+
+  const result = document.getElementById('result-main');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== 相性鑑定 =====
+function calcLove() {
+  const ay = parseInt(document.getElementById('a-year').value);
+  const am = parseInt(document.getElementById('a-month').value);
+  const ad = parseInt(document.getElementById('a-day').value);
+  const an = document.getElementById('a-name').value || 'おひとり目';
+  const by = parseInt(document.getElementById('b-year').value);
+  const bm = parseInt(document.getElementById('b-month').value);
+  const bd = parseInt(document.getElementById('b-day').value);
+  const bn = document.getElementById('b-name').value || 'おふたり目';
+
+  if (!ay || !am || !ad || !by || !bm || !bd) {
+    alert('お二人の生年月日を入力してください'); return;
+  }
+
+  const as = getHonmei(ay, am, ad);
+  const bs = getHonmei(by, bm, bd);
+  const ad_ = KYUSEI[as];
+  const bd_ = KYUSEI[bs];
+  const ai  = getAiData(as, bs);
+  const sc  = getScoreColor(ai.score);
+
+  document.getElementById('al-names').innerHTML = `<span>${an}</span> ✦ <span>${bn}</span>`;
+  document.getElementById('al-score').textContent = ai.score;
+  document.getElementById('al-score').style.color = sc.color;
+  document.getElementById('al-grade').textContent = sc.grade;
+  document.getElementById('al-grade').style.color = sc.color;
+
+  document.getElementById('al-stars-compare').innerHTML = `
+    <div class="ai-star-box">
+      <div class="ai-star-box-label">おひとり目</div>
+      <div class="ai-star-box-name">${an}</div>
+      <div class="ai-star-box-num" style="color:${ad_.color}">${as}</div>
+      <div class="ai-star-box-star">${ad_.name}</div>
+    </div>
+    <div class="ai-vs">VS</div>
+    <div class="ai-star-box">
+      <div class="ai-star-box-label">おふたり目</div>
+      <div class="ai-star-box-name">${bn}</div>
+      <div class="ai-star-box-num" style="color:${bd_.color}">${bs}</div>
+      <div class="ai-star-box-star">${bd_.name}</div>
+    </div>
+  `;
+
+  document.getElementById('al-ai-text').textContent = ai.text;
+  document.getElementById('al-love-text').textContent = ai.love;
+  document.getElementById('al-message').textContent = ai.message;
+
+  const result = document.getElementById('result-love');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
