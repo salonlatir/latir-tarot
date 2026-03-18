@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宿曜占星術｜伶受監修</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6a20;--silver:#a8b0c0;--purple:#4a2060;--pl:#7a40a0;--black:#0a0808;--black2:#120f0f;--text:#e8d8b0;--dim:#a09070;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Noto Serif JP',serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(74,32,96,.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(201,168,76,.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+.header{text-align:center;padding:30px 0 20px;}
+.title-jp{font-size:clamp(22px,6vw,38px);font-weight:900;color:var(--gold);letter-spacing:.3em;text-shadow:0 0 30px rgba(201,168,76,.4);}
+.title-en{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,3vw,16px);color:var(--gl);letter-spacing:.2em;margin:6px 0;}
+.subtitle{font-size:14px;color:var(--dim);letter-spacing:.15em;}
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gd),transparent);}
+.divider-diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 8px var(--gold);}
+.form-card{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-radius:4px;padding:28px 20px;position:relative;box-shadow:0 0 40px rgba(0,0,0,.6);}
+.form-card::before{content:'宿';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--black2);color:var(--gold);font-size:20px;padding:0 12px;border:1px solid var(--gd);}
+.form-section-title{font-size:13px;color:var(--gold);letter-spacing:.3em;margin-bottom:16px;text-align:center;}
+.privacy-note{font-size:12px;color:var(--dim);text-align:center;margin-bottom:18px;padding:8px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:3px;line-height:1.7;}
+.form-row{display:grid;gap:10px;margin-bottom:14px;}
+.cols-3{grid-template-columns:2fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group label{font-size:12px;color:var(--dim);letter-spacing:.15em;}
+.form-group input,.form-group select{background:rgba(10,8,8,.8);border:1px solid var(--gd);color:var(--text);padding:10px 12px;font-family:'Noto Serif JP',serif;font-size:15px;border-radius:2px;outline:none;transition:border-color .3s;width:100%;}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);box-shadow:0 0 8px rgba(201,168,76,.2);}
+.form-group select option{background:var(--black2);}
+.btn-divination{width:100%;padding:16px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));border:none;color:var(--black);font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;letter-spacing:.3em;cursor:pointer;border-radius:2px;transition:all .3s;margin-top:4px;}
+.btn-divination:hover{box-shadow:0 0 20px rgba(201,168,76,.5);transform:translateY(-1px);}
+.btn-divination::before{content:'◈';margin-right:10px;}
+.btn-divination::after{content:'◈';margin-left:10px;}
+.result-area{display:none;margin-top:30px;animation:fadeIn .8s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.result-header{text-align:center;margin-bottom:24px;}
+.result-label{font-size:13px;color:var(--gold);letter-spacing:.3em;margin-bottom:10px;}
+.shuku-big{font-size:clamp(36px,10vw,56px);font-weight:900;color:var(--gl);text-shadow:0 0 30px rgba(240,208,128,.5);margin-bottom:8px;}
+.shuku-en{font-size:16px;color:var(--dim);letter-spacing:.1em;margin-bottom:6px;}
+.shuku-planet{font-size:13px;color:var(--gold);letter-spacing:.2em;}
+.info-section{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-radius:4px;padding:22px 20px;margin-bottom:20px;}
+.info-section h3{font-size:13px;color:var(--gold);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.info-text{font-size:15px;color:var(--text);line-height:2.1;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.info-item{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:12px;}
+.info-item-label{font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:6px;}
+.info-item-value{font-size:14px;color:var(--text);line-height:1.7;}
+.aroma-section{background:linear-gradient(135deg,rgba(74,32,96,.3),rgba(30,24,24,.95));border:1px solid var(--pl);border-radius:4px;padding:22px 20px;margin-bottom:20px;position:relative;}
+.aroma-section::before{content:'🌿';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--black2);padding:0 8px;font-size:18px;}
+.aroma-section h3{font-size:13px;color:var(--silver);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.aroma-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.aroma-card{background:rgba(74,32,96,.2);border:1px solid rgba(122,64,160,.4);border-radius:4px;padding:14px;text-align:center;}
+.aroma-oil-name{font-size:16px;font-weight:700;color:var(--silver);margin-bottom:4px;}
+.aroma-oil-en{font-size:11px;color:var(--dim);letter-spacing:.1em;margin-bottom:8px;}
+.aroma-reason{font-size:13px;color:var(--text);line-height:1.7;}
+.aroma-note{font-size:13px;color:var(--dim);text-align:center;margin-top:12px;line-height:1.9;}
+.tarot-cta{background:linear-gradient(135deg,rgba(74,32,96,.5),rgba(30,24,24,.95));border:1px solid var(--pl);border-radius:4px;padding:24px 20px;margin-bottom:20px;text-align:center;position:relative;}
+.tarot-cta::before{content:'✦';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--black2);color:var(--gold);padding:0 10px;font-size:16px;}
+.tarot-cta-text{font-size:15px;color:var(--text);line-height:2;}
+.tarot-cta-name{font-size:15px;font-weight:700;color:var(--gl);margin-top:10px;letter-spacing:.1em;}
+.btn-reserve{display:inline-block;margin-top:18px;padding:14px 40px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));color:var(--black);font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;letter-spacing:.2em;text-decoration:none;border-radius:2px;transition:all .3s;box-shadow:0 0 20px rgba(201,168,76,.3);}
+.btn-reserve:hover{box-shadow:0 0 30px rgba(201,168,76,.6);transform:translateY(-2px);}
+.disclaimer{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.15);border-radius:4px;padding:16px;margin-bottom:20px;font-size:13px;color:var(--dim);line-height:2;text-align:center;}
+.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid rgba(201,168,76,.2);}
+.footer-text{font-size:12px;color:var(--dim);letter-spacing:.2em;}
+@media(max-width:480px){.cols-3{grid-template-columns:1fr 1fr;}.aroma-cards{grid-template-columns:1fr;}.info-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div class="title-jp">宿曜占星術</div>
+  <div class="title-en">SUKUYO ASTROLOGY</div>
+  <div class="subtitle">月の宿が示す、あなたの魂の本質</div>
+</div>
+<div class="divider"><div class="divider-diamond"></div></div>
+<div class="form-card">
+  <div class="form-section-title">▶ 生年月日を入力してください ◀</div>
+  <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+  <div class="form-row cols-3">
+    <div class="form-group"><label>生年（西暦）</label><input type="number" id="year" placeholder="例: 1990" min="1900" max="2099"></div>
+    <div class="form-group"><label>月</label><select id="month"><option value="">月</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div>
+    <div class="form-group"><label>日</label><input type="number" id="day" placeholder="日" min="1" max="31"></div>
+  </div>
+  <div class="form-group" style="margin-bottom:14px;"><label>お名前（任意）</label><input type="text" id="name" placeholder="例: 山田 太郎"></div>
+  <button class="btn-divination" onclick="calculate()">鑑　定　開　始</button>
+</div>
+
+<div class="result-area" id="result">
+  <div class="divider"><div class="divider-diamond"></div></div>
+  <div class="result-header">
+    <div class="result-label">◈ あなたの宿 ◈</div>
+    <div id="r-name" style="font-size:16px;color:var(--dim);margin-bottom:16px;"></div>
+    <div class="shuku-big" id="r-shuku"></div>
+    <div class="shuku-en" id="r-shuku-en"></div>
+    <div class="shuku-planet" id="r-planet"></div>
+  </div>
+
+  <div class="info-section">
+    <h3>◈ 宿の基本情報 ◈</h3>
+    <div class="info-grid" id="r-info"></div>
+  </div>
+  <div class="info-section">
+    <h3>◈ 性格・才能 ◈</h3>
+    <div class="info-text" id="r-personality"></div>
+  </div>
+  <div class="info-section">
+    <h3>◈ 恋愛・人間関係 ◈</h3>
+    <div class="info-text" id="r-love"></div>
+  </div>
+  <div class="info-section">
+    <h3>◈ 仕事・使命 ◈</h3>
+    <div class="info-text" id="r-work"></div>
+  </div>
+  <div class="aroma-section">
+    <h3>◈ あなたに合うdōTERRAオイル ◈</h3>
+    <div class="aroma-cards" id="r-aroma"></div>
+    <div class="aroma-note" id="r-aroma-note"></div>
+  </div>
+  <div class="tarot-cta">
+    <div class="tarot-cta-text">あなたの宿が示す運命をさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、<br>あなたの今と未来をより具体的にお伝えします。</div>
+    <div class="tarot-cta-name">◈ 伶受　サイキックタロット・霊視鑑定 ◈</div>
+    <a href="https://form.run/@latir" target="_blank" class="btn-reserve">ご予約はこちら</a>
+  </div>
+  <div class="disclaimer">
+    ※ 本ツールは簡易版としてお使いください。<br>
+    ※ 宿の計算は旧暦換算を使用した近似値です。節入り前後で誤差が生じる場合があります。<br>
+    ※ 入力された情報はサーバーに送信・保存されません。
+  </div>
+</div>
+<div class="footer"><div class="footer-text">© 伶受監修｜Salon Latir</div></div>
+</div>
+
+<script>
+// 27宿データ
+const SHUKU = [
+  {
+    name:'昴宿', en:'Krittika', planet:'太陽', element:'火',
+    kanji:'ぼうしゅく',
+    personality:'輝かしいカリスマ性と強い意志を持ちます。太陽のように周囲を照らし、自然とリーダーとなる力があります。正義感が強く、曲がったことが嫌いな真っ直ぐな性格です。',
+    love:'情熱的で一途な恋愛をします。相手に誠実で、深く愛する力があります。プライドが高いため素直になれない場面もありますが、愛する人への献身は本物です。',
+    work:'リーダーや経営者として活躍します。目標を定めると必ずやり遂げる実行力があります。芸術・エンターテインメント・政治など、表舞台で輝ける仕事が向いています。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'昴宿の太陽のような輝きをさらに高め、リーダーシップと精神力をサポートします。'},{name:'ワイルドオレンジ',en:'Wild Orange',reason:'昴宿の情熱と明るいエネルギーを解放し、本来の輝きを引き出します。'}]
+  },
+  {
+    name:'畢宿', en:'Rohini', planet:'月', element:'水',
+    kanji:'ひつしゅく',
+    personality:'豊かな感受性と美的センスを持ちます。月のように周囲を包み込む優しさがあり、人の気持ちを敏感に察知します。芸術的才能と直感力に優れています。',
+    love:'深い愛情と包容力で相手を包み込みます。感情豊かで、パートナーの気持ちに寄り添える恋愛をします。時に依存しすぎる面もありますが、誠実な愛情の持ち主です。',
+    work:'芸術・美容・カウンセリング・保育など、人の心に寄り添う仕事で才能を発揮します。感受性を活かした創造的な分野でも輝けます。',
+    aroma:[{name:'ラベンダー',en:'Lavender',reason:'畢宿の繊細な感受性を穏やかに整え、心のバランスを保ちます。'},{name:'ゼラニウム',en:'Geranium',reason:'豊かな愛情エネルギーを高め、畢宿の包容力をさらに深めます。'}]
+  },
+  {
+    name:'觜宿', en:'Mrigashira', planet:'火星', element:'火',
+    kanji:'ししゅく',
+    personality:'好奇心旺盛で行動力があります。新しいことへの探求心が強く、多才な才能を持ちます。素直で純粋な心の持ち主で、周囲に活気をもたらします。',
+    love:'純粋で情熱的な恋愛をします。好きになったら積極的に行動します。飽きやすい面もあるため、常に新鮮な関係を保つことが大切です。',
+    work:'探偵・研究者・記者・クリエイターなど、探求と発見を活かせる仕事に向いています。次々と新しいプロジェクトに挑戦することで才能が開花します。',
+    aroma:[{name:'ペパーミント',en:'Peppermint',reason:'觜宿の旺盛な好奇心と行動力をさらに高め、前進するエネルギーをサポートします。'},{name:'バジル',en:'Basil',reason:'集中力と決断力を与え、觜宿の多才な才能を一点に集めます。'}]
+  },
+  {
+    name:'参宿', en:'Ardra', planet:'ラーフ', element:'風',
+    kanji:'しんしゅく',
+    personality:'強烈な個性と変革の力を持ちます。既存の枠を壊し、新しい世界を切り開く革命家的な資質があります。深い洞察力と変化への適応力が強みです。',
+    love:'情熱的で激しい恋愛をします。相手に強く惹きつけられると一途に愛します。関係において変化を好むため、停滞を感じると新しい刺激を求める傾向があります。',
+    work:'IT・革命的なビジネス・研究・スピリチュアルなど、既存の枠を超える分野で才能を発揮します。改革と変革をもたらす使命を持っています。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'参宿の変革エネルギーを浄化し、破壊から創造へのプロセスをサポートします。'},{name:'セダーウッド',en:'Cedarwood',reason:'激しいエネルギーをグラウンディングさせ、参宿の力を安定させます。'}]
+  },
+  {
+    name:'井宿', en:'Punarvasu', planet:'木星', element:'水',
+    kanji:'せいしゅく',
+    personality:'楽観的で寛大な心を持ちます。木星の恵みを受け、幸運を引き寄せる力があります。知恵と哲学的思考が得意で、多くの人に希望を与える存在です。',
+    love:'大らかで包容力のある恋愛をします。相手の欠点も受け入れ、長期的な関係を大切にします。精神的な繋がりを重視するタイプです。',
+    work:'教育・哲学・宗教・法律・出版など、知識と知恵を伝える仕事に向いています。海外との縁も深く、スケールの大きな活動で才能を発揮します。',
+    aroma:[{name:'ベルガモット',en:'Bergamot',reason:'井宿の楽観的なエネルギーを高め、豊かさと幸運を引き寄せます。'},{name:'フランキンセンス',en:'Frankincense',reason:'哲学的思考と精神性を深め、井宿の高い理想をサポートします。'}]
+  },
+  {
+    name:'鬼宿', en:'Pushya', planet:'土星', element:'水',
+    kanji:'きしゅく',
+    personality:'忍耐力と責任感が強く、着実に物事を積み上げる力があります。土星の影響で試練が多いですが、それを乗り越えることで大きな成功を掴みます。',
+    love:'真剣で誠実な恋愛をします。軽い交際より深く安定した関係を好みます。時間をかけて信頼関係を築いていくタイプです。',
+    work:'管理職・経営・不動産・伝統的な職業など、長期的な視点で物事を進める仕事に向いています。地道な努力で大きな成功を手にします。',
+    aroma:[{name:'セダーウッド',en:'Cedarwood',reason:'鬼宿の忍耐力と安定感をさらに強化し、着実な歩みをサポートします。'},{name:'フランキンセンス',en:'Frankincense',reason:'試練の中で精神力を保ち、鬼宿の本来の強さを引き出します。'}]
+  },
+  {
+    name:'柳宿', en:'Ashlesha', planet:'水星', element:'水',
+    kanji:'りゅうしゅく',
+    personality:'直感力と洞察力に優れた神秘的な宿です。物事の本質を見抜く力があり、変幻自在に状況に適応できます。霊的な感受性も高いです。',
+    love:'神秘的な魅力で相手を引きつけます。深い部分で繋がれる相手を求め、表面的な付き合いに満足できません。ソウルメイト的な縁を求めます。',
+    work:'占い・ヒーリング・心理学・医療・IT・金融など、複雑な問題を解く仕事で才能を発揮します。見えない部分を扱う職業に向いています。',
+    aroma:[{name:'サンダルウッド',en:'Sandalwood',reason:'柳宿の直感力と霊的感受性を高め、内なる知恵を引き出します。'},{name:'ジュニパーベリー',en:'Juniper Berry',reason:'神秘的なエネルギーを浄化し、柳宿の洞察力をさらに磨きます。'}]
+  },
+  {
+    name:'星宿', en:'Magha', planet:'ケートゥ', element:'火',
+    kanji:'せいしゅく',
+    personality:'先祖からの強いエネルギーと伝統を守る力を持ちます。威厳があり、自然と人々から尊敬を集めます。過去と未来を繋ぐ使命を持っています。',
+    love:'誇り高く、相手にも高い基準を求めます。一度心を許した相手には深く誠実に愛します。家庭を大切にするタイプです。',
+    work:'伝統産業・政治・神社仏閣・家業継承など、伝統と権威に関わる仕事に向いています。リーダーとして組織を守る役割で輝きます。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'星宿の先祖とのつながりを深め、伝統のエネルギーをサポートします。'},{name:'パチュリ',en:'Patchouli',reason:'大地に根ざした安定感を与え、星宿の威厳と安定をサポートします。'}]
+  },
+  {
+    name:'張宿', en:'Purva Phalguni', planet:'金星', element:'火',
+    kanji:'ちょうしゅく',
+    personality:'魅力と社交性に溢れ、人を喜ばせる天性の才能を持ちます。金星の恵みで美的センスが高く、豊かさと楽しみを引き寄せる力があります。',
+    love:'ロマンチックで愛情表現が豊かです。パートナーを大切に喜ばせることに喜びを感じます。美しい恋愛を好む理想主義的な一面も。',
+    work:'芸能・美容・ファッション・デザイン・ホスピタリティーなど、美と喜びを提供する仕事に向いています。人を楽しませることで才能が輝きます。',
+    aroma:[{name:'ワイルドオレンジ',en:'Wild Orange',reason:'張宿の明るい魅力と豊かさのエネルギーをさらに輝かせます。'},{name:'ゼラニウム',en:'Geranium',reason:'愛と美のエネルギーを高め、張宿の社交性と魅力をサポートします。'}]
+  },
+  {
+    name:'翼宿', en:'Uttara Phalguni', planet:'太陽', element:'火',
+    kanji:'よくしゅく',
+    personality:'誠実さと正義感を持つ、頼もしいリーダーです。約束を必ず守り、周囲からの信頼が厚いです。人の役に立つことに喜びを感じます。',
+    love:'誠実で一途な恋愛をします。パートナーには深い責任感を持って接し、長期的な関係を大切にします。浮気とは無縁のタイプです。',
+    work:'医療・教育・福祉・公務員など、人の役に立つ仕事に向いています。組織の中で信頼される存在として縁の下の力持ちになります。',
+    aroma:[{name:'ラベンダー',en:'Lavender',reason:'翼宿の誠実さと責任感を穏やかに保ち、心のバランスを整えます。'},{name:'フランキンセンス',en:'Frankincense',reason:'高い精神性と誠実さをサポートし、翼宿の使命感を深めます。'}]
+  },
+  {
+    name:'軫宿', en:'Hasta', planet:'月', element:'水',
+    kanji:'しんしゅく',
+    personality:'器用さと実用的な知恵を持ちます。手先が器用で、何でも形にする力があります。細部への注意力と分析力に優れています。',
+    love:'丁寧で思いやりのある恋愛をします。小さな気遣いで相手を喜ばせる才能があります。安定した日常の幸せを大切にするタイプです。',
+    work:'職人・デザイン・医療・分析・会計など、細かな作業と精度が求められる仕事に向いています。手を使うすべての職業で才能を発揮します。',
+    aroma:[{name:'ベルガモット',en:'Bergamot',reason:'軫宿の器用さと実用的なエネルギーを整え、創造力を高めます。'},{name:'ティーツリー',en:'Tea Tree',reason:'分析力と細部への集中力をサポートし、軫宿の才能を引き出します。'}]
+  },
+  {
+    name:'角宿', en:'Chitra', planet:'火星', element:'火',
+    kanji:'かくしゅく',
+    personality:'美的センスと創造力が非常に高い宿です。独自のビジョンで美しいものを創り出す才能があります。個性的で人とは違う道を歩む力があります。',
+    love:'美しい恋愛を理想とします。外見と内面両方に魅力を求め、センスの合う相手と深い絆を結びます。ロマンチックな雰囲気を大切にします。',
+    work:'建築・デザイン・アート・ファッション・宝飾など、美を創造する仕事で真価を発揮します。独自のスタイルが高く評価されます。',
+    aroma:[{name:'ワイルドオレンジ',en:'Wild Orange',reason:'角宿の創造的なエネルギーを解放し、美的センスをさらに輝かせます。'},{name:'ベルガモット',en:'Bergamot',reason:'洗練された美のエネルギーを高め、角宿の芸術的才能をサポートします。'}]
+  },
+  {
+    name:'亢宿', en:'Swati', planet:'ラーフ', element:'風',
+    kanji:'こうしゅく',
+    personality:'自由と独立を愛する風のような宿です。柔軟性が高く、どんな環境にも適応できます。外交力と交渉力に優れ、多くの人と良好な関係を築けます。',
+    love:'自由を尊重し合える恋愛を好みます。束縛を嫌い、パートナーにも自立を求めます。風のように爽やかな恋愛スタイルが魅力です。',
+    work:'貿易・外交・通訳・フリーランス・旅行業など、自由と移動を活かせる仕事に向いています。国際的な舞台での活躍が期待できます。',
+    aroma:[{name:'ペパーミント',en:'Peppermint',reason:'亢宿の自由なエネルギーをさらに高め、風のような軽やかさをサポートします。'},{name:'ラベンダー',en:'Lavender',reason:'自由奔放なエネルギーを穏やかに整え、亢宿の柔軟性をバランスします。'}]
+  },
+  {
+    name:'氐宿', en:'Vishakha', planet:'木星', element:'火',
+    kanji:'ていしゅく',
+    personality:'目標に向かって一直線に進む、強い意志と情熱を持ちます。競争心が強く、勝負事に強いです。正義感が強く、不公平を許せない性格です。',
+    love:'一度決めたら一途に愛し続けます。嫉妬心が強い面もありますが、それは愛情の深さの表れです。相手に誠実で真剣な恋愛をします。',
+    work:'スポーツ・法律・競争のあるビジネス・政治など、勝負と競争の中で才能を発揮します。目標達成への強いモチベーションが武器です。',
+    aroma:[{name:'ワイルドオレンジ',en:'Wild Orange',reason:'氐宿の情熱と競争心に明るいエネルギーを加え、目標達成をサポートします。'},{name:'ジンジャー',en:'Ginger',reason:'強い意志と行動力を高め、氐宿の勝負強さをさらに引き出します。'}]
+  },
+  {
+    name:'房宿', en:'Anuradha', planet:'土星', element:'水',
+    kanji:'ぼうしゅく',
+    personality:'深い友情と献身の心を持ちます。一度結んだ縁を大切にし、困難な時こそ力を発揮します。精神的な強さと探求心が特徴です。',
+    love:'深く誠実な愛情を育みます。時間をかけて信頼を築くタイプで、一度愛した相手には長く真摯に向き合います。友情から発展する恋愛も多いです。',
+    work:'研究・医療・カウンセリング・社会福祉など、深く人と関わる仕事に向いています。チームの中で信頼の要となる存在です。',
+    aroma:[{name:'サンダルウッド',en:'Sandalwood',reason:'房宿の深い精神性と友情のエネルギーをさらに深めます。'},{name:'フランキンセンス',en:'Frankincense',reason:'献身の心と精神的強さをサポートし、房宿の使命感を高めます。'}]
+  },
+  {
+    name:'心宿', en:'Jyeshtha', planet:'水星', element:'水',
+    kanji:'しんしゅく',
+    personality:'強いリーダーシップと保護者の本能を持ちます。責任感が強く、弱い立場の人を守ろうとします。表面は威厳がありますが、内面は温かい人情家です。',
+    love:'頼りがいのある存在として相手を守る恋愛をします。独占欲が強い面もありますが、それは深い愛情の表れです。家族を大切にします。',
+    work:'管理職・警察・軍・医療・福祉など、人を守り導く仕事に向いています。組織の中で自然とリーダーの位置に立ちます。',
+    aroma:[{name:'セダーウッド',en:'Cedarwood',reason:'心宿の保護者としての力強さを安定させ、リーダーシップをサポートします。'},{name:'ベチバー',en:'Vetiver',reason:'大地に根ざした安定感で、心宿の責任感と強さの基盤を築きます。'}]
+  },
+  {
+    name:'尾宿', en:'Mula', planet:'ケートゥ', element:'火',
+    kanji:'びしゅく',
+    personality:'根本に迫る探求心と破壊・再生の力を持ちます。表面的なものに満足せず、本質を追い求めます。変革と変容の力が強く、自らも何度も生まれ変わります。',
+    love:'深く燃えるような恋愛をします。相手の本質に惹かれ、魂レベルで繋がれる相手を求めます。激しい感情の起伏もありますが、愛の深さは本物です。',
+    work:'医学研究・考古学・心理学・スピリチュアル・変革的なビジネスなど、根本から変えていく仕事に向いています。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'尾宿の破壊と再生のエネルギーを浄化し、変容のプロセスをサポートします。'},{name:'サンダルウッド',en:'Sandalwood',reason:'深い探求心と精神性を高め、尾宿の本質を追い求める力をサポートします。'}]
+  },
+  {
+    name:'箕宿', en:'Purva Ashadha', planet:'金星', element:'水',
+    kanji:'きしゅく',
+    personality:'不屈の精神と勝利へのエネルギーを持ちます。困難に負けず、どんな状況でも前進し続けます。説得力と情熱的な表現力が強みです。',
+    love:'情熱的で一途な恋愛をします。相手への愛情を言葉や行動でしっかり表現します。一度決めたら諦めない粘り強さがあります。',
+    work:'スポーツ・法律・音楽・演劇・セールスなど、情熱と表現力を活かせる仕事に向いています。持ち前の説得力でどんな相手も動かします。',
+    aroma:[{name:'ジンジャー',en:'Ginger',reason:'箕宿の不屈のエネルギーと情熱をさらに高め、前進する力をサポートします。'},{name:'ワイルドオレンジ',en:'Wild Orange',reason:'明るい勝利のエネルギーで、箕宿の前向きな力を引き出します。'}]
+  },
+  {
+    name:'斗宿', en:'Uttara Ashadha', planet:'太陽', element:'火',
+    kanji:'としゅく',
+    personality:'誠実さと普遍的な原則への devotion を持ちます。正直で真面目、一度決めた道を最後まで歩み抜く強さがあります。時代を超えた価値観の持ち主です。',
+    love:'真面目で誠実な恋愛をします。遊びの恋愛には興味がなく、生涯のパートナーを求めます。ゆっくりと時間をかけて深い絆を育みます。',
+    work:'法律・学術・外交・行政など、普遍的な原則に基づく仕事に向いています。長期的な視点で社会に貢献する使命を持ちます。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'斗宿の誠実さと普遍的な精神性をさらに深め、高い理想をサポートします。'},{name:'ラベンダー',en:'Lavender',reason:'真面目すぎる斗宿の緊張を和らげ、心のバランスを整えます。'}]
+  },
+  {
+    name:'牛宿', en:'Shravana', planet:'月', element:'水',
+    kanji:'ぎゅうしゅく',
+    personality:'聴く力と学ぶ力に優れた宿です。知識を吸収し、それを人に伝える天性の才能があります。温かい心と深い共感力を持ちます。',
+    love:'相手の話をよく聞き、理解しようとする姿勢が魅力です。精神的な繋がりを重視し、対話を通じて深まる恋愛を好みます。',
+    work:'教育・メディア・コンサルティング・音楽・通訳など、知識と情報を扱う仕事に向いています。学ぶことと教えることを生業にできます。',
+    aroma:[{name:'サンダルウッド',en:'Sandalwood',reason:'牛宿の聴く力と学ぶ力を深め、知恵の吸収をサポートします。'},{name:'ラベンダー',en:'Lavender',reason:'温かい共感力を穏やかに保ち、牛宿の心の豊かさを育みます。'}]
+  },
+  {
+    name:'女宿', en:'Dhanishtha', planet:'火星', element:'水',
+    kanji:'じょしゅく',
+    personality:'音楽と豊かさの宿です。リズム感と調和の感覚が優れ、チームをまとめる力があります。富を引き寄せる強いエネルギーを持ちます。',
+    love:'社交的で多くの人から好かれます。恋愛においても周囲との調和を大切にします。楽しい時間を共有できるパートナーを求めます。',
+    work:'音楽・エンターテインメント・ビジネス・不動産・金融など、豊かさと調和を生み出す仕事に向いています。チームをまとめるコーディネーター的役割でも輝きます。',
+    aroma:[{name:'ワイルドオレンジ',en:'Wild Orange',reason:'女宿の豊かさと喜びのエネルギーをさらに引き出します。'},{name:'シナモン',en:'Cinnamon',reason:'富を引き寄せるエネルギーを高め、女宿の繁栄をサポートします。'}]
+  },
+  {
+    name:'虚宿', en:'Shatabhisha', planet:'ラーフ', element:'風',
+    kanji:'きょしゅく',
+    personality:'独立心が強く、独自の哲学を持つ宿です。神秘的な知識と癒しの力を持ちます。孤独を恐れず、自分のペースで深い探求を続けます。',
+    love:'独立した関係を好みます。精神的な自由を大切にしながら、深い部分で繋がれる相手を求めます。スピリチュアルな縁を感じる相手と深く結ばれます。',
+    work:'医療・薬学・スピリチュアル・IT・占星術など、神秘と科学の境界領域での仕事に向いています。独自の研究で先駆者となる可能性を持ちます。',
+    aroma:[{name:'ジュニパーベリー',en:'Juniper Berry',reason:'虚宿の独自の探求心と神秘的なエネルギーをサポートします。'},{name:'フランキンセンス',en:'Frankincense',reason:'スピリチュアルな探求と独自の哲学をさらに深めます。'}]
+  },
+  {
+    name:'危宿', en:'Purva Bhadrapada', planet:'木星', element:'風',
+    kanji:'きしゅく',
+    personality:'深い洞察力と変革の意志を持ちます。表面上は穏やかに見えますが、内面に強い情熱を秘めています。精神的な探求者であり、変革者です。',
+    love:'深く激しい感情を内に秘めた恋愛をします。相手の本質を見抜く洞察力で、真の相手を見つけます。一度愛した相手には深く真摯に向き合います。',
+    work:'哲学・心理学・スピリチュアル・社会改革など、深い思考と変革を必要とする分野で才能を発揮します。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'危宿の深い洞察力と変革の意志をサポートし、精神的探求を深めます。'},{name:'サンダルウッド',en:'Sandalwood',reason:'内なる情熱を穏やかに整え、危宿の本質的な力を引き出します。'}]
+  },
+  {
+    name:'室宿', en:'Uttara Bhadrapada', planet:'土星', element:'水',
+    kanji:'しつしゅく',
+    personality:'深い知恵と精神的な成熟を持ちます。長老のような落ち着きと包容力があり、多くの人の心の支えになります。過去と未来を見通す力があります。',
+    love:'深く成熟した愛情で相手を包みます。年齢を超えた縁や、魂レベルの深い絆を持つ相手と結ばれることが多いです。',
+    work:'医療・カウンセリング・宗教・哲学・占いなど、深い知恵と精神性を活かす仕事に向いています。人生の後半に真の使命が花開きます。',
+    aroma:[{name:'サンダルウッド',en:'Sandalwood',reason:'室宿の深い精神的成熟と知恵をさらに深め、高い洞察力をサポートします。'},{name:'ベチバー',en:'Vetiver',reason:'長老のような安定感と大地のエネルギーで、室宿の包容力を高めます。'}]
+  },
+  {
+    name:'壁宿', en:'Revati', planet:'水星', element:'水',
+    kanji:'へきしゅく',
+    personality:'慈悲深く優しい魂の持ち主です。27宿の最後に位置し、すべてを包み込む普遍的な愛を体現します。直感力と霊的な感受性が高いです。',
+    love:'無条件の愛と深い慈悲心を持つ恋愛をします。相手のすべてを受け入れ、魂レベルで繋がれる相手との絆を大切にします。ツインレイとの縁を持つ可能性が高い宿です。',
+    work:'ヒーリング・カウンセリング・芸術・宗教・慈善活動など、人類への愛と奉仕に関わる仕事で使命を発揮します。',
+    aroma:[{name:'ローズ',en:'Rose',reason:'壁宿の無条件の愛と慈悲のエネルギーをさらに高め、魂の使命をサポートします。'},{name:'フランキンセンス',en:'Frankincense',reason:'高い霊的感受性と直感力を深め、壁宿の普遍的な愛の実践を助けます。'}]
+  },
+  {
+    name:'奎宿', en:'Ashwini', planet:'ケートゥ', element:'火',
+    kanji:'けいしゅく',
+    personality:'スピードと治癒の力を持つ、27宿の最初の宿です。行動力が非常に高く、誰よりも早く動き出します。新しいことを始める天性の才能があります。',
+    love:'積極的で情熱的な恋愛をします。好きになったら一直線に行動します。自由と新鮮さを大切にし、常に輝き続けられる関係を求めます。',
+    work:'医療・スポーツ・冒険家・起業家・緊急対応など、素早い判断と行動が求められる仕事に向いています。先駆者として新しい道を切り開きます。',
+    aroma:[{name:'ペパーミント',en:'Peppermint',reason:'奎宿の素早いエネルギーと行動力をさらに高め、前進する力をサポートします。'},{name:'ワイルドオレンジ',en:'Wild Orange',reason:'新しいスタートの明るいエネルギーで、奎宿の先駆者精神を輝かせます。'}]
+  },
+  {
+    name:'婁宿', en:'Bharani', planet:'金星', element:'火',
+    kanji:'ろうしゅく',
+    personality:'創造と変容の力を持ちます。生と死、始まりと終わりを司り、深い魂の転換をもたらします。強い意志と豊かな感情が共存します。',
+    love:'情熱的で深い愛情を持ちます。愛する人のためなら何でもする献身的な一面があります。深い感情の絆を持つ相手と魂レベルで結ばれます。',
+    work:'医療・芸術・音楽・スピリチュアル・助産師など、生命の誕生と変容に関わる仕事に向いています。創造的な分野でも高い才能を発揮します。',
+    aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'婁宿の創造と変容のエネルギーを浄化し、深い魂の転換をサポートします。'},{name:'ゼラニウム',en:'Geranium',reason:'豊かな感情と愛のエネルギーを高め、婁宿の深い絆を育みます。'}]
+  }
+];
+
+// 旧暦変換（簡易版）とジュリアン日数を使って宿を計算
+function getJD(y, m, d) {
+  if (m <= 2) { y--; m += 12; }
+  const A = Math.floor(y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+}
+
+function getShuku(year, month, day) {
+  const jd = getJD(year, month, day);
+  // 基準日: 2000年1月1日のJD = 2451545.0
+  // この日の月の黄経から宿を計算（近似）
+  // 月の黄経周期 ≈ 27.32166日 (恒星月)
+  const base_jd = 2451545.0;
+  const diff = jd - base_jd;
+  // 月の宿インデックス（27で割った余り）
+  const shuku_cycle = 27.32166;
+  // 基準日の宿インデックス（2000/1/1 = 牛宿(19)付近）
+  const base_shuku = 19;
+  const shuku_idx = ((Math.floor(diff / shuku_cycle * 27) + base_shuku) % 27 + 27) % 27;
+  return shuku_idx;
+}
+
+function calculate() {
+  const year = parseInt(document.getElementById('year').value);
+  const month = parseInt(document.getElementById('month').value);
+  const day = parseInt(document.getElementById('day').value);
+  const name = document.getElementById('name').value || 'あなた';
+
+  if (!year || !month || !day) { alert('生年月日を入力してください'); return; }
+
+  const idx = getShuku(year, month, day);
+  const s = SHUKU[idx];
+
+  document.getElementById('r-name').textContent = `${name} 様`;
+  document.getElementById('r-shuku').textContent = s.name;
+  document.getElementById('r-shuku-en').textContent = s.en;
+  document.getElementById('r-planet').textContent = `支配星：${s.planet}　元素：${s.element}`;
+
+  document.getElementById('r-info').innerHTML = `
+    <div class="info-item"><div class="info-item-label">宿の名前</div><div class="info-item-value">${s.name}（${s.kanji}）</div></div>
+    <div class="info-item"><div class="info-item-label">支配星</div><div class="info-item-value">${s.planet}</div></div>
+    <div class="info-item"><div class="info-item-label">元素</div><div class="info-item-value">${s.element}</div></div>
+    <div class="info-item"><div class="info-item-label">インド名</div><div class="info-item-value">${s.en}</div></div>
+  `;
+  document.getElementById('r-personality').textContent = s.personality;
+  document.getElementById('r-love').textContent = s.love;
+  document.getElementById('r-work').textContent = s.work;
+
+  document.getElementById('r-aroma').innerHTML = `
+    <div class="aroma-card"><div class="aroma-oil-name">${s.aroma[0].name}</div><div class="aroma-oil-en">${s.aroma[0].en}</div><div class="aroma-reason">${s.aroma[0].reason}</div></div>
+    <div class="aroma-card"><div class="aroma-oil-name">${s.aroma[1].name}</div><div class="aroma-oil-en">${s.aroma[1].en}</div><div class="aroma-reason">${s.aroma[1].reason}</div></div>
+  `;
+  document.getElementById('r-aroma-note').innerHTML = `✦ ${s.name}のあなたには <strong>${s.aroma[0].name}</strong> が特に合います<br>✦ サロンLatirでは本格アロマオイルを使った、あなただけのオリジナルブレンドスプレーや香水をお作りいただけます`;
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

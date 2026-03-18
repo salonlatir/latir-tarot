@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算命学｜伶受監修</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6a20;--silver:#a8b0c0;--purple:#4a2060;--pl:#7a40a0;--black:#0a0808;--black2:#120f0f;--text:#e8d8b0;--dim:#a09070;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Noto Serif JP',serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(74,32,96,.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(201,168,76,.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+.header{text-align:center;padding:30px 0 20px;}
+.title-jp{font-size:clamp(22px,6vw,38px);font-weight:900;color:var(--gold);letter-spacing:.3em;text-shadow:0 0 30px rgba(201,168,76,.4);}
+.title-en{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,3vw,16px);color:var(--gl);letter-spacing:.2em;margin:6px 0;}
+.subtitle{font-size:14px;color:var(--dim);letter-spacing:.15em;}
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gd),transparent);}
+.divider-diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 8px var(--gold);}
+.form-card{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-radius:4px;padding:28px 20px;position:relative;box-shadow:0 0 40px rgba(0,0,0,.6);}
+.form-card::before{content:'命';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--black2);color:var(--gold);font-size:20px;padding:0 12px;border:1px solid var(--gd);}
+.form-section-title{font-size:13px;color:var(--gold);letter-spacing:.3em;margin-bottom:16px;text-align:center;}
+.privacy-note{font-size:12px;color:var(--dim);text-align:center;margin-bottom:18px;padding:8px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:3px;line-height:1.7;}
+.form-row{display:grid;gap:10px;margin-bottom:14px;}
+.cols-3{grid-template-columns:2fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group label{font-size:12px;color:var(--dim);letter-spacing:.15em;}
+.form-group input,.form-group select{background:rgba(10,8,8,.8);border:1px solid var(--gd);color:var(--text);padding:10px 12px;font-family:'Noto Serif JP',serif;font-size:15px;border-radius:2px;outline:none;transition:border-color .3s;width:100%;}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);box-shadow:0 0 8px rgba(201,168,76,.2);}
+.form-group select option{background:var(--black2);}
+.btn-divination{width:100%;padding:16px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));border:none;color:var(--black);font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;letter-spacing:.3em;cursor:pointer;border-radius:2px;transition:all .3s;margin-top:4px;}
+.btn-divination:hover{box-shadow:0 0 20px rgba(201,168,76,.5);transform:translateY(-1px);}
+.btn-divination::before{content:'◈';margin-right:10px;}
+.btn-divination::after{content:'◈';margin-left:10px;}
+.result-area{display:none;margin-top:30px;animation:fadeIn .8s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.result-header{text-align:center;margin-bottom:24px;}
+.result-label{font-size:13px;color:var(--gold);letter-spacing:.3em;margin-bottom:10px;}
+/* 命式盤 */
+.meishiki-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.meishiki-card{background:linear-gradient(180deg,rgba(30,24,24,.95),rgba(15,12,12,.95));border:1px solid var(--gd);border-radius:4px;padding:16px 10px;text-align:center;}
+.meishiki-label{font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:8px;}
+.meishiki-kan{font-size:clamp(22px,6vw,32px);font-weight:900;color:var(--gl);display:block;line-height:1;margin-bottom:4px;text-shadow:0 0 10px rgba(240,208,128,.3);}
+.meishiki-shi{font-size:clamp(24px,6.5vw,34px);font-weight:900;color:var(--text);display:block;line-height:1;margin-bottom:8px;}
+.meishiki-element{font-size:11px;padding:2px 8px;border-radius:10px;display:inline-block;}
+.el-wood{background:rgba(60,120,40,.3);color:#80d060;border:1px solid rgba(80,160,60,.4);}
+.el-fire{background:rgba(160,60,20,.3);color:#ff8060;border:1px solid rgba(200,80,40,.4);}
+.el-earth{background:rgba(140,110,20,.3);color:#d4a840;border:1px solid rgba(180,140,30,.4);}
+.el-metal{background:rgba(160,160,120,.3);color:#d0d0a0;border:1px solid rgba(180,180,140,.4);}
+.el-water{background:rgba(20,60,140,.3);color:#60a0ff;border:1px solid rgba(40,80,180,.4);}
+/* 陽占 */
+.yoosen-section{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-radius:4px;padding:22px 20px;margin-bottom:20px;}
+.yoosen-section h3{font-size:13px;color:var(--gold);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.hoshi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.hoshi-card{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:10px 8px;text-align:center;}
+.hoshi-pos{font-size:10px;color:var(--gold);margin-bottom:4px;}
+.hoshi-name{font-size:14px;font-weight:700;color:var(--gl);}
+.info-section{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-radius:4px;padding:22px 20px;margin-bottom:20px;}
+.info-section h3{font-size:13px;color:var(--gold);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.info-text{font-size:15px;color:var(--text);line-height:2.1;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.info-item{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:12px;}
+.info-item-label{font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:6px;}
+.info-item-value{font-size:14px;color:var(--text);line-height:1.7;}
+.aroma-section{background:linear-gradient(135deg,rgba(74,32,96,.3),rgba(30,24,24,.95));border:1px solid var(--pl);border-radius:4px;padding:22px 20px;margin-bottom:20px;position:relative;}
+.aroma-section::before{content:'🌿';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--black2);padding:0 8px;font-size:18px;}
+.aroma-section h3{font-size:13px;color:var(--silver);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.aroma-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.aroma-card{background:rgba(74,32,96,.2);border:1px solid rgba(122,64,160,.4);border-radius:4px;padding:14px;text-align:center;}
+.aroma-oil-name{font-size:16px;font-weight:700;color:var(--silver);margin-bottom:4px;}
+.aroma-oil-en{font-size:11px;color:var(--dim);letter-spacing:.1em;margin-bottom:8px;}
+.aroma-reason{font-size:13px;color:var(--text);line-height:1.7;}
+.aroma-note{font-size:13px;color:var(--dim);text-align:center;margin-top:12px;line-height:1.9;}
+.tarot-cta{background:linear-gradient(135deg,rgba(74,32,96,.5),rgba(30,24,24,.95));border:1px solid var(--pl);border-radius:4px;padding:24px 20px;margin-bottom:20px;text-align:center;position:relative;}
+.tarot-cta::before{content:'✦';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--black2);color:var(--gold);padding:0 10px;font-size:16px;}
+.tarot-cta-text{font-size:15px;color:var(--text);line-height:2;}
+.tarot-cta-name{font-size:15px;font-weight:700;color:var(--gl);margin-top:10px;letter-spacing:.1em;}
+.btn-reserve{display:inline-block;margin-top:18px;padding:14px 40px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));color:var(--black);font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;letter-spacing:.2em;text-decoration:none;border-radius:2px;transition:all .3s;box-shadow:0 0 20px rgba(201,168,76,.3);}
+.btn-reserve:hover{box-shadow:0 0 30px rgba(201,168,76,.6);transform:translateY(-2px);}
+.disclaimer{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.15);border-radius:4px;padding:16px;margin-bottom:20px;font-size:13px;color:var(--dim);line-height:2;text-align:center;}
+.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid rgba(201,168,76,.2);}
+.footer-text{font-size:12px;color:var(--dim);letter-spacing:.2em;}
+@media(max-width:480px){.cols-3{grid-template-columns:1fr 1fr;}.aroma-cards{grid-template-columns:1fr;}.info-grid{grid-template-columns:1fr;}.hoshi-grid{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div class="title-jp">算　命　学</div>
+  <div class="title-en">SANMEIGAKU</div>
+  <div class="subtitle">天干地支が示す、あなたの命の設計図</div>
+</div>
+<div class="divider"><div class="divider-diamond"></div></div>
+<div class="form-card">
+  <div class="form-section-title">▶ 生年月日を入力してください ◀</div>
+  <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+  <div class="form-row cols-3">
+    <div class="form-group"><label>生年（西暦）</label><input type="number" id="year" placeholder="例: 1990" min="1900" max="2099"></div>
+    <div class="form-group"><label>月</label><select id="month"><option value="">月</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div>
+    <div class="form-group"><label>日</label><input type="number" id="day" placeholder="日" min="1" max="31"></div>
+  </div>
+  <div class="form-group" style="margin-bottom:14px;"><label>お名前（任意）</label><input type="text" id="name" placeholder="例: 山田 太郎"></div>
+  <button class="btn-divination" onclick="calculate()">鑑　定　開　始</button>
+</div>
+
+<div class="result-area" id="result">
+  <div class="divider"><div class="divider-diamond"></div></div>
+  <div class="result-header">
+    <div class="result-label">◈ 命　式 ◈</div>
+    <div id="r-name" style="font-size:16px;color:var(--dim);margin-bottom:16px;"></div>
+  </div>
+
+  <!-- 陰占（命式） -->
+  <div class="meishiki-grid" id="meishiki"></div>
+
+  <!-- 陽占（十大主星） -->
+  <div class="yoosen-section">
+    <h3>◈ 陽占（十大主星） ◈</h3>
+    <div class="hoshi-grid" id="hoshi-grid"></div>
+  </div>
+
+  <!-- 日干の性格 -->
+  <div class="info-section">
+    <h3>◈ 命式の特徴 ◈</h3>
+    <div class="info-grid" id="r-info"></div>
+  </div>
+  <div class="info-section">
+    <h3>◈ 性格・才能 ◈</h3>
+    <div class="info-text" id="r-personality"></div>
+  </div>
+  <div class="info-section">
+    <h3>◈ 恋愛・人間関係 ◈</h3>
+    <div class="info-text" id="r-love"></div>
+  </div>
+  <div class="info-section">
+    <h3>◈ 仕事・天命 ◈</h3>
+    <div class="info-text" id="r-work"></div>
+  </div>
+  <div class="aroma-section">
+    <h3>◈ あなたに合うdōTERRAオイル ◈</h3>
+    <div class="aroma-cards" id="r-aroma"></div>
+    <div class="aroma-note" id="r-aroma-note"></div>
+  </div>
+  <div class="tarot-cta">
+    <div class="tarot-cta-text">この命式をさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、<br>あなたの今と未来をより具体的にお伝えします。</div>
+    <div class="tarot-cta-name">◈ 伶受　サイキックタロット・霊視鑑定 ◈</div>
+    <a href="https://form.run/@latir" target="_blank" class="btn-reserve">ご予約はこちら</a>
+  </div>
+  <div class="disclaimer">
+    ※ 本ツールは簡易版としてお使いください。<br>
+    ※ 算命学の完全な鑑定には生時・性別など多くの情報が必要です。本ツールは基本的な命式のみを表示します。<br>
+    ※ 入力された情報はサーバーに送信・保存されません。
+  </div>
+</div>
+<div class="footer"><div class="footer-text">© 伶受監修｜Salon Latir</div></div>
+</div>
+
+<script>
+const KAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const KAN_EL = ['木','木','火','火','土','土','金','金','水','水'];
+const SHI_EL = ['水','土','木','木','土','火','火','土','金','金','土','水'];
+const EL_CLASS = {木:'el-wood',火:'el-fire',土:'el-earth',金:'el-metal',水:'el-water'};
+
+// 十大主星
+const JUSSHO = ['貫索星','石門星','鳳閣星','調舒星','禄存星','司禄星','車騎星','牽牛星','龍高星','玉堂星'];
+const JUSSHO_DESC = {
+  '貫索星':'自立心・独立の星。マイペースで自分の道を貫く力があります。',
+  '石門星':'社交の星。人との縁を大切にし、和をもって物事を進めます。',
+  '鳳閣星':'自然・芸術の星。自由を愛し、ありのままに生きる才能があります。',
+  '調舒星':'感受性・芸術の星。繊細な感性で美しいものを創り出す力があります。',
+  '禄存星':'愛情・サービスの星。人を世話し、愛情を注ぐことに喜びを感じます。',
+  '司禄星':'堅実・貯蓄の星。コツコツと積み上げ、安定を築く力があります。',
+  '車騎星':'行動・闘争の星。積極的に行動し、勝負に強いエネルギーを持ちます。',
+  '牽牛星':'名誉・責任の星。誇りを持って役割を果たし、周囲から尊敬を集めます。',
+  '龍高星':'改革・変革の星。既存の枠を超え、新しい世界を切り開く力があります。',
+  '玉堂星':'知識・伝統の星。深い知識と伝統を重んじる、学識者の星です。'
+};
+
+function getJD(y,m,d){if(m<=2){y--;m+=12;}const A=Math.floor(y/100);const B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524;}
+
+function getYearKanshi(year,month,day){
+  const sekki_feb=getSekki(year,2);
+  let y=year;
+  if(month<2||(month===2&&day<sekki_feb))y=year-1;
+  const base=((y-4)%60+60)%60;
+  return{kan:KAN[base%10],shi:SHI[base%12]};
+}
+
+function getSekki(year,month){
+  const SEKKI_TABLE={
+    1976:[6,5,5,5,5,6,7,7,8,8,7,7],1990:[6,4,6,5,6,6,7,8,8,8,7,7],
+    2000:[6,4,5,4,5,6,7,7,8,8,7,7],2010:[6,4,6,5,6,6,7,8,8,8,7,7],
+    2020:[6,4,5,4,5,6,7,7,8,8,7,7],2024:[6,4,5,4,5,6,7,7,8,8,7,7]
+  };
+  const avg=[6,4,6,5,6,6,7,8,8,8,7,7];
+  const keys=Object.keys(SEKKI_TABLE).map(Number).sort((a,b)=>a-b);
+  let best=keys[0];
+  for(const k of keys){if(Math.abs(k-year)<Math.abs(best-year))best=k;}
+  return(SEKKI_TABLE[best]||avg)[month-1];
+}
+
+function getMonthKanshi(year,month,day){
+  const sekki_day=getSekki(year,month);
+  let m=month,y=year;
+  if(day<sekki_day){m=month-1;if(m===0){m=12;y=year-1;}}
+  const SOLAR_TO_SHI=[1,2,3,4,5,6,7,8,9,10,11,0];
+  const shi_idx=SOLAR_TO_SHI[m-1];
+  const year_ks=getYearKanshi(year,month,day);
+  const year_kan_idx=KAN.indexOf(year_ks.kan);
+  const base_kan=[2,4,6,8,0][year_kan_idx%5];
+  const shi_offset=shi_idx-2;
+  const kan_idx=((base_kan+shi_offset)%10+10)%10;
+  return{kan:KAN[kan_idx],shi:SHI[shi_idx]};
+}
+
+function getDayKanshi(year,month,day){
+  const jd=getJD(year,month,day);
+  const base_jd=2451545;
+  const base_kan=4,base_shi=6;
+  const diff=jd-base_jd;
+  return{kan:KAN[((base_kan+diff)%10+10)%10],shi:SHI[((base_shi+diff)%12+12)%12]};
+}
+
+// 十大主星の計算（日干と各柱の干の関係）
+function getHoshi(nichi_kan, target_kan) {
+  const nichi_idx = KAN.indexOf(nichi_kan);
+  const target_idx = KAN.indexOf(target_kan);
+  const rel = ((target_idx - nichi_idx) + 10) % 10;
+  return JUSSHO[rel];
+}
+
+// 日干データ
+const NICHI_DATA = {
+  '甲':{personality:'大樹のように真っ直ぐ上に伸びる性質を持ちます。強い自立心と向上心があり、リーダーとして人を引っ張る力があります。正義感が強く、曲がったことが嫌いな性格です。',love:'一途で誠実な恋愛をします。プライドが高いため素直になれない場面もありますが、愛する人への献身は本物です。',work:'リーダー・経営者・教育者として活躍します。長期的な目標に向かって粘り強く取り組む力があります。',aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'甲の大樹のような精神力とリーダーシップをサポートします。'},{name:'ペパーミント',en:'Peppermint',reason:'向上心と行動力を高め、甲の上昇するエネルギーを後押しします。'}]},
+  '乙':{personality:'しなやかな草花のように、柔軟に環境に適応する才能があります。繊細な感性と美的センスを持ち、人の気持ちを読む力が優れています。',love:'感情豊かで思いやりのある恋愛をします。相手の細かい変化に気づく繊細さが魅力です。',work:'芸術・美容・接客・デザインなど、美的センスや対人スキルを活かせる仕事に向いています。',aroma:[{name:'ラベンダー',en:'Lavender',reason:'乙の繊細な感受性を穏やかに保ち、心のバランスを整えます。'},{name:'ゼラニウム',en:'Geranium',reason:'柔軟性と美のエネルギーを高め、乙の才能をサポートします。'}]},
+  '丙':{personality:'太陽のように明るく輝き、周囲を照らすエネルギーを持ちます。社交的で行動力があり、どんな場所でも存在感を放ちます。',love:'情熱的で積極的な恋愛をします。好きになったら一直線で、相手を明るく元気にする力があります。',work:'表に立つ仕事・営業・芸能・広報など、人前に出る職種で才能を発揮します。',aroma:[{name:'ワイルドオレンジ',en:'Wild Orange',reason:'丙の太陽のような輝きをさらに高め、明るいエネルギーをサポートします。'},{name:'シナモン',en:'Cinnamon',reason:'情熱と行動力を高め、丙のエネルギーをさらに活性化します。'}]},
+  '丁':{personality:'ろうそくの炎のように、静かだが確かな光を放ちます。直感力が鋭く、物事の本質を見抜く洞察力があります。',love:'深く静かに愛する一途なタイプです。信頼できる相手には深く心を開きます。',work:'研究・芸術・カウンセリング・スピリチュアル系など、深く掘り下げる仕事に向いています。',aroma:[{name:'サンダルウッド',en:'Sandalwood',reason:'丁の深い洞察力と直感力をさらに高め、精神的探求をサポートします。'},{name:'フランキンセンス',en:'Frankincense',reason:'静かな炎のような精神力を守り、丁の本来の輝きを引き出します。'}]},
+  '戊':{personality:'大山のように安定した、頼もしい存在感を持ちます。粘り強く着実に物事を進める力があり、周囲から信頼される人格者です。',love:'安定した関係を好み、長期的なパートナーシップを大切にします。誠実で浮気とは無縁のタイプです。',work:'不動産・建設・農業・医療など地に足のついた仕事に向いています。',aroma:[{name:'セダーウッド',en:'Cedarwood',reason:'戊の山のような安定感と包容力をさらに強化します。'},{name:'ベチバー',en:'Vetiver',reason:'大地のエネルギーで戊の揺るぎない基盤をサポートします。'}]},
+  '己':{personality:'肥沃な田畑のように、物事を育てる力を持ちます。几帳面で細かい配慮ができ、縁の下の力持ちとして周囲を支えます。',love:'思いやりと献身の気持ちが強いタイプです。相手の世話をすることに喜びを感じます。',work:'経理・福祉・保育・事務など、細かい作業や人をサポートする仕事に向いています。',aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'己の育てる力と精神性を深め、使命感をサポートします。'},{name:'ラベンダー',en:'Lavender',reason:'尽くしすぎる己の緊張を和らげ、心のバランスを整えます。'}]},
+  '庚':{personality:'鋼のように硬く鋭い精神力を持ちます。義理堅く、筋を通すことを大切にします。決断力があり、一度決めたことは最後までやり抜きます。',love:'真剣でまじめな恋愛をします。プライドが高く素直になれないことも。',work:'法律・金融・技術・製造など、精密さと正確さが求められる仕事に向いています。',aroma:[{name:'ベルガモット',en:'Bergamot',reason:'庚の鋭い精神力を整え、洗練されたエネルギーをサポートします。'},{name:'フランキンセンス',en:'Frankincense',reason:'義理堅さと精神的強さを守り、庚の本来の力を引き出します。'}]},
+  '辛':{personality:'宝石のように磨かれた、洗練された感性を持ちます。審美眼があり、美しいものへのこだわりが強いです。',love:'理想が高く、センスの合う相手を求めます。上品な恋愛を楽しむタイプです。',work:'美容・ファッション・ジュエリー・芸術など、美的センスを活かせる分野で才能を発揮します。',aroma:[{name:'ベルガモット',en:'Bergamot',reason:'辛の洗練された美のエネルギーをさらに磨きます。'},{name:'ラベンダー',en:'Lavender',reason:'完璧主義の辛の緊張を和らげ、心の調和をサポートします。'}]},
+  '壬':{personality:'大海のように広大な心を持ちます。知性と柔軟性があり、状況に応じて自在に対応できます。発想力が豊かです。',love:'自由を好み、束縛を嫌います。多くの人に優しいため誰にでも好かれますが、特定の相手に深く踏み込むことが苦手な場合も。',work:'貿易・IT・マスコミ・哲学など、知性と発想力を活かせる仕事が向いています。',aroma:[{name:'サンダルウッド',en:'Sandalwood',reason:'壬の広大な知性と直感力を深め、大海のような洞察力をサポートします。'},{name:'ジュニパーベリー',en:'Juniper Berry',reason:'流れるような柔軟性を高め、壬の適応力をサポートします。'}]},
+  '癸':{personality:'霧雨のように静かに、しかし確実に浸透する力を持ちます。直感力と洞察力が鋭く、表面には見えない真実を感じ取ります。',love:'繊細で傷つきやすいですが、深く愛する力があります。ロマンチックな恋愛を好みます。',work:'占い・カウンセリング・医療・研究など、見えないものを扱う仕事で才能を発揮します。',aroma:[{name:'フランキンセンス',en:'Frankincense',reason:'癸の深い直感力と霊的感受性をサポートし、見えない真実を捉える力を高めます。'},{name:'サンダルウッド',en:'Sandalwood',reason:'癸の静かな探求心と洞察力をさらに深めます。'}]}
+};
+
+function calculate(){
+  const year=parseInt(document.getElementById('year').value);
+  const month=parseInt(document.getElementById('month').value);
+  const day=parseInt(document.getElementById('day').value);
+  const name=document.getElementById('name').value||'あなた';
+  if(!year||!month||!day){alert('生年月日を入力してください');return;}
+
+  const year_ks=getYearKanshi(year,month,day);
+  const month_ks=getMonthKanshi(year,month,day);
+  const day_ks=getDayKanshi(year,month,day);
+
+  const nichi=day_ks.kan;
+  const data=NICHI_DATA[nichi]||NICHI_DATA['甲'];
+
+  document.getElementById('r-name').textContent=`${name} 様の命式`;
+
+  // 陰占（命式）
+  const pillars=[
+    {label:'年柱（先天的な宿命）',...year_ks},
+    {label:'月柱（社会・才能）',...month_ks},
+    {label:'日柱（日主・本質）',...day_ks}
+  ];
+  document.getElementById('meishiki').innerHTML=pillars.map(p=>{
+    const ke=KAN_EL[KAN.indexOf(p.kan)];
+    const se=SHI_EL[SHI.indexOf(p.shi)];
+    return`<div class="meishiki-card">
+      <div class="meishiki-label">${p.label}</div>
+      <span class="meishiki-kan">${p.kan}</span>
+      <span class="meishiki-shi">${p.shi}</span>
+      <span class="meishiki-element ${EL_CLASS[ke]}">${ke}</span>
+    </div>`;
+  }).join('');
+
+  // 十大主星（陽占）
+  const positions=['南（才能・感情）','東（精神・実力）','中央（本質）','西（社会・仕事）','北（意志・意欲）'];
+  const hoshi_kans=[year_ks.kan, month_ks.kan, nichi, month_ks.shi, year_ks.shi];
+  // 支の蔵干（簡易版：支の代表干）
+  const SHI_ZOUKAN=['壬','己','甲','乙','戊','丙','丁','己','庚','辛','戊','癸'];
+  const hoshi_values=[
+    getHoshi(nichi, year_ks.kan),
+    getHoshi(nichi, month_ks.kan),
+    '（日主）',
+    getHoshi(nichi, SHI_ZOUKAN[SHI.indexOf(month_ks.shi)]),
+    getHoshi(nichi, SHI_ZOUKAN[SHI.indexOf(year_ks.shi)])
+  ];
+
+  document.getElementById('hoshi-grid').innerHTML=positions.map((pos,i)=>`
+    <div class="hoshi-card">
+      <div class="hoshi-pos">${pos}</div>
+      <div class="hoshi-name">${hoshi_values[i]}</div>
+    </div>
+  `).join('');
+
+  // 基本情報
+  document.getElementById('r-info').innerHTML=`
+    <div class="info-item"><div class="info-item-label">日主（本質）</div><div class="info-item-value">${nichi}（${KAN_EL[KAN.indexOf(nichi)]}）</div></div>
+    <div class="info-item"><div class="info-item-label">生まれ年の干支</div><div class="info-item-value">${year_ks.kan}${year_ks.shi}年</div></div>
+    <div class="info-item"><div class="info-item-label">月柱</div><div class="info-item-value">${month_ks.kan}${month_ks.shi}</div></div>
+    <div class="info-item"><div class="info-item-label">中央星</div><div class="info-item-value">${hoshi_values[1]||'貫索星'}</div></div>
+  `;
+
+  document.getElementById('r-personality').textContent=data.personality;
+  document.getElementById('r-love').textContent=data.love;
+  document.getElementById('r-work').textContent=data.work;
+
+  document.getElementById('r-aroma').innerHTML=`
+    <div class="aroma-card"><div class="aroma-oil-name">${data.aroma[0].name}</div><div class="aroma-oil-en">${data.aroma[0].en}</div><div class="aroma-reason">${data.aroma[0].reason}</div></div>
+    <div class="aroma-card"><div class="aroma-oil-name">${data.aroma[1].name}</div><div class="aroma-oil-en">${data.aroma[1].en}</div><div class="aroma-reason">${data.aroma[1].reason}</div></div>
+  `;
+  document.getElementById('r-aroma-note').innerHTML=`✦ 日主${nichi}のあなたには <strong>${data.aroma[0].name}</strong> が特に合います<br>✦ サロンLatirでは本格アロマオイルを使った、あなただけのオリジナルブレンドスプレーや香水をお作りいただけます`;
+
+  document.getElementById('result').style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>

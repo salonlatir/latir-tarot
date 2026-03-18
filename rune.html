@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーン占い｜伶受監修</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
+:root{--gold:#c9a84c;--gl:#f0d080;--gd:#8a6a20;--silver:#a8b0c0;--purple:#4a2060;--pl:#7a40a0;--black:#0a0808;--black2:#120f0f;--text:#e8d8b0;--dim:#a09070;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Noto Serif JP',serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(74,32,96,.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(201,168,76,.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+.header{text-align:center;padding:30px 0 20px;}
+.title-jp{font-size:clamp(26px,7vw,42px);font-weight:900;color:var(--gold);letter-spacing:.3em;text-shadow:0 0 30px rgba(201,168,76,.4);}
+.title-en{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,3vw,18px);color:var(--gl);letter-spacing:.2em;margin:6px 0;}
+.subtitle{font-size:14px;color:var(--dim);letter-spacing:.15em;}
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gd),transparent);}
+.divider-diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 8px var(--gold);}
+/* タブ */
+.tab-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--gd);border-radius:4px 4px 0 0;overflow:hidden;}
+.tab-btn{padding:14px 8px;background:rgba(10,8,8,.8);border:none;color:var(--dim);font-family:'Noto Serif JP',serif;font-size:13px;font-weight:700;letter-spacing:.1em;cursor:pointer;transition:all .3s;text-align:center;}
+.tab-btn.active{background:linear-gradient(135deg,rgba(30,24,24,.95),rgba(20,16,16,.95));color:var(--gold);border-bottom:2px solid var(--gold);}
+.tab-btn:hover:not(.active){background:rgba(201,168,76,.05);color:var(--text);}
+.form-card{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-top:none;border-radius:0 0 4px 4px;padding:28px 20px;box-shadow:0 0 40px rgba(0,0,0,.6);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.form-section-title{font-size:13px;color:var(--gold);letter-spacing:.3em;margin-bottom:16px;text-align:center;}
+.privacy-note{font-size:12px;color:var(--dim);text-align:center;margin-bottom:18px;padding:8px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:3px;line-height:1.7;}
+/* ルーン石の見た目 */
+.rune-select-area{text-align:center;padding:16px 0;}
+.rune-instruction{font-size:13px;color:var(--dim);margin-bottom:20px;line-height:1.9;}
+.rune-bag{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+  margin-bottom:20px;
+  max-height:200px;overflow-y:auto;
+  padding:10px;
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(201,168,76,.15);
+  border-radius:4px;
+}
+.rune-stone{
+  width:50px;height:50px;
+  background:linear-gradient(135deg,#2a2420,#1a1410);
+  border:1px solid rgba(201,168,76,.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;cursor:pointer;
+  transition:all .3s;
+  color:var(--dim);
+  user-select:none;
+}
+.rune-stone:hover{border-color:var(--gold);box-shadow:0 0 12px rgba(201,168,76,.4);transform:scale(1.1);color:var(--gold);}
+.rune-stone.selected{background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(138,106,32,.3));border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.5);color:var(--gl);}
+.rune-stone.drawn{opacity:.3;cursor:not-allowed;pointer-events:none;}
+.spread-name{font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:12px;}
+.spread-slots{display:flex;justify-content:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.spread-slot{
+  width:60px;
+  background:rgba(0,0,0,.4);border:1px dashed rgba(201,168,76,.3);
+  border-radius:4px;padding:8px 4px;text-align:center;
+  font-size:11px;color:var(--dim);
+}
+.spread-slot-label{font-size:10px;color:var(--dim);margin-bottom:4px;}
+.spread-slot-rune{font-size:26px;min-height:32px;display:flex;align-items:center;justify-content:center;color:var(--gl);}
+.spread-slot.filled{border-color:var(--gold);border-style:solid;}
+.btn-divination{width:100%;padding:16px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));border:none;color:var(--black);font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;letter-spacing:.3em;cursor:pointer;border-radius:2px;transition:all .3s;margin-top:4px;}
+.btn-divination:hover{box-shadow:0 0 20px rgba(201,168,76,.5);transform:translateY(-1px);}
+.btn-divination::before{content:'◈';margin-right:10px;}
+.btn-divination::after{content:'◈';margin-left:10px;}
+.btn-reset{width:100%;padding:12px;background:transparent;border:1px solid var(--gd);color:var(--gold);font-family:'Noto Serif JP',serif;font-size:14px;cursor:pointer;border-radius:2px;margin-top:10px;letter-spacing:.1em;transition:all .3s;}
+.btn-reset:hover{background:rgba(201,168,76,.08);}
+/* 結果 */
+.result-area{display:none;margin-top:30px;animation:fadeIn .8s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.rune-result-cards{display:grid;gap:16px;margin-bottom:24px;}
+.rune-result-card{background:linear-gradient(135deg,rgba(30,24,24,.95),rgba(15,12,12,.95));border:1px solid var(--gd);border-radius:4px;padding:20px;}
+.rune-result-pos{font-size:11px;color:var(--gold);letter-spacing:.3em;margin-bottom:10px;text-align:center;}
+.rune-result-symbol{font-size:52px;text-align:center;color:var(--gl);text-shadow:0 0 20px rgba(240,208,128,.4);margin-bottom:8px;line-height:1;}
+.rune-result-name{font-size:16px;font-weight:700;color:var(--gl);text-align:center;margin-bottom:4px;}
+.rune-result-en{font-size:12px;color:var(--dim);text-align:center;letter-spacing:.1em;margin-bottom:12px;}
+.rune-result-reversed{display:inline-block;font-size:11px;color:#d07060;border:1px solid #d07060;padding:2px 8px;border-radius:10px;margin-bottom:10px;}
+.rune-result-meaning{font-size:14px;color:var(--text);line-height:2;}
+.info-section{background:linear-gradient(135deg,rgba(30,24,24,.9),rgba(20,16,16,.95));border:1px solid var(--gd);border-radius:4px;padding:22px 20px;margin-bottom:20px;}
+.info-section h3{font-size:13px;color:var(--gold);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.info-text{font-size:15px;color:var(--text);line-height:2.1;}
+.aroma-section{background:linear-gradient(135deg,rgba(74,32,96,.3),rgba(30,24,24,.95));border:1px solid var(--pl);border-radius:4px;padding:22px 20px;margin-bottom:20px;position:relative;}
+.aroma-section::before{content:'🌿';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--black2);padding:0 8px;font-size:18px;}
+.aroma-section h3{font-size:13px;color:var(--silver);letter-spacing:.3em;text-align:center;margin-bottom:16px;}
+.aroma-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.aroma-card{background:rgba(74,32,96,.2);border:1px solid rgba(122,64,160,.4);border-radius:4px;padding:14px;text-align:center;}
+.aroma-oil-name{font-size:16px;font-weight:700;color:var(--silver);margin-bottom:4px;}
+.aroma-oil-en{font-size:11px;color:var(--dim);letter-spacing:.1em;margin-bottom:8px;}
+.aroma-reason{font-size:13px;color:var(--text);line-height:1.7;}
+.aroma-note{font-size:13px;color:var(--dim);text-align:center;margin-top:12px;line-height:1.9;}
+.tarot-cta{background:linear-gradient(135deg,rgba(74,32,96,.5),rgba(30,24,24,.95));border:1px solid var(--pl);border-radius:4px;padding:24px 20px;margin-bottom:20px;text-align:center;position:relative;}
+.tarot-cta::before{content:'✦';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--black2);color:var(--gold);padding:0 10px;font-size:16px;}
+.tarot-cta-text{font-size:15px;color:var(--text);line-height:2;}
+.tarot-cta-name{font-size:15px;font-weight:700;color:var(--gl);margin-top:10px;letter-spacing:.1em;}
+.btn-reserve{display:inline-block;margin-top:18px;padding:14px 40px;background:linear-gradient(135deg,var(--gd),var(--gold),var(--gd));color:var(--black);font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;letter-spacing:.2em;text-decoration:none;border-radius:2px;transition:all .3s;box-shadow:0 0 20px rgba(201,168,76,.3);}
+.btn-reserve:hover{box-shadow:0 0 30px rgba(201,168,76,.6);transform:translateY(-2px);}
+.disclaimer{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.15);border-radius:4px;padding:16px;margin-bottom:20px;font-size:13px;color:var(--dim);line-height:2;text-align:center;}
+.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid rgba(201,168,76,.2);}
+.footer-text{font-size:12px;color:var(--dim);letter-spacing:.2em;}
+@media(max-width:480px){.tab-btn{font-size:11px;padding:12px 4px;}.aroma-cards{grid-template-columns:1fr;}.spread-slot{width:50px;}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div class="title-jp">ルーン占い</div>
+  <div class="title-en">RUNE DIVINATION</div>
+  <div class="subtitle">古代北欧の文字が示す、魂へのメッセージ</div>
+</div>
+<div class="divider"><div class="divider-diamond"></div></div>
+
+<!-- タブ -->
+<div class="tab-wrap">
+  <button class="tab-btn active" onclick="switchTab('single',this)">一枚引き</button>
+  <button class="tab-btn" onclick="switchTab('three',this)">三枚引き</button>
+  <button class="tab-btn" onclick="switchTab('five',this)">五枚引き</button>
+</div>
+
+<div class="form-card">
+  <!-- 一枚引き -->
+  <div class="tab-content active" id="tab-single">
+    <div class="form-section-title">▶ 一枚引き ◀</div>
+    <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+    <div class="rune-select-area">
+      <div class="rune-instruction">心に質問を思い浮かべながら、<br>直感で1枚のルーン石を選んでください。</div>
+      <div class="rune-bag" id="bag-single"></div>
+    </div>
+  </div>
+
+  <!-- 三枚引き -->
+  <div class="tab-content" id="tab-three">
+    <div class="form-section-title">▶ 三枚引き（過去・現在・未来）◀</div>
+    <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+    <div class="rune-select-area">
+      <div class="rune-instruction">心に質問を思い浮かべながら、<br>直感で3枚のルーン石を順番に選んでください。</div>
+      <div class="spread-slots" id="slots-three">
+        <div class="spread-slot" id="slot3-0"><div class="spread-slot-label">過去</div><div class="spread-slot-rune" id="slot3r-0"></div></div>
+        <div class="spread-slot" id="slot3-1"><div class="spread-slot-label">現在</div><div class="spread-slot-rune" id="slot3r-1"></div></div>
+        <div class="spread-slot" id="slot3-2"><div class="spread-slot-label">未来</div><div class="spread-slot-rune" id="slot3r-2"></div></div>
+      </div>
+      <div class="rune-bag" id="bag-three"></div>
+    </div>
+  </div>
+
+  <!-- 五枚引き -->
+  <div class="tab-content" id="tab-five">
+    <div class="form-section-title">▶ 五枚引き（クロス展開）◀</div>
+    <div class="privacy-note">🔒 入力された情報はサーバーに送信・保存されません。すべてお使いの端末内で処理されます。</div>
+    <div class="rune-select-area">
+      <div class="rune-instruction">心に質問を思い浮かべながら、<br>直感で5枚のルーン石を順番に選んでください。</div>
+      <div class="spread-slots" id="slots-five">
+        <div class="spread-slot" id="slot5-0"><div class="spread-slot-label">状況</div><div class="spread-slot-rune" id="slot5r-0"></div></div>
+        <div class="spread-slot" id="slot5-1"><div class="spread-slot-label">課題</div><div class="spread-slot-rune" id="slot5r-1"></div></div>
+        <div class="spread-slot" id="slot5-2"><div class="spread-slot-label">過去</div><div class="spread-slot-rune" id="slot5r-2"></div></div>
+        <div class="spread-slot" id="slot5-3"><div class="spread-slot-label">未来</div><div class="spread-slot-rune" id="slot5r-3"></div></div>
+        <div class="spread-slot" id="slot5-4"><div class="spread-slot-label">結果</div><div class="spread-slot-rune" id="slot5r-4"></div></div>
+      </div>
+      <div class="rune-bag" id="bag-five"></div>
+    </div>
+  </div>
+
+  <button class="btn-reset" onclick="resetAll()">← やり直す</button>
+</div>
+
+<!-- 結果 -->
+<div class="result-area" id="result">
+  <div class="divider"><div class="divider-diamond"></div></div>
+  <div style="text-align:center;margin-bottom:24px;">
+    <div style="font-size:13px;color:var(--gold);letter-spacing:.3em;margin-bottom:8px;">◈ ルーンのメッセージ ◈</div>
+  </div>
+  <div class="rune-result-cards" id="rune-results"></div>
+  <div class="info-section">
+    <h3>◈ 総合メッセージ ◈</h3>
+    <div class="info-text" id="r-total"></div>
+  </div>
+  <div class="aroma-section">
+    <h3>◈ 今のあなたに合うdōTERRAオイル ◈</h3>
+    <div class="aroma-cards" id="r-aroma"></div>
+    <div class="aroma-note" id="r-aroma-note"></div>
+  </div>
+  <div class="tarot-cta">
+    <div class="tarot-cta-text">ルーンが示すメッセージをさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、<br>あなたの今と未来をより具体的にお伝えします。</div>
+    <div class="tarot-cta-name">◈ 伶受　サイキックタロット・霊視鑑定 ◈</div>
+    <a href="https://form.run/@latir" target="_blank" class="btn-reserve">ご予約はこちら</a>
+  </div>
+  <div class="disclaimer">
+    ※ 本ツールは占いを楽しむための簡易版です。<br>
+    ※ 鑑定結果はあくまで参考としてお楽しみください。<br>
+    ※ 入力された情報はサーバーに送信・保存されません。
+  </div>
+</div>
+
+<div class="footer"><div class="footer-text">© 伶受監修｜Salon Latir</div></div>
+</div>
+
+<script>
+// ===== ルーンデータ =====
+const RUNES = [
+  {symbol:'ᚠ',name:'フェフ',en:'Fehu',upright:'豊かさ・財運・新しい始まり。物質的・精神的な豊かさが訪れます。努力が実を結び、望むものが手に入る兆しです。',reversed:'損失・欲求不満・貪欲への警告。物質的なことに執着しすぎていないか確認を。',aroma:'ワイルドオレンジ'},
+  {symbol:'ᚢ',name:'ウルズ',en:'Uruz',upright:'強さ・健康・変化。困難を乗り越える力と生命力が高まっています。変化を恐れず、前進してください。',reversed:'弱さ・機会の喪失。今は力を蓄える時期です。',aroma:'ジンジャー'},
+  {symbol:'ᚦ',name:'サリサズ',en:'Thurisaz',upright:'保護・変容・試練の突破。守護のエネルギーがあなたを包みます。試練は成長のための贈り物です。',reversed:'危険・衝動的な行動への警告。冷静な判断を心がけてください。',aroma:'フランキンセンス'},
+  {symbol:'ᚨ',name:'アンスズ',en:'Ansuz',upright:'コミュニケーション・知恵・神からのメッセージ。言葉と知恵があなたの武器となります。インスピレーションを受け取る時です。',reversed:'コミュニケーション不全・誤解。言葉に注意が必要です。',aroma:'ペパーミント'},
+  {symbol:'ᚱ',name:'ライソ',en:'Raidho',upright:'旅・動き・変化。人生の旅路は順調に進んでいます。行動することで道が開けます。',reversed:'停滞・遅延。今は計画を見直す時期です。',aroma:'ベルガモット'},
+  {symbol:'ᚲ',name:'ケナズ',en:'Kenaz',upright:'知識・光・創造性。内なる光が輝き始めています。創造的なエネルギーが高まり、新しいことに挑戦する力があります。',reversed:'迷い・無知。今は学びの時期です。',aroma:'レモン'},
+  {symbol:'ᚷ',name:'ギフ',en:'Gebo',upright:'贈り物・パートナーシップ・バランス。与えることと受け取ることのバランスが取れています。素晴らしい縁と出会いの予感です。',reversed:'不均衡・依存。関係性を見直してみてください。',aroma:'ゼラニウム'},
+  {symbol:'ᚹ',name:'ウンジョ',en:'Wunjo',upright:'喜び・幸福・成功。願いが叶い、幸せな時期を迎えています。喜びをすべての人と分かち合いましょう。',reversed:'悲しみ・遅延。今は内省の時です。',aroma:'ワイルドオレンジ'},
+  {symbol:'ᚺ',name:'ハガラズ',en:'Hagalaz',upright:'変化・破壊と再生。嵐の後に晴れ間が来るように、試練を越えた先に新しい自分が待っています。',reversed:'逆位置なし（このルーンは正逆同じ）。すべては再生への道です。',aroma:'フランキンセンス'},
+  {symbol:'ᚾ',name:'ナウティズ',en:'Nauthiz',upright:'忍耐・必要性・制約。今は我慢の時ですが、この制約がやがて大きな強さになります。',reversed:'焦り・不満。冷静に、一歩ずつ進みましょう。',aroma:'セダーウッド'},
+  {symbol:'ᛁ',name:'イサ',en:'Isa',upright:'停滞・静止・内省。今は動かず、じっくりと内省する時です。氷が溶けるように、やがて流れは動き出します。',reversed:'逆位置なし。静寂の中に次の一手があります。',aroma:'サンダルウッド'},
+  {symbol:'ᛃ',name:'ジェラ',en:'Jera',upright:'収穫・結果・サイクル。努力の結果が実を結ぶ時です。蒔いた種は必ず育ちます。',reversed:'停滞・遅れた収穫。もう少し辛抱してください。',aroma:'フランキンセンス'},
+  {symbol:'ᛇ',name:'イワズ',en:'Ihwaz',upright:'持久力・変容・保護。困難を乗り越える力があります。変化を受け入れることで新しい扉が開きます。',reversed:'混乱・行き詰まり。視点を変えてみてください。',aroma:'セダーウッド'},
+  {symbol:'ᛈ',name:'ペルソ',en:'Pertho',upright:'秘密・運命・神秘。隠れていたものが明らかになります。運命の流れに身を任せてください。',reversed:'失望・秘密の暴露。真実と向き合う時です。',aroma:'サンダルウッド'},
+  {symbol:'ᛉ',name:'アルギズ',en:'Algiz',upright:'保護・守護・高い意識。神聖な保護に包まれています。直感を信じ、精神的な探求を続けてください。',reversed:'脆弱性・守護の弱まり。今は慎重に行動してください。',aroma:'フランキンセンス'},
+  {symbol:'ᛊ',name:'ソウロ',en:'Sowilo',upright:'太陽・成功・全体性。太陽のエネルギーがあなたを照らしています。目標への道が輝いています。',reversed:'逆位置なし。あなたは光に包まれています。',aroma:'ワイルドオレンジ'},
+  {symbol:'ᛏ',name:'ティワズ',en:'Tiwaz',upright:'正義・犠牲・勝利。正義と真実があなたの側にあります。困難があっても、信念を貫けば勝利が待っています。',reversed:'不正義・敗北。戦略を見直す時です。',aroma:'ベルガモット'},
+  {symbol:'ᛒ',name:'ベルカナ',en:'Berkano',upright:'成長・豊穣・新しい始まり。春の訪れのように、新しい命と可能性が芽吹いています。',reversed:'停滞・成長の妨害。今は種を蒔く準備をしてください。',aroma:'ラベンダー'},
+  {symbol:'ᛖ',name:'エワズ',en:'Ehwaz',upright:'パートナーシップ・進歩・信頼。信頼できるパートナーとの協力で大きなことが達成できます。',reversed:'不和・停滞。関係性の見直しが必要です。',aroma:'ゼラニウム'},
+  {symbol:'ᛗ',name:'マナズ',en:'Mannaz',upright:'人間・自己・社会性。自分自身と向き合い、人との繋がりを大切にする時です。',reversed:'孤立・自己中心性。周囲への思いやりを忘れずに。',aroma:'ベルガモット'},
+  {symbol:'ᛚ',name:'ラグズ',en:'Laguz',upright:'水・流れ・直感。感情と直感を信じてください。流れに乗ることで物事がスムーズに進みます。',reversed:'感情の混乱・不安。心を静め、自分の感情と向き合いましょう。',aroma:'サンダルウッド'},
+  {symbol:'ᛜ',name:'イング',en:'Inguz',upright:'完結・新しい始まり・豊穣。一つのサイクルが完結し、新しい段階へ移行します。内なるエネルギーが高まっています。',reversed:'逆位置なし。完結は新しい始まりです。',aroma:'フランキンセンス'},
+  {symbol:'ᛞ',name:'ダガズ',en:'Dagaz',upright:'夜明け・突破口・変容。暗闇の後に必ず夜明けが来ます。大きな変容と突破口が訪れています。',reversed:'逆位置なし。今がまさに夜明けの時です。',aroma:'ワイルドオレンジ'},
+  {symbol:'ᛟ',name:'オシラ',en:'Othala',upright:'遺産・家・ルーツ。先祖や故郷からの恵みがあります。根を大切にすることで安定した基盤が生まれます。',reversed:'孤立・故郷との断絶。ルーツを見直してみてください。',aroma:'セダーウッド'},
+  {symbol:'ᛈ̲',name:'ウォルン',en:'Wyrd（空白）',upright:'運命・未知・可能性。何も示されない空白は、すべての可能性が開かれていることを示します。あなたの選択が未来を作ります。',reversed:'同上。すべては白紙から始まります。',aroma:'フランキンセンス'}
+];
+
+// アロマ詳細
+const AROMA_DETAILS = {
+  'ワイルドオレンジ':{en:'Wild Orange',reason:'引き出されたルーンの豊かさと喜びのエネルギーをさらに輝かせ、あなたの前向きな力をサポートします。'},
+  'ジンジャー':{en:'Ginger',reason:'強さと変化のエネルギーを高め、困難を乗り越える力をサポートします。'},
+  'フランキンセンス':{en:'Frankincense',reason:'保護と浄化のエネルギーで、ルーンが示す変容のプロセスをサポートします。'},
+  'ペパーミント':{en:'Peppermint',reason:'明晰な思考と直感力を高め、ルーンのメッセージを受け取りやすい状態を作ります。'},
+  'ベルガモット':{en:'Bergamot',reason:'心のバランスを整え、ルーンが示す旅路を自信を持って歩む力をサポートします。'},
+  'レモン':{en:'Lemon',reason:'知識と創造性を高め、新しい光を取り入れる力をサポートします。'},
+  'ゼラニウム':{en:'Geranium',reason:'愛と調和のエネルギーを高め、人との繋がりと縁をサポートします。'},
+  'セダーウッド':{en:'Cedarwood',reason:'忍耐と安定感を与え、試練を乗り越えるグラウンディングをサポートします。'},
+  'サンダルウッド':{en:'Sandalwood',reason:'深い内省と精神性を高め、ルーンが示す神秘的なメッセージの理解をサポートします。'},
+  'ラベンダー':{en:'Lavender',reason:'成長と再生のエネルギーを穏やかにサポートし、心のバランスを整えます。'}
+};
+
+// 状態
+let currentTab = 'single';
+let drawn = {single:[], three:[], five:[]};
+let shuffled = {};
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('result').style.display='none';
+}
+
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function initBag(tab) {
+  const max={single:1,three:3,five:5};
+  shuffled[tab] = shuffle([...Array(RUNES.length).keys()]);
+  drawn[tab] = [];
+  const bag = document.getElementById('bag-'+tab);
+  bag.innerHTML = shuffled[tab].map((idx,i)=>`
+    <div class="rune-stone" onclick="selectRune('${tab}',${i})" id="stone-${tab}-${i}" title="${RUNES[idx].name}">᛫</div>
+  `).join('');
+  // スロットリセット
+  if(tab==='three'){
+    for(let i=0;i<3;i++){document.getElementById('slot3-'+i).classList.remove('filled');document.getElementById('slot3r-'+i).textContent='';}
+  }
+  if(tab==='five'){
+    for(let i=0;i<5;i++){document.getElementById('slot5-'+i).classList.remove('filled');document.getElementById('slot5r-'+i).textContent='';}
+  }
+}
+
+function selectRune(tab, stoneIdx) {
+  const maxDraw={single:1,three:3,five:5};
+  if(drawn[tab].length>=maxDraw[tab])return;
+  const runeIdx=shuffled[tab][stoneIdx];
+  const stone=document.getElementById('stone-'+tab+'-'+stoneIdx);
+  if(stone.classList.contains('drawn'))return;
+  // 逆位置（30%の確率）
+  const reversed=Math.random()<0.3;
+  stone.textContent=RUNES[runeIdx].symbol;
+  stone.classList.add('drawn','selected');
+  drawn[tab].push({runeIdx,reversed,stoneIdx});
+  // スロットに表示
+  const pos=drawn[tab].length-1;
+  if(tab==='three'){
+    document.getElementById('slot3r-'+pos).textContent=RUNES[runeIdx].symbol;
+    document.getElementById('slot3-'+pos).classList.add('filled');
+  }
+  if(tab==='five'){
+    document.getElementById('slot5r-'+pos).textContent=RUNES[runeIdx].symbol;
+    document.getElementById('slot5-'+pos).classList.add('filled');
+  }
+  if(drawn[tab].length>=maxDraw[tab]){
+    setTimeout(()=>showResult(tab),400);
+  }
+  if(tab==='single'&&drawn[tab].length===1){
+    setTimeout(()=>showResult(tab),400);
+  }
+}
+
+function showResult(tab){
+  const positions={
+    single:['現在のメッセージ'],
+    three:['過去','現在','未来'],
+    five:['現在の状況','課題・障害','過去の影響','未来の可能性','最終的な結果']
+  };
+  const pos=positions[tab];
+  let aromaName='フランキンセンス';
+
+  const cards=drawn[tab].map((d,i)=>{
+    const r=RUNES[d.runeIdx];
+    const meaning=d.reversed?r.reversed:r.upright;
+    if(i===0)aromaName=r.aroma;
+    return`<div class="rune-result-card">
+      <div class="rune-result-pos">${pos[i]}</div>
+      <div class="rune-result-symbol">${r.symbol}</div>
+      <div class="rune-result-name">${r.name}</div>
+      <div class="rune-result-en">${r.en}</div>
+      ${d.reversed?'<div style="text-align:center"><span class="rune-result-reversed">逆位置</span></div>':''}
+      <div class="rune-result-meaning">${meaning}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('rune-results').innerHTML=cards;
+
+  // 総合メッセージ
+  const rune_names=drawn[tab].map(d=>RUNES[d.runeIdx].name).join('・');
+  let total='';
+  if(tab==='single'){
+    total=`${RUNES[drawn[tab][0].runeIdx].name}があなたに届けるメッセージは、今この瞬間に最も必要な気づきです。ルーンの示す言葉を、心の奥深くで受け取ってください。`;
+  }else if(tab==='three'){
+    total=`${rune_names}の3枚が示すのは、あなたの過去・現在・未来の流れです。過去から学び、現在に意識を向け、未来への道を切り開いていきましょう。ルーンはあなたの内なる声を映し出す鏡です。`;
+  }else{
+    total=`5枚のルーンが示す複雑な状況を読み解くと、あなたが今どこにいて、どこへ向かうべきかが見えてきます。${rune_names}のエネルギーを統合し、自分の道を信じて進んでください。`;
+  }
+  document.getElementById('r-total').textContent=total;
+
+  // アロマ
+  const aData=AROMA_DETAILS[aromaName]||AROMA_DETAILS['フランキンセンス'];
+  const aData2=AROMA_DETAILS['サンダルウッド'];
+  document.getElementById('r-aroma').innerHTML=`
+    <div class="aroma-card"><div class="aroma-oil-name">${aromaName}</div><div class="aroma-oil-en">${aData.en}</div><div class="aroma-reason">${aData.reason}</div></div>
+    <div class="aroma-card"><div class="aroma-oil-name">サンダルウッド</div><div class="aroma-oil-en">Sandalwood</div><div class="aroma-reason">${aData2.reason}</div></div>
+  `;
+  document.getElementById('r-aroma-note').innerHTML=`✦ 引いたルーンのエネルギーに合う <strong>${aromaName}</strong> が今のあなたに特におすすめです<br>✦ サロンLatirでは本格アロマオイルを使った、あなただけのオリジナルブレンドスプレーや香水をお作りいただけます`;
+
+  document.getElementById('result').style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetAll(){
+  drawn={single:[],three:[],five:[]};
+  initBag('single');initBag('three');initBag('five');
+  document.getElementById('result').style.display='none';
+}
+
+// 初期化
+window.onload=function(){
+  initBag('single');initBag('three');initBag('five');
+};
+</script>
+</body>
+</html>
