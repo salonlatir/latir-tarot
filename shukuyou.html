@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宿曜占星術 - 魂の導記：伶受</title>
+    <style>
+        body { background: #010b1a; color: #e0ca82; font-family: 'serif'; text-align: center; padding: 15px; min-height: 100vh; line-height: 1.6; }
+        .container { max-width: 500px; margin: 0 auto; border: 2px solid #e0ca82; padding: 25px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; box-shadow: 0 0 30px rgba(224, 202, 130, 0.2); }
+        h1 { font-size: 1.6em; border-bottom: 1px solid #e0ca82; padding-bottom: 10px; margin-bottom: 20px; letter-spacing: 2px; }
+        input { font-size: 1.1em; padding: 10px; width: 85%; background: #0a192f; color: #fff; border: 1px solid #e0ca82; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        .btn-check { font-size: 1.1em; padding: 12px 30px; background: #e0ca82; color: #010b1a; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; width: 100%; transition: 0.4s; }
+        .btn-check:hover { background: #fff; box-shadow: 0 0 15px #fff; transform: translateY(-2px); }
+        #result { margin-top: 30px; padding: 20px; border-top: 1px double #e0ca82; display: none; text-align: left; }
+        .shuku-name { font-size: 1.8em; color: #fff; display: block; margin-bottom: 15px; text-align: center; text-shadow: 0 0 10px #e0ca82; }
+        .aroma-box { border: 1px solid #e0ca82; padding: 15px; margin-top: 25px; border-radius: 10px; background: rgba(224, 202, 130, 0.1); text-align: center; }
+        .aroma-item { color: #fff; font-weight: bold; font-size: 1.1em; margin-top: 5px; }
+        .btn-reserve { background: #d4af37; color: #000; width: 100%; padding: 15px; font-size: 1.2em; border: none; border-radius: 5px; margin-top: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s; }
+        .btn-reserve:hover { background: #fff; transform: scale(1.02); }
+        .footer-note { margin-top: 30px; font-size: 0.75em; color: #888; text-align: left; line-height: 1.6; border-top: 1px solid #333; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>宿曜占星術：魂の導記</h1>
+        <p style="font-size: 0.85em; margin-bottom: 20px;">古の智恵が教える貴方の宿命。<br>龍神の光と共に、その扉を開きましょう。</p>
+
+        <input type="date" id="birthday" value="1990-01-01">
+        <button class="btn-check" onclick="checkShukuyou()">宿命の扉を開く</button>
+
+        <div id="result">
+            <span id="shuku-display" class="shuku-name"></span>
+            <p id="comment-display"></p>
+
+            <div class="aroma-box">
+                <p style="font-size: 0.8em; margin-bottom: 5px; letter-spacing: 1px; color: #e0ca82;">◈ あなたの魂を整えるアロマ ◈</p>
+                <div id="aroma-area" class="aroma-item"></div>
+            </div>
+
+            <div style="margin-top: 30px; border-top: 1px double #e0ca82; padding-top: 20px; text-align: center;">
+                <p style="font-size: 0.85em; text-align: left; color: #ccc;">この結果をさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、あなたの今と未来をより具体的にお伝えします。</p>
+                <p style="color: #e0ca82; font-weight: bold; margin-top: 15px; font-size: 1em;">◈ 伶受 サイキックタロット鑑定 ◈</p>
+                <a href="https://form.run/@latir" target="_blank" style="text-decoration: none;">
+                    <button class="btn-reserve">ご予約はこちら</button>
+                </a>
+            </div>
+
+            <div class="footer-note">
+                <p>※ 本ツールは簡易版としてお使いください。</p>
+                <p>※ 鑑定結果はあくまで統計学に基づく目安であり、個人の行動・選択を保証するものではありません。</p>
+                <p>※ 入力された情報はサーバーに送信・保存されません。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const shukuData = [
+            { name: "角宿", comment: "純粋で豊かな感性を持つ人。貴方の生み出す美しさは周囲を癒します。自信を持って表現してください。", aroma: "ラベンダー ＆ ゼラニウム" },
+            { name: "亢宿", comment: "信念を貫く高潔な魂。その正義感は尊いものですが、時には自分を労る優しさも忘れないでください。", aroma: "フランキンセンス ＆ レモン" },
+            { name: "底宿", comment: "力強い生命力を宿しています。困難さえも糧にして、大きな花を咲かせることができる人です。", aroma: "パチョリ ＆ オレンジ" },
+            { name: "房宿", comment: "豊かさに恵まれた星。その豊かさを周囲と分かち合うことで、運気はさらに上昇していきます。", aroma: "イランイラン ＆ ベルガモット" },
+            { name: "心宿", comment: "人の心の機微を察する力を持っています。その洞察力で、多くの人を支え導いていくでしょう。", aroma: "サンダルウッド ＆ メリッサ" },
+            { name: "尾宿", comment: "一つのことに情熱を注げる一途な人。貴方の探求心が、本物の価値をこの世に生み出します。", aroma: "シダーウッド ＆ ゼンジェスト" },
+            { name: "箕宿", comment: "囚われない自由な魂。その軽やかさが、行き詰まった現状を打破する新しい風を呼び込みます。", aroma: "グレープフルーツ ＆ サイプレス" },
+            { name: "斗宿", comment: "天の加護を受け、志を成し遂げる人。貴方の夢は、貴方一人のものではなく皆の希望となります。", aroma: "フランキンセンス ＆ ローズマリー" },
+            { name: "女宿", comment: "知恵と礼節を重んじる落ち着いた魂。静かな努力が実を結び、確固たる安心を築くでしょう。", aroma: "オンガード ＆ ティーツリー" },
+            { name: "虚宿", comment: "
