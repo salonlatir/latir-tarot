@@ -8,7 +8,8 @@
         body { background: #010b1a; color: #e0ca82; font-family: 'serif'; text-align: center; padding: 15px; min-height: 100vh; line-height: 1.6; }
         .container { max-width: 500px; margin: 0 auto; border: 2px solid #e0ca82; padding: 25px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; box-shadow: 0 0 30px rgba(224, 202, 130, 0.2); }
         h1 { font-size: 1.6em; border-bottom: 1px solid #e0ca82; padding-bottom: 10px; margin-bottom: 20px; letter-spacing: 2px; }
-        input { font-size: 1.1em; padding: 10px; width: 85%; background: #0a192f; color: #fff; border: 1px solid #e0ca82; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        /* 入力欄のサイズ感を調整ｗ */
+        input { font-size: 1.1em; padding: 10px; width: 90%; background: #0a192f; color: #fff; border: 1px solid #e0ca82; border-radius: 8px; margin-bottom: 15px; outline: none; box-sizing: border-box; }
         .btn-check { font-size: 1.1em; padding: 12px 30px; background: #e0ca82; color: #010b1a; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; width: 100%; transition: 0.4s; }
         .btn-check:hover { background: #fff; box-shadow: 0 0 15px #fff; transform: translateY(-2px); }
         #result { margin-top: 30px; padding: 20px; border-top: 1px double #e0ca82; display: none; text-align: left; }
@@ -26,7 +27,7 @@
         <h1>宿曜占星術：魂の導記</h1>
         <p style="font-size: 0.85em; margin-bottom: 20px;">古の智恵が教える貴方の宿命。<br>龍神の光と共に、その扉を開きましょう。</p>
 
-        <input type="date" id="birthday" value="1990-01-01">
+        <input type="date" id="birthday" value="1990-01-01" min="1900-01-01" max="2100-12-31">
         <button class="btn-check" onclick="checkShukuyou()">宿命の扉を開く</button>
 
         <div id="result">
@@ -55,6 +56,7 @@
     </div>
 
     <script>
+        // 27宿データは変更なしのため省略せず保持
         const shukuData = [
             { name: "角宿", comment: "純粋で豊かな感性を持つ人。貴方の生み出す美しさは周囲を癒します。自信を持って表現してください。", aroma: "ラベンダー ＆ ゼラニウム" },
             { name: "亢宿", comment: "信念を貫く高潔な魂。その正義感は尊いものですが、時には自分を労る優しさも忘れないでください。", aroma: "フランキンセンス ＆ レモン" },
@@ -65,4 +67,44 @@
             { name: "箕宿", comment: "囚われない自由な魂。その軽やかさが、行き詰まった現状を打破する新しい風を呼び込みます。", aroma: "グレープフルーツ ＆ サイプレス" },
             { name: "斗宿", comment: "天の加護を受け、志を成し遂げる人。貴方の夢は、貴方一人のものではなく皆の希望となります。", aroma: "フランキンセンス ＆ ローズマリー" },
             { name: "女宿", comment: "知恵と礼節を重んじる落ち着いた魂。静かな努力が実を結び、確固たる安心を築くでしょう。", aroma: "オンガード ＆ ティーツリー" },
-            { name: "虚宿", comment: "
+            { name: "虚宿", comment: "鋭い直感を持つ精神性の高い人。目に見えないメッセージを、現実の力に変える力があります。", aroma: "アダプティブ ＆ ラベンダー" },
+            { name: "危宿", comment: "軽快な足取りと純粋な心。貴方の冒険心が、周囲に活気と喜びを運んでくれます。", aroma: "ペパーミント ＆ レモン" },
+            { name: "室宿", comment: "強い創造力を持つ人。貴方が動くことで、世界に新しい価値観の城が築かれていくでしょう。", aroma: "ワイルドオレンジ ＆ カシア" },
+            { name: "壁宿", comment: "誠実で信頼の厚い人。貴方の存在そのものが、多くの人にとっての安らぎの場所となります。", aroma: "マジョラム ＆ ラベンダー" },
+            { name: "奎宿", comment: "清らかで気品ある魂。その美学を大切にすることで、運命はより洗練されたものへ導かれます。", aroma: "ジャスミン ＆ ユーカリプタス" },
+            { name: "婁宿", comment: "周囲を和ませる才能を持つ人。貴方の細やかな気遣いが、滞っていた縁を再び繋ぎ直します。", aroma: "ベルガモット ＆ ティーツリー" },
+            { name: "胃宿", comment: "溢れるエネルギーと実行力を持つ人。困難を恐れず突き進む勇気が、幸運の扉を開きます。", aroma: "ゼンジェスト ＆ ブラックペッパー" },
+            { name: "昴宿", comment: "気高く輝く魂。貴方の言葉には、人を惹きつけ高みへと引き上げる不思議な力が宿っています。", aroma: "フランキンセンス ＆ レモングラス" },
+            { name: "畢宿", comment: "誰よりも粘り強く誠実な人。貴方がコツコツと積み上げたものは、揺るぎない財産となります。", aroma: "シダーウッド ＆ ベチバー" },
+            { name: "觜宿", comment: "知恵に溢れ、言葉の力を操る人。貴方のアドバイスが、迷える人の心に光を灯すでしょう。", aroma: "スペアミント ＆ ローズマリー" },
+            { name: "参宿", comment: "新しい時代を切り拓く開拓者。貴方の明るいエネルギーが、古い殻を破り可能性を広げます。", aroma: "ペパーミント ＆ ライム" },
+            { name: "井宿", comment: "冷静な判断力を持つ論理的な人。混乱の中でも道を見失わない姿は、皆の道標となります。", aroma: "ユーカリプタス ＆ レモン" },
+            { name: "鬼宿", comment: "豊かな想像力を持つ自由な人。枠に囚われない発想が、予期せぬ奇跡を引き寄せるでしょう。", aroma: "ラベンダー ＆ クラリセージ" },
+            { name: "柳宿", comment: "内に秘めた情熱と慈愛を持つ人。愛する人を守るための強さが、貴方の運命を強固にします。", aroma: "ゼラニウム ＆ ローズ" },
+            { name: "星宿", comment: "自分にしか歩めない道を誇り高く進む人。貴方の独自の生き方が、多くの人に勇気を与えます。", aroma: "コパイバ ＆ フランキンセンス" },
+            { name: "張宿", comment: "華やかな魅力と才能。貴方の笑顔が周囲を明るくし、成功への道を引き寄せていきます。", aroma: "シトラスブリス ＆ イランイラン" },
+            { name: "翼宿", comment: "高い理想を持ち羽ばたき続ける人。貴方の澄んだ瞳が見つめる未来は、必ず現実のものとなります。", aroma: "ドテラバランス ＆ シベリアンファー" },
+            { name: "軫宿", comment: "細部まで行き届いた優しさを持つ人。貴方の丁寧な心が、関わる全ての人を幸せに導きます。", aroma: "パルマローザ ＆ ティーツリー" }
+        ];
+
+        function checkShukuyou() {
+            const dateInput = document.getElementById('birthday').value;
+            if (!dateInput) { alert("生年月日を選んでくださいね。"); return; }
+            const date = new Date(dateInput);
+            const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
+            const magicNum = [0, 2, 5, 6, 9, 11, 14, 16, 19, 21, 24, 26];
+            // 計算式のさらなる安定化ｗ
+            let yearDiff = y - 1900;
+            let leapYears = Math.floor((y - 1901) / 4);
+            let base = (yearDiff * 5) + leapYears + magicNum[m - 1] + d;
+            let resultIndex = (base + 2) % 27;
+            if (resultIndex < 0) resultIndex += 27;
+            const res = shukuData[resultIndex];
+            document.getElementById('shuku-display').innerText = "貴方の宿星は【" + res.name + "】";
+            document.getElementById('comment-display').innerText = res.comment;
+            document.getElementById('aroma-area').innerText = res.aroma;
+            document.getElementById('result').style.display = "block";
+        }
+    </script>
+</body>
+</html>
