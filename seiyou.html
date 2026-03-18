@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西洋占星術 - 慈悲の導き：伶受</title>
+    <style>
+        body { background: #020617; color: #f3e8ff; font-family: 'serif'; text-align: center; padding: 15px; min-height: 100vh; line-height: 1.6; }
+        .container { max-width: 500px; margin: 0 auto; border: 1px solid #a855f7; padding: 25px; background: rgba(88, 28, 135, 0.1); border-radius: 20px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); }
+        h1 { font-size: 1.6em; border-bottom: 1px double #a855f7; padding-bottom: 10px; margin-bottom: 20px; color: #d8b4fe; }
+        input { font-size: 1.1em; padding: 8px; width: 80%; background: #0f172a; color: #fff; border: 1px solid #a855f7; border-radius: 8px; margin-bottom: 15px; }
+        .btn-check { font-size: 1.1em; padding: 12px 30px; background: linear-gradient(45deg, #7e22ce, #a855f7); color: #fff; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn-check:hover { background: #fff; color: #7e22ce; }
+        #result { margin-top: 30px; padding: 20px; border-top: 1px solid rgba(168, 85, 247, 0.3); display: none; }
+        .zodiac-name { font-size: 1.8em; color: #fff; display: block; margin-bottom: 15px; text-shadow: 0 0 10px #a855f7; }
+        .aroma-box { border: 1px solid #e0ca82; padding: 15px; margin-top: 25px; border-radius: 10px; background: rgba(224, 202, 130, 0.05); }
+        .aroma-item { color: #e0ca82; font-weight: bold; font-size: 1.1em; }
+        .btn-reserve { background: #d4af37; color: #000; width: 100%; padding: 15px; font-size: 1.2em; border: none; border-radius: 5px; margin-top: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .footer-note { margin-top: 30px; font-size: 0.75em; color: #888; text-align: left; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>星天の囁き</h1>
+        <p style="font-size: 0.9em;">龍神の風に乗せて、その光を読み解きましょう。</p>
+
+        <input type="date" id="birthday" value="1990-01-01">
+        <button class="btn-check" onclick="checkZodiac()">星の導きを受け取る</button>
+
+        <div id="result">
+            <span id="zodiac-display" class="zodiac-name"></span>
+            <p id="comment-display" style="text-align: left; font-size: 1em;"></p>
+
+            <div class="aroma-box">
+                <p style="font-size: 0.8em; margin-bottom: 10px; letter-spacing: 1px;">◈ あなたに合う doTERRA オイル ◈</p>
+                <div id="aroma-area" class="aroma-item"></div>
+            </div>
+
+            <div style="margin-top: 30px; border-top: 1px double #e0ca82; padding-top: 20px;">
+                <p style="font-size: 0.85em;">この結果をさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定では、<br>あなたの今と未来をより具体的にお伝えします。</p>
+                <p style="color: #e0ca82; font-weight: bold; margin-top: 10px; font-size: 0.9em;">◈ 伶受 サイキックタロット鑑定 ◈</p>
+                <a href="https://form.run/@latir" target="_blank">
+                    <button class="btn-reserve">ご予約はこちら</button>
+                </a>
+            </div>
+
+            <div class="footer-note">
+                <p>※ 本ツールは簡易版としてお使いください。</p>
+                <p>※ 鑑定結果はあくまで目安であり、個人の行動・選択を保証するものではありません。</p>
+                <p>※ 入力された情報はサーバーに保存されません。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const zodiacData = [
+            { name: "山羊座", comment: "険しい道も一歩ずつ登りきる、誠実な努力の人。その歩みは必ず大成へ繋がります。", aroma: "オンガード ＆ シダーウッド" },
+            { name: "水瓶座", comment: "枠に囚われない自由な感性の人。貴方の独創性が、新しい時代を切り拓く光となります。", aroma: "グレープフルーツ ＆ ペパーミント" },
+            { name: "魚座", comment: "海のように深く全てを包み込む優しさを持つ貴方。その共感力は周囲を癒す聖なる雫です。", aroma: "ラベンダー ＆ セレニティー" },
+            { name: "牡羊座", comment: "真っ直ぐな瞳で未来を見つめる情熱の人。貴方の勇気が、多くの人の背中を押しています。", aroma: "レモン ＆ ペパーミント" },
+            { name: "牡牛座", comment: "五感に恵まれ、豊かさを慈しむことができる人。丁寧な暮らしが幸運を大きく育みます。", aroma: "オレンジ ＆ ゼラニウム" },
+            { name: "双子座", comment: "軽やかな知性と好奇心を持つ人。人と言葉を繋ぐその才能は、世界に彩りを与えます。", aroma: "レモン ＆ ローズマリー" },
+            { name: "蟹座", comment: "大切な人を守り抜く、深い愛情を宿した貴方。貴方の側は、誰もが安心できる聖域です。", aroma: "ラベンダー ＆ オレンジ" },
+            { name: "獅子座", comment: "太陽のように明るく、気高い輝きを放つ人。自分自身を愛し、その舞台を楽しんで。", aroma: "フランキンセンス ＆ オレンジ" },
+            { name: "乙女座", comment: "細やかな気配りと誠実さを持つ人。貴方の知性は、混乱を整え美しい秩序を生みます。", aroma: "ティーツリー ＆ ラベンダー" },
+            { name: "天秤座", comment: "調和を愛し、美しいバランス感覚を持つ貴方。その存在は争いを鎮め、世界を和ませます。", aroma: "イランイラン ＆ ベルガモット" },
+            { name: "蠍座", comment: "深い洞察力と情熱を秘めた人。揺るぎない強さが、不可能を可能にする奇跡を呼びます。", aroma: "フランキンセンス ＆ ティーツリー" },
+            { name: "射手座", comment: "理想を掲げ、未知へ挑戦し続ける貴方。楽観的なエネルギーが周囲を照らす太陽に。", aroma: "ドテラバランス ＆ スペミント" }
+        ];
+
+        function checkZodiac() {
+            const date = new Date(document.getElementById('birthday').value);
+            if (isNaN(date)) { alert("生年月日を選んでくださいね。"); return; }
+            const m = date.getMonth() + 1, d = date.getDate();
+            let i = (m==1&&d>=20)||(m==2&&d<=18)?1:(m==2&&d>=19)||(m==3&&d<=20)?2:(m==3&&d>=21)||(m==4&&d<=19)?3:(m==4&&d>=20)||(m==5&&d<=20)?4:(m==5&&d>=21)||(m==6&&d<=21)?5:(m==6&&d>=22)||(m==7&&d<=22)?6:(m==7&&d>=23)||(m==8&&d<=22)?7:(m==8&&d>=23)||(m==9&&d<=22)?8:(m==9&&d>=23)||(m==10&&d<=23)?9:(m==10&&d>=24)||(m==11&&d<=22)?10:(m==11&&d>=23)||(m==12&&d<=21)?11:0;
+            const res = zodiacData[i];
+            document.getElementById('zodiac-display').innerText = "【" + res.name + "】";
+            document.getElementById('comment-display').innerText = res.comment;
+            document.getElementById('aroma-area').innerText = res.aroma;
+            document.getElementById('result').style.display = "block";
+        }
+    </script>
+</body>
+</html>
