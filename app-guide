@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rayju鑑定をお持ち帰り - Salon Latir</title>
+    <style>
+        body { background: #0a0a0a; color: #e0ca82; font-family: 'serif'; text-align: center; padding: 20px; line-height: 1.8; }
+        .container { max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 30px; background: rgba(20, 20, 20, 0.9); border-radius: 20px; box-shadow: 0 0 50px rgba(212, 175, 55, 0.3); }
+        h1 { font-size: 1.8em; color: #fff; text-shadow: 0 0 10px #d4af37; margin-bottom: 30px; letter-spacing: 2px; }
+        .icon-preview { width: 100px; height: 100px; border-radius: 20px; border: 2px solid #d4af37; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .selection-box { display: flex; justify-content: space-around; margin-bottom: 40px; gap: 10px; }
+        .select-card { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 12px; width: 45%; cursor: pointer; transition: 0.3s; }
+        .select-card:hover { background: rgba(212, 175, 55, 0.2); transform: translateY(-3px); }
+        .select-card h3 { font-size: 0.9em; margin: 0; color: #fff; }
+        
+        .how-to-section { display: none; margin-top: 30px; text-align: left; padding: 20px; border-top: 1px double #d4af37; animation: fadeIn 0.8s; }
+        .step { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
+        .step span { color: #d4af37; font-weight: bold; margin-right: 10px; }
+        
+        .btn-toggle { background: #d4af37; color: #000; padding: 10px 20px; border: none; border-radius: 20px; font-weight: bold; margin: 10px; cursor: pointer; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="https://via.placeholder.com/150/000000/d4af37?text=Rayju" alt="Rayju Icon" class="icon-preview"> <h1>Rayjuをホーム画面に。</h1>
+        <p style="font-size: 0.9em;">「毎日手軽に占いたい」「Rayjuの城へすぐ行きたい」<br>そんな貴方のために、お持ち帰り（ホーム画面追加）の手順を記しまする。ｗ</p>
+
+        <div class="selection-box">
+            <div class="select-card" onclick="showHowTo('iphone')">
+                <h3>iPhoneの方<br>(Safari)</h3>
+            </div>
+            <div class="select-card" onclick="showHowTo('android')">
+                <h3>Androidの方<br>(Chrome)</h3>
+            </div>
+        </div>
+
+        <div id="how-to-iphone" class="how-to-section">
+            <h2 style="text-align:center; color:#d4af37; font-size:1.2em;">◈ iPhoneでの手順 ◈</h2>
+            <div class="step"><span>1</span>Safariの下にある「共有ボタン（□に↑）」をタップ。</div>
+            <div class="step"><span>2</span>出てきたメニューを下にスクロール。</div>
+            <div class="step"><span>3</span>「ホーム画面に追加」をタップ。</div>
+            <div class="step"><span>4</span>右上の「追加」を押せば、Rayjuが貴方のスマホに住み着きますｗ</div>
+        </div>
+
+        <div id="how-to-android" class="how-to-section">
+            <h2 style="text-align:center; color:#d4af37; font-size:1.2em;">◈ Androidでの手順 ◈</h2>
+            <div class="step"><span>1</span>Chromeの右上にある「︙（三点リーダー）」をタップ。</div>
+            <div class="step"><span>2</span>「ホーム画面に追加」をタップ。</div>
+            <div class="step"><span>3</span>「追加」をタップすれば、黄金のアイコンがホームに出現しますｗ</div>
+        </div>
+
+        <div style="margin-top: 40px; font-size: 0.8em; color: #888;">
+            <p>※各シミュレーターのページでこれを行えば、その占い専用のショートカットになりまする。ｗ</p>
+            <p>※ホームページ（TOP）で行えば、Rayjuの城すべてへの入り口になりまする。ｗ</p>
+        </div>
+
+        <a href="index.html" style="color: #d4af37; text-decoration: none; font-size: 0.9em;">← 本丸（ホームページ）へ戻る</a>
+    </div>
+
+    <script>
+        function showHowTo(os) {
+            document.getElementById('how-to-iphone').style.display = 'none';
+            document.getElementById('how-to-android').style.display = 'none';
+            document.getElementById('how-to-' + os).style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
