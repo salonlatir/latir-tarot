@@ -1,72 +1,751 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayju鑑定をお持ち帰り - Salon Latir</title>
-    <style>
-        body { background: #0a0a0a; color: #e0ca82; font-family: 'serif'; text-align: center; padding: 20px; line-height: 1.8; }
-        .container { max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 30px; background: rgba(20, 20, 20, 0.9); border-radius: 20px; box-shadow: 0 0 50px rgba(212, 175, 55, 0.3); }
-        h1 { font-size: 1.8em; color: #fff; text-shadow: 0 0 10px #d4af37; margin-bottom: 30px; letter-spacing: 2px; }
-        .icon-preview { width: 100px; height: 100px; border-radius: 20px; border: 2px solid #d4af37; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .selection-box { display: flex; justify-content: space-around; margin-bottom: 40px; gap: 10px; }
-        .select-card { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 12px; width: 45%; cursor: pointer; transition: 0.3s; }
-        .select-card:hover { background: rgba(212, 175, 55, 0.2); transform: translateY(-3px); }
-        .select-card h3 { font-size: 0.9em; margin: 0; color: #fff; }
-        
-        .how-to-section { display: none; margin-top: 30px; text-align: left; padding: 20px; border-top: 1px double #d4af37; animation: fadeIn 0.8s; }
-        .step { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
-        .step span { color: #d4af37; font-weight: bold; margin-right: 10px; }
-        
-        .btn-toggle { background: #d4af37; color: #000; padding: 10px 20px; border: none; border-radius: 20px; font-weight: bold; margin: 10px; cursor: pointer; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>占いの部屋をホーム画面に追加 | Latir</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Cinzel:wght@400;600&display=swap');
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --gold-dim: #8a6e30;
+    --black: #0a0a0a;
+    --black-mid: #141414;
+    --black-card: #1a1714;
+    --text: #e8e0d0;
+    --text-dim: #9a8f7a;
+    --border: rgba(201,168,76,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 背景装飾 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 90%, rgba(201,168,76,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* ヘッダー */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .header-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--gold-light);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .header-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 16px auto;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+  }
+
+  /* セクションタイトル */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-title-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    background: rgba(201,168,76,0.05);
+  }
+
+  .section-title h2 {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+  }
+
+  .section-title p {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  /* メインカード */
+  .card {
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  /* パターン選択タブ */
+  .pattern-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .pattern-tab {
+    flex: 1;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    background: var(--black-card);
+    border: none;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+  }
+
+  .pattern-tab:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .pattern-tab.active {
+    background: rgba(201,168,76,0.1);
+    color: var(--gold-light);
+  }
+
+  .pattern-tab .tab-icon {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  /* インストールボタン群 */
+  .install-section {
+    display: none;
+  }
+  .install-section.active {
+    display: block;
+  }
+
+  /* 「占いの部屋まるごと」ボタン */
+  .main-install-btn {
+    display: block;
+    width: 100%;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+    border: 1px solid var(--gold-dim);
+    border-radius: 2px;
+    color: var(--gold-light);
+    text-decoration: none;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .main-install-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .main-install-btn:hover::after,
+  .main-install-btn:active::after {
+    opacity: 1;
+  }
+
+  .main-install-btn .btn-label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* 個別シミュレーターグリッド */
+  .simulator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .sim-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 8px;
+    background: rgba(201,168,76,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    line-height: 1.4;
+    min-height: 80px;
+  }
+
+  .sim-btn:hover, .sim-btn:active {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold-dim);
+    color: var(--gold-light);
+  }
+
+  .sim-btn .sim-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* 手順カード */
+  .steps-card {
+    background: rgba(10,10,10,0.8);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 2px;
+    padding: 0;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+
+  /* OS切り替えタブ */
+  .os-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .os-tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    transition: all 0.25s;
+  }
+
+  .os-tab.active {
+    color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  .os-tab:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  /* 手順コンテンツ */
+  .os-content {
+    display: none;
+    padding: 24px 20px;
+  }
+
+  .os-content.active {
+    display: block;
+  }
+
+  .steps-list {
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .steps-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* 縦線 */
+  .steps-list li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 30px;
+    bottom: -20px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    opacity: 0.4;
+  }
+
+  .step-num {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--gold);
+    flex-shrink: 0;
+    background: rgba(201,168,76,0.05);
+  }
+
+  .step-body {
+    flex: 1;
+    padding-top: 4px;
+  }
+
+  .step-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+
+  .step-highlight {
+    display: inline-block;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 3px;
+    padding: 1px 7px;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+
+  /* 区切り線 */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* 注意書き */
+  .note-box {
+    background: rgba(201,168,76,0.04);
+    border-left: 2px solid var(--gold-dim);
+    padding: 14px 16px;
+    margin-top: 20px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .note-box p {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+
+  .note-box strong {
+    color: var(--gold);
+  }
+
+  /* 予約誘導 */
+  .cta-box {
+    text-align: center;
+    padding: 32px 20px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    margin-top: 32px;
+    background: var(--black-card);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: '🐉';
+    position: absolute;
+    font-size: 80px;
+    opacity: 0.04;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .cta-box h3 {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+
+  .cta-box p {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: var(--black);
+    text-decoration: none;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    border-radius: 1px;
+    transition: opacity 0.25s;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  /* ラベル */
+  .pattern-label {
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    padding-left: 2px;
+  }
+
+  /* レスポンシブ */
+  @media (max-width: 400px) {
+    .simulator-grid {
+      grid-template-columns: 1fr;
+    }
+    .header h1 { font-size: 18px; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <img src="https://via.placeholder.com/150/000000/d4af37?text=Rayju" alt="Rayju Icon" class="icon-preview"> <h1>Rayjuをホーム画面に。</h1>
-        <p style="font-size: 0.9em;">「毎日手軽に占いたい」「Rayjuの城へすぐ行きたい」<br>そんな貴方のために、お持ち帰り（ホーム画面追加）の手順を記しまする。ｗ</p>
+<div class="container">
 
-        <div class="selection-box">
-            <div class="select-card" onclick="showHowTo('iphone')">
-                <h3>iPhoneの方<br>(Safari)</h3>
-            </div>
-            <div class="select-card" onclick="showHowTo('android')">
-                <h3>Androidの方<br>(Chrome)</h3>
-            </div>
-        </div>
+  <!-- ヘッダー -->
+  <div class="header">
+    <div class="header-label">Latir × 占いの部屋</div>
+    <h1>🔮 占いをホーム画面へ<br>いつでも気軽に占いを</h1>
+    <div class="header-divider"></div>
+    <p>スマホのホーム画面に追加しておくと<br>アプリのようにすぐ開けます</p>
+  </div>
 
-        <div id="how-to-iphone" class="how-to-section">
-            <h2 style="text-align:center; color:#d4af37; font-size:1.2em;">◈ iPhoneでの手順 ◈</h2>
-            <div class="step"><span>1</span>Safariの下にある「共有ボタン（□に↑）」をタップ。</div>
-            <div class="step"><span>2</span>出てきたメニューを下にスクロール。</div>
-            <div class="step"><span>3</span>「ホーム画面に追加」をタップ。</div>
-            <div class="step"><span>4</span>右上の「追加」を押せば、Rayjuが貴方のスマホに住み着きますｗ</div>
-        </div>
+  <!-- パターン選択 -->
+  <div class="section-title">
+    <div class="section-title-icon">✦</div>
+    <div>
+      <h2>お持ち帰りスタイルを選んでね</h2>
+      <p>2つのパターンからお選びいただけます</p>
+    </div>
+  </div>
 
-        <div id="how-to-android" class="how-to-section">
-            <h2 style="text-align:center; color:#d4af37; font-size:1.2em;">◈ Androidでの手順 ◈</h2>
-            <div class="step"><span>1</span>Chromeの右上にある「︙（三点リーダー）」をタップ。</div>
-            <div class="step"><span>2</span>「ホーム画面に追加」をタップ。</div>
-            <div class="step"><span>3</span>「追加」をタップすれば、黄金のアイコンがホームに出現しますｗ</div>
-        </div>
+  <div class="pattern-tabs">
+    <button class="pattern-tab active" onclick="switchPattern('room')">
+      <span class="tab-icon">🏠</span>
+      占いの部屋<br>まるごと
+    </button>
+    <button class="pattern-tab" onclick="switchPattern('single')">
+      <span class="tab-icon">⭐</span>
+      好きな占いを<br>ひとつだけ
+    </button>
+  </div>
 
-        <div style="margin-top: 40px; font-size: 0.8em; color: #888;">
-            <p>※各シミュレーターのページでこれを行えば、その占い専用のショートカットになりまする。ｗ</p>
-            <p>※ホームページ（TOP）で行えば、Rayjuの城すべてへの入り口になりまする。ｗ</p>
-        </div>
+  <!-- パターンA: まるごと -->
+  <div id="pattern-room" class="install-section active">
+    <div class="card">
+      <p class="pattern-label">▶ パターン①　占いの部屋をまるごとホーム画面へ</p>
 
-        <a href="index.html" style="color: #d4af37; text-decoration: none; font-size: 0.9em;">← 本丸（ホームページ）へ戻る</a>
+      <a class="main-install-btn" href="https://salonlatir.wixsite.com/salon/uranairoom" id="room-link">
+        ✦ 占いの部屋を開く
+        <span class="btn-label">← このページを開いた状態でホーム画面に追加してね</span>
+      </a>
+
+      <div class="note-box">
+        <p>上のボタンでページを開き、<strong>下の手順</strong>でホーム画面に追加すると<br>「占いの部屋」がまるごとアイコンになります🌙</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- パターンB: 個別 -->
+  <div id="pattern-single" class="install-section">
+    <div class="card">
+      <p class="pattern-label">▶ パターン②　使いたいシミュレーターを個別に追加</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:16px;letter-spacing:0.05em;line-height:1.8;">
+        追加したい占いを開いて、下の手順でホーム画面に追加してね
+      </p>
+
+      <div class="simulator-grid">
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/tarotsimulator">
+          <span class="sim-icon">🃏</span>伶受監修<br>タロット占い
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/ryujintarotsimulator">
+          <span class="sim-icon">🐉</span>龍神タロット占い
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/twinraytarotsimulator">
+          <span class="sim-icon">💫</span>ツインレイ<br>タロット占い
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/shichusuimei">
+          <span class="sim-icon">☯️</span>四柱推命
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/namejudgment">
+          <span class="sim-icon">📝</span>簡単姓名判断
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/numerology">
+          <span class="sim-icon">🔢</span>数秘術
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/kyuseikigaku">
+          <span class="sim-icon">⭐</span>九星気学・<br>相性占い
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/biorhythm">
+          <span class="sim-icon">📈</span>バイオリズム
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/arithmetic">
+          <span class="sim-icon">🌌</span>算命学
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/shukuyo">
+          <span class="sim-icon">🌙</span>宿曜占星術
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/rune">
+          <span class="sim-icon">᚛</span>ルーン占い
+        </a>
+        <a class="sim-btn" href="https://salonlatir.wixsite.com/salon/musicbox">
+          <span class="sim-icon">🎵</span>開運<br>ミュージック診断
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手順（共通） -->
+  <hr class="divider">
+
+  <div class="section-title">
+    <div class="section-title-icon">📱</div>
+    <div>
+      <h2>ホーム画面への追加手順</h2>
+      <p>iPhoneとAndroid、どちらのやり方もご案内します</p>
+    </div>
+  </div>
+
+  <div class="steps-card">
+    <div class="os-tabs">
+      <button class="os-tab active" onclick="switchOS('ios')">🍎 iPhone（Safari）</button>
+      <button class="os-tab" onclick="switchOS('android')">🤖 Android（Chrome）</button>
     </div>
 
-    <script>
-        function showHowTo(os) {
-            document.getElementById('how-to-iphone').style.display = 'none';
-            document.getElementById('how-to-android').style.display = 'none';
-            document.getElementById('how-to-' + os).style.display = 'block';
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-    </script>
+    <!-- iOS手順 -->
+    <div id="ios-steps" class="os-content active">
+      <ul class="steps-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Safariでページを開く</div>
+            <div class="step-desc">
+              上のボタンから追加したいページを開いてください。<br>
+              <span class="step-highlight">⚠️ ChromeではなくSafariで開いてください</span>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">共有ボタンをタップ</div>
+            <div class="step-desc">
+              画面下の真ん中にある <span class="step-highlight">📤 共有ボタン</span> をタップします
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">「ホーム画面に追加」を選ぶ</div>
+            <div class="step-desc">
+              メニューをスクロールして <span class="step-highlight">＋ ホーム画面に追加</span> をタップします
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">名前を確認して「追加」</div>
+            <div class="step-desc">
+              名前はそのままで <span class="step-highlight">追加</span> をタップすれば完了です🎉<br>
+              ホーム画面にアイコンが現れます
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Android手順 -->
+    <div id="android-steps" class="os-content">
+      <ul class="steps-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Chromeでページを開く</div>
+            <div class="step-desc">
+              上のボタンから追加したいページを開いてください。<br>
+              <span class="step-highlight">Chromeブラウザを使ってください</span>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">右上のメニューをタップ</div>
+            <div class="step-desc">
+              画面右上の <span class="step-highlight">⋮ （縦3点）</span> をタップします
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">「ホーム画面に追加」を選ぶ</div>
+            <div class="step-desc">
+              メニューの中の <span class="step-highlight">＋ ホーム画面に追加</span> をタップします
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">「追加」をタップして完了</div>
+            <div class="step-desc">
+              確認画面が出たら <span class="step-highlight">追加</span> をタップすれば完了です🎉<br>
+              ホーム画面にアイコンが現れます
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top:16px;">
+    <p>
+      ✦ <strong>iPhoneの方：</strong>必ずSafariで開いてください。Chromeや他のブラウザでは「ホーム画面に追加」が出ないことがあります。<br><br>
+      ✦ ホーム画面のアイコンから開くと、毎回最新の状態で表示されます。
+    </p>
+  </div>
+
+  <!-- 予約CTA -->
+  <div class="cta-box">
+    <h3>🌙 もっと深く知りたいなら</h3>
+    <p>シミュレーターで気になることがあったら<br>ぜひ本鑑定でご相談ください</p>
+    <a class="cta-btn" href="https://form.run/@latir">ご予約はこちら ✦</a>
+  </div>
+
+</div>
+
+<script>
+  function switchPattern(pattern) {
+    document.querySelectorAll('.install-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.pattern-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('pattern-' + pattern).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  function switchOS(os) {
+    document.querySelectorAll('.os-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.os-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(os + '-steps').classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // スマホのOSを自動判定して初期表示を切り替え
+  window.addEventListener('DOMContentLoaded', function() {
+    const ua = navigator.userAgent;
+    if (/Android/.test(ua)) {
+      switchOSAuto('android');
+    }
+  });
+
+  function switchOSAuto(os) {
+    document.querySelectorAll('.os-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.os-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(os + '-steps').classList.add('active');
+    document.querySelector('.os-tab:last-child').classList.add('active');
+  }
+</script>
+
 </body>
 </html>
