@@ -1,0 +1,25 @@
+{
+  "name": "伶受の姓名判断 | Latir",
+  "short_name": "Latir姓名判断",
+  "description": "Latir占いの部屋 - 姓名判断",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0800",
+  "theme_color": "#c9a84c",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "namejudgment-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "namejudgment-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

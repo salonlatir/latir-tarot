@@ -1,0 +1,25 @@
+{
+  "name": "伶受の数秘術 | Latir",
+  "short_name": "Latir数秘術",
+  "description": "Latir占いの部屋 - 数秘術",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0800",
+  "theme_color": "#c9a84c",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "numerology-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "numerology-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

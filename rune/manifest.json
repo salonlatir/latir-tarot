@@ -1,0 +1,25 @@
+{
+  "name": "伶受のルーン占い | Latir",
+  "short_name": "Latirルーン",
+  "description": "Latir占いの部屋 - ルーン占い",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0800",
+  "theme_color": "#c9a84c",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "rune-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "rune-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

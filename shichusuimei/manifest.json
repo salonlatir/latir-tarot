@@ -1,0 +1,25 @@
+{
+  "name": "伶受の四柱推命 | Latir",
+  "short_name": "Latir四柱推命",
+  "description": "Latir占いの部屋 - 四柱推命",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0800",
+  "theme_color": "#c9a84c",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "shichusuimei-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "shichusuimei-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

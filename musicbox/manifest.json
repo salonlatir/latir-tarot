@@ -1,0 +1,25 @@
+{
+  "name": "伶受の開運ミュージック | Latir",
+  "short_name": "Latir開運音楽",
+  "description": "Latir占いの部屋 - 開運ミュージック",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0800",
+  "theme_color": "#c9a84c",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "musicbox-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "musicbox-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
