@@ -1,5 +1,4 @@
-// Latir PWA Service Worker
-const CACHE_NAME = 'latir-v1';
+const CACHE_NAME = 'latir-v2';
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', './manifest.json'])));
   self.skipWaiting();
