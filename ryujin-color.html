@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>龍神カラー診断 - 守護龍神の導き：伶受</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Cinzel:wght@400;700&display=swap');
+
+        :root {
+            --gold: #e0ca82;
+            --gold-dim: #a08840;
+            --bg: #010810;
+            --bg2: #050d1a;
+            --text: #f0e8d0;
+            --text-dim: #8a7a5a;
+            --border: rgba(224,202,130,0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Noto Serif JP', serif;
+            min-height: 100vh;
+            padding: 20px 15px 40px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* 背景の龍の鱗模様 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                radial-gradient(ellipse at 20% 20%, rgba(224,202,130,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(224,202,130,0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ヘッダー */
+        .header {
+            text-align: center;
+            padding: 30px 0 25px;
+        }
+
+        .header-dragon {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .header h2 {
+            font-size: 1.4em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--text);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 0;
+            margin: 10px 0;
+        }
+
+        .header p {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* 診断カード */
+        .quiz-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(224,202,130,0.05);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .progress-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            transition: all 0.3s;
+        }
+
+        .progress-dot.active { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+        .progress-dot.done { background: var(--gold-dim); }
+
+        .question-num {
+            font-size: 0.75em;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 1.05em;
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 22px;
+            color: var(--text);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.9em;
+            padding: 12px 16px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+        }
+
+        .choice-btn:hover {
+            background: rgba(224,202,130,0.08);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateX(4px);
+        }
+
+        .choice-btn.selected {
+            background: rgba(224,202,130,0.12);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* 結果エリア */
+        #result { display: none; }
+
+        .result-card {
+            border-radius: 15px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.08;
+            background: var(--dragon-color, var(--gold));
+        }
+
+        .result-dragon-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .result-label {
+            font-size: 0.75em;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .result-name {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .result-en {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85em;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .result-color-swatch {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px var(--dragon-color, var(--gold)), 0 0 40px rgba(0,0,0,0.5);
+            background: var(--dragon-color, var(--gold));
+        }
+
+        .result-message {
+            font-size: 0.9em;
+            line-height: 1.9;
+            text-align: left;
+            color: var(--text);
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--dragon-color, var(--gold));
+        }
+
+        .result-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .trait-tag {
+            background: rgba(224,202,130,0.1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.8em;
+            color: var(--gold);
+        }
+
+        .dragon-voice {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+            font-size: 0.88em;
+            line-height: 1.9;
+            color: var(--text);
+            font-style: italic;
+            position: relative;
+        }
+
+        .dragon-voice::before {
+            content: '✦ 龍神様からのメッセージ ✦';
+            display: block;
+            font-style: normal;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* アロマ */
+        .aroma-section {
+            background: rgba(224,202,130,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .aroma-title {
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .aroma-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .aroma-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .aroma-name { font-size: 1em; font-weight: 700; color: var(--gold); }
+        .aroma-en { font-size: 0.75em; color: var(--text-dim); letter-spacing: 1px; }
+        .aroma-reason { font-size: 0.83em; color: var(--text); line-height: 1.7; }
+
+        /* ボタン */
+        .btn-reserve {
+            background: linear-gradient(135deg, #b8962e, #e0ca82, #b8962e);
+            color: #000;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Serif JP', serif;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(224,202,130,0.3);
+        }
+
+        .btn-reserve:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(224,202,130,0.5); }
+
+        .btn-retry {
+            background: transparent;
+            color: var(--text-dim);
+            width: 100%;
+            padding: 12px;
+            font-size: 0.9em;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Noto Serif JP', serif;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .btn-retry:hover { color: var(--gold); border-color: var(--gold); }
+
+        .footer-note {
+            font-size: 0.72em;
+            color: #555;
+            line-height: 1.7;
+            border-top: 1px solid #222;
+            padding-top: 15px;
+        }
+
+        /* フェードイン */
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-dragon">🐉</div>
+        <h1>RYUJIN COLOR DIAGNOSIS</h1>
+        <h2>龍神カラー診断</h2>
+        <p>あなたを守護する龍神様を、魂の声から読み解きます</p>
+    </div>
+
+    <!-- 診断エリア -->
+    <div id="quiz">
+        <div class="quiz-card">
+            <div class="progress-bar" id="progress"></div>
+            <div class="question-num" id="q-num"></div>
+            <div class="question-text" id="q-text"></div>
+            <div class="choices" id="q-choices"></div>
+        </div>
+    </div>
+
+    <!-- 結果エリア -->
+    <div id="result">
+        <div class="result-card" id="result-card">
+            <div class="result-dragon-icon" id="res-icon"></div>
+            <div class="result-label">あなたの守護龍神は</div>
+            <div class="result-name" id="res-name"></div>
+            <div class="result-en" id="res-en"></div>
+            <div class="result-color-swatch" id="res-swatch"></div>
+            <div class="result-traits" id="res-traits"></div>
+            <div class="result-message" id="res-message"></div>
+        </div>
+
+        <div class="dragon-voice" id="res-voice"></div>
+
+        <div class="aroma-section">
+            <div class="aroma-title">◈ 守護龍神と共鳴するアロマ ◈</div>
+            <div class="aroma-items" id="res-aroma"></div>
+        </div>
+
+        <div style="text-align:center; margin-bottom:20px;">
+            <p style="font-size:0.85em; color:#ccc; margin-bottom:12px;">守護龍神のメッセージをさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定で、あなたの今と未来を具体的にお伝えします。</p>
+            <p style="color:var(--gold); font-weight:bold; margin-bottom:12px; font-size:0.95em;">◈ 伶受 サイキックタロット鑑定 ◈</p>
+            <a href="https://form.run/@latir" target="_blank" style="text-decoration:none;">
+                <button class="btn-reserve">ご予約はこちら</button>
+            </a>
+        </div>
+
+        <button class="btn-retry" onclick="restartQuiz()">🔄 もう一度診断する</button>
+
+        <div class="footer-note">
+            <p>※ 本ツールは簡易版としてお使いください。</p>
+            <p>※ 診断結果はスピリチュアルな観点に基づく目安であり、個人の行動・選択を保証するものではありません。</p>
+            <p>※ 入力された情報はサーバーに送信・保存されません。</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ===== 龍神データ =====
+const DRAGONS = {
+    gold: {
+        name: '金龍', en: 'GOLDEN DRAGON', icon: '🐉',
+        color: '#e0ca82',
+        traits: ['豊かさ','繁栄','強運','カリスマ','現実創造'],
+        message: '金龍はあなたの魂に宿る豊かさのエネルギーを守護しています。物質的・精神的な豊かさを同時に引き寄せる力を持ち、あなたの行動一つひとつが黄金の光で照らされています。自信を持って前に進みましょう。',
+        voice: '「あなたの歩む道に、我が黄金の光を降り注ごう。恐れることなく大きく望みなさい。豊かさとは本来、あなたに与えられた魂の権利。その扉を自ら開く勇気を持ちなさい。」',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: '金龍の神聖な豊かさのエネルギーと共鳴し、繁栄への道を開きます。' },
+            { name: 'グレープフルーツ', en: 'Grapefruit', reason: '金龍の明るい勝運エネルギーを引き寄せ、豊かさへの流れを整えます。' },
+            { name: 'シナモンバーク', en: 'Cinnamon Bark', reason: '金龍の情熱と実行力のエネルギーを高め、成功への道をサポートします。' }
+        ]
+    },
+    white: {
+        name: '白龍', en: 'WHITE DRAGON', icon: '🤍',
+        color: '#e8e8f0',
+        traits: ['浄化','純粋','癒し','直感','神聖な守護'],
+        message: '白龍はあなたの魂の純粋さと繊細な感性を守護しています。高い精神性と直感力を持つあなたを、邪気から守り、魂を常に清らかに保つ力を与えてくれています。',
+        voice: '「我、白龍はあなたの魂を常に清らかな光で包んでいます。迷ったときは静かに内なる声に耳を澄ませなさい。その声こそが、我からの導きの言葉です。」',
+        aroma: [
+            { name: 'ラベンダー', en: 'Lavender', reason: '白龍の浄化と癒しのエネルギーと共鳴し、魂の純粋さを保ちます。' },
+            { name: 'フランキンセンス', en: 'Frankincense', reason: '白龍の神聖な守護力を高め、高い精神性へのアクセスをサポートします。' },
+            { name: 'サンダルウッド', en: 'Sandalwood', reason: '白龍の静寂と瞑想のエネルギーを深め、直感力を開きます。' }
+        ]
+    },
+    black: {
+        name: '黒龍', en: 'BLACK DRAGON', icon: '🖤',
+        color: '#6a5acd',
+        traits: ['変容','深淵','再生','秘密','強い意志'],
+        message: '黒龍はあなたの魂の深い変容と再生の力を守護しています。困難をも糧にして生まれ変わるエネルギーを持つあなたを、闇の中でも迷わず進めるよう導いてくれています。',
+        voice: '「深淵より現れる我、黒龍はあなたの変容を見届けてきた。恐れるな。闇は終わりではなく、新たな光が生まれる前夜である。その試練は全て、あなたが輝くための礎となる。」',
+        aroma: [
+            { name: 'パチョリ', en: 'Patchouli', reason: '黒龍の深い変容と再生のエネルギーを支え、グラウンディングをサポートします。' },
+            { name: 'ベチバー', en: 'Vetiver', reason: '黒龍の強い意志と大地の力を呼び覚まし、魂の根を安定させます。' },
+            { name: 'ミルラ', en: 'Myrrh', reason: '黒龍の深淵の智慧と浄化のエネルギーを高め、魂の完成へと導きます。' }
+        ]
+    },
+    blue: {
+        name: '青龍', en: 'BLUE DRAGON', icon: '💙',
+        color: '#4a9eff',
+        traits: ['成長','前進','可能性','知性','新しい始まり'],
+        message: '青龍はあなたの魂の無限の可能性と成長を守護しています。知性と探求心に溢れるあなたを、常に新しい扉へと導き、進化し続けるエネルギーを与えてくれています。',
+        voice: '「大空を駆ける我、青龍はあなたの可能性に限界などないと知っている。恐れず羽ばたきなさい。あなたの前に広がる空は、無限の祝福で満ちている。」',
+        aroma: [
+            { name: 'ペパーミント', en: 'Peppermint', reason: '青龍の前進と成長のエネルギーと共鳴し、新しい可能性への道を開きます。' },
+            { name: 'レモン', en: 'Lemon', reason: '青龍の知性と明晰さのエネルギーを高め、新たな始まりをサポートします。' },
+            { name: 'ユーカリプタス', en: 'Eucalyptus', reason: '青龍の清々しい前進エネルギーを整え、呼吸とともに可能性を広げます。' }
+        ]
+    },
+    red: {
+        name: '赤龍', en: 'RED DRAGON', icon: '❤️‍🔥',
+        color: '#ff4a4a',
+        traits: ['情熱','行動力','勝利','愛','強烈なエネルギー'],
+        message: '赤龍はあなたの魂に宿る情熱と強烈な生命エネルギーを守護しています。誰よりも熱く、誰よりも強く生きるあなたを、勝利と愛の道へと導いてくれています。',
+        voice: '「炎をまとう我、赤龍はあなたの情熱の炎を絶やさぬよう守っている。燃え尽きることを恐れるな。真の情熱は燃えれば燃えるほど強くなる。全力で生き、全力で愛しなさい。」',
+        aroma: [
+            { name: 'カシア', en: 'Cassia', reason: '赤龍の情熱と行動力のエネルギーと共鳴し、勝利へのエネルギーを高めます。' },
+            { name: 'ジンジャー', en: 'Ginger', reason: '赤龍の強烈な生命エネルギーを内側から燃え上がらせ、行動力をサポートします。' },
+            { name: 'オレガノ', en: 'Oregano', reason: '赤龍の強い守護力を高め、邪気を払い情熱の道を切り開きます。' }
+        ]
+    },
+    purple: {
+        name: '紫龍', en: 'PURPLE DRAGON', icon: '💜',
+        color: '#9b59b6',
+        traits: ['霊性','神秘','高次元','使命','スピリチュアル覚醒'],
+        message: '紫龍はあなたの魂の高い霊性とスピリチュアルな使命を守護しています。この世とあの世の境界を超えた深い洞察力を持つあなたを、魂の覚醒へと導いてくれています。',
+        voice: '「高次元より降りる我、紫龍はあなたの魂が覚醒の時を迎えていると告げる。あなたの持つ霊的な感性は、多くの人を救う光となる。その使命から逃げることなく、堂々と歩みなさい。」',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: '紫龍の高い霊性と使命のエネルギーを安定させ、魂の覚醒をサポートします。' },
+            { name: 'クラリセージ', en: 'Clary Sage', reason: '紫龍の神秘と直感のエネルギーを高め、高次元へのアクセスを助けます。' },
+            { name: 'サンダルウッド', en: 'Sandalwood', reason: '紫龍の深い霊性と内省のエネルギーを深め、魂の使命を明確にします。' }
+        ]
+    },
+    silver: {
+        name: '銀龍', en: 'SILVER DRAGON', icon: '🩶',
+        color: '#c0c0d0',
+        traits: ['知恵','洗練','冷静','月の力','バランス'],
+        message: '銀龍はあなたの魂に宿る知恵と冷静な判断力を守護しています。月の光のように静かに輝き、感情と理性の完璧なバランスを保つあなたを、洗練された道へと導いてくれています。',
+        voice: '「月光のごとく輝く我、銀龍はあなたの知恵の深さに宿っている。焦ることなく、静かに物事の本質を見極めなさい。あなたの冷静な判断こそが、周囲を救う光となるのです。」',
+        aroma: [
+            { name: 'ラベンダー', en: 'Lavender', reason: '銀龍の冷静と月の力のエネルギーと共鳴し、感情のバランスを整えます。' },
+            { name: 'ローズマリー', en: 'Rosemary', reason: '銀龍の知恵と洗練のエネルギーを高め、明晰な判断力をサポートします。' },
+            { name: 'ベルガモット', en: 'Bergamot', reason: '銀龍のバランスと調和のエネルギーを整え、内なる静けさをもたらします。' }
+        ]
+    },
+    rainbow: {
+        name: '虹龍', en: 'RAINBOW DRAGON', icon: '🌈',
+        color: '#ff79c6',
+        traits: ['多才','愛','繋がり','希望','奇跡'],
+        message: '虹龍はあなたの魂の多彩な才能と愛の力を守護しています。あらゆる可能性を内包し、人と人を繋ぐ虹の橋を架けるあなたを、奇跡と希望の道へと導いてくれています。',
+        voice: '「七色の光をまとう我、虹龍はあなたの多彩な魂の輝きを愛している。一つの色に縛られることなく、あなたのすべての色を世界に見せなさい。その輝きこそが、人々に奇跡をもたらす光となるのです。」',
+        aroma: [
+            { name: 'イランイラン', en: 'Ylang Ylang', reason: '虹龍の愛と繋がりのエネルギーと共鳴し、多彩な才能を開花させます。' },
+            { name: 'オレンジ', en: 'Wild Orange', reason: '虹龍の希望と喜びのエネルギーを高め、奇跡を引き寄せる流れを整えます。' },
+            { name: 'ゼラニウム', en: 'Geranium', reason: '虹龍の調和と愛の橋渡しエネルギーを深め、人との縁を豊かにします。' }
+        ]
+    },
+    pink: {
+        name: '桃龍', en: 'PINK DRAGON', icon: '🌸',
+        color: '#ff69b4',
+        traits: ['愛情','癒し','縁結び','慈悲','ツインレイ'],
+        message: '桃龍はあなたの魂の深い愛情と縁結びのエネルギーを守護しています。真の愛を求め、人の心を癒す力を持つあなたを、ツインレイとの魂の統合へと導いてくれています。',
+        voice: '「桃色の花びらをまとう我、桃龍はあなたの純粋な愛を守っている。真の愛は急ぐことなく、魂の準備が整った時に必ず花開く。今は自分自身を深く愛することから始めなさい。その愛が、あなたのツインレイを引き寄せる磁石となるのです。」',
+        aroma: [
+            { name: 'イランイラン', en: 'Ylang Ylang', reason: '桃龍の愛情と縁結びのエネルギーと深く共鳴し、真の愛への道を開きます。' },
+            { name: 'サンダルウッド', en: 'Sandalwood', reason: '桃龍の慈悲と魂の統合エネルギーを高め、ツインレイとの繋がりをサポートします。' },
+            { name: 'ローズマリー', en: 'Rosemary', reason: '桃龍の愛の浄化エネルギーを整え、真実の縁を引き寄せる力を強めます。' }
+        ]
+    },
+    yellow: {
+        name: '黄龍', en: 'YELLOW DRAGON', icon: '⭐',
+        color: '#ffd700',
+        traits: ['中心','統合','大地','調和','万物の源'],
+        message: '黄龍はあなたの魂の中心にある統合の力を守護しています。すべての龍神エネルギーを調和させる黄龍に選ばれたあなたは、周囲全体のバランスを保ち、大きな調和をもたらす使命を持っています。',
+        voice: '「万物の中心に宿る我、黄龍はあなたが全ての龍神の力を統合する存在であることを告げる。あなたは一つの属性に縛られない。大地の如く全てを受け入れ、全てを包み込む力があなたには宿っている。その大きな器で、多くの人を支えていきなさい。」',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: '黄龍の統合と調和のエネルギーの中心を安定させ、万物との繋がりを深めます。' },
+            { name: 'シダーウッド', en: 'Cedarwood', reason: '黄龍の大地と中心のエネルギーをグラウンディングし、揺るぎない基盤を築きます。' },
+            { name: 'ベチバー', en: 'Vetiver', reason: '黄龍の大地の力と安定のエネルギーを深め、中心軸をしっかりと保ちます。' }
+        ]
+    }
+};
+
+// ===== 質問データ =====
+const QUESTIONS = [
+    {
+        text: '今、あなたが最も心惹かれる場所はどこですか？',
+        choices: [
+            { text: '黄金に輝く神殿や豪華な宮殿', scores: { gold: 3, yellow: 1 } },
+            { text: '雲の上や澄み切った高い山の頂', scores: { white: 3, silver: 1 } },
+            { text: '深い海の底や洞窟の奥深く', scores: { black: 3, purple: 1 } },
+            { text: '広大な空や地平線の向こう', scores: { blue: 3, rainbow: 1 } },
+            { text: '燃え盛る炎の中心や火山', scores: { red: 3, gold: 1 } },
+            { text: '神秘的な霧に包まれた幽玄な森', scores: { purple: 3, black: 1 } },
+            { text: '月光降り注ぐ静かな湖畔', scores: { silver: 3, white: 1 } },
+            { text: '色とりどりの花が咲き乱れる庭', scores: { rainbow: 2, pink: 2 } },
+            { text: '桜が舞い散る川のほとり', scores: { pink: 3, rainbow: 1 } },
+            { text: '大地の中心・地球のへそのような場所', scores: { yellow: 3, black: 1 } }
+        ]
+    },
+    {
+        text: '困難に直面したとき、あなたはどう対処しますか？',
+        choices: [
+            { text: '絶対に成功すると信じて力強く突き進む', scores: { gold: 2, red: 2 } },
+            { text: '静かに祈り、心を浄化して答えを待つ', scores: { white: 3, silver: 1 } },
+            { text: '一度全てを手放し、新たに生まれ変わる', scores: { black: 3, purple: 1 } },
+            { text: '新しい方法を探し、前向きにチャレンジする', scores: { blue: 3, rainbow: 1 } },
+            { text: '情熱と気合いで正面からぶつかっていく', scores: { red: 3, gold: 1 } },
+            { text: '深く内省し、魂のレベルで答えを見つける', scores: { purple: 3, black: 1 } },
+            { text: '冷静に分析し、最善策を論理的に導き出す', scores: { silver: 3, blue: 1 } },
+            { text: '仲間の力を借りながら皆で乗り越える', scores: { rainbow: 2, pink: 2 } },
+            { text: '愛する人のために頑張る力が湧いてくる', scores: { pink: 3, red: 1 } },
+            { text: '全体のバランスを保ちながら調和的に解決する', scores: { yellow: 3, silver: 1 } }
+        ]
+    },
+    {
+        text: '次のうち、あなたが最も大切にしていることは？',
+        choices: [
+            { text: '豊かさと成功・夢を現実にすること', scores: { gold: 3, yellow: 1 } },
+            { text: '魂の純粋さと清らかさを保つこと', scores: { white: 3, silver: 1 } },
+            { text: '深く変容し続け、本物の自分になること', scores: { black: 3, purple: 1 } },
+            { text: '常に成長し、可能性を広げていくこと', scores: { blue: 3, rainbow: 1 } },
+            { text: '情熱を燃やし、全力で生き抜くこと', scores: { red: 3, gold: 1 } },
+            { text: '霊的な使命を果たし、魂を覚醒させること', scores: { purple: 3, black: 1 } },
+            { text: '知恵と洞察力を磨き、本質を見極めること', scores: { silver: 3, blue: 1 } },
+            { text: '多くの人と繋がり、皆を幸せにすること', scores: { rainbow: 2, pink: 2 } },
+            { text: '深い愛を育み、真の縁を引き寄せること', scores: { pink: 3, red: 1 } },
+            { text: '全てを調和させ、中心軸を保つこと', scores: { yellow: 3, silver: 1 } }
+        ]
+    },
+    {
+        text: '直感で選んでください。あなたが最も力をもらう色は？',
+        choices: [
+            { text: '✨ 金・黄金色', scores: { gold: 3 } },
+            { text: '🤍 白・クリアホワイト', scores: { white: 3 } },
+            { text: '🖤 黒・深紫', scores: { black: 2, purple: 1 } },
+            { text: '💙 青・水色', scores: { blue: 3 } },
+            { text: '❤️ 赤・オレンジ', scores: { red: 3 } },
+            { text: '💜 紫・藤色', scores: { purple: 3 } },
+            { text: '🩶 銀・グレー', scores: { silver: 3 } },
+            { text: '🌈 虹色・マルチカラー', scores: { rainbow: 3 } },
+            { text: '🌸 ピンク・桃色', scores: { pink: 3 } },
+            { text: '⭐ 黄・太陽色', scores: { yellow: 3 } }
+        ]
+    },
+    {
+        text: 'あなたが夢の中でよく見る世界はどんな場所ですか？',
+        choices: [
+            { text: '豪華で輝かしい宮殿や神社', scores: { gold: 2, yellow: 2 } },
+            { text: '雲海や光に包まれた天上の世界', scores: { white: 3, silver: 1 } },
+            { text: '暗い海や宇宙の深淵', scores: { black: 3, purple: 1 } },
+            { text: '広大な空や未知の宇宙', scores: { blue: 3, rainbow: 1 } },
+            { text: '炎に包まれた場所や戦場', scores: { red: 3, black: 1 } },
+            { text: '幽玄な神殿や霊的な空間', scores: { purple: 3, white: 1 } },
+            { text: '月夜の静寂な場所', scores: { silver: 3, white: 1 } },
+            { text: '虹がかかる美しい自然の中', scores: { rainbow: 3, pink: 1 } },
+            { text: '花や光に包まれた愛の世界', scores: { pink: 3, rainbow: 1 } },
+            { text: '大地の中心・根源的な場所', scores: { yellow: 3, black: 1 } }
+        ]
+    },
+    {
+        text: 'あなたが最も得意なことは何ですか？',
+        choices: [
+            { text: '目標を達成し、豊かさを引き寄せること', scores: { gold: 3, red: 1 } },
+            { text: '人の心を癒し、浄化すること', scores: { white: 3, pink: 1 } },
+            { text: '困難を乗り越え、変容・再生すること', scores: { black: 3, purple: 1 } },
+            { text: '新しいことを学び、成長し続けること', scores: { blue: 3, silver: 1 } },
+            { text: '情熱的に行動し、周囲を鼓舞すること', scores: { red: 3, gold: 1 } },
+            { text: '霊的なメッセージを受け取り、伝えること', scores: { purple: 3, white: 1 } },
+            { text: '物事を冷静に分析し、本質を見抜くこと', scores: { silver: 3, blue: 1 } },
+            { text: '人と人を繋ぎ、コミュニティを作ること', scores: { rainbow: 3, pink: 1 } },
+            { text: '深い愛情で人を包み込み、支えること', scores: { pink: 3, white: 1 } },
+            { text: 'あらゆるものを統合し、調和させること', scores: { yellow: 3, silver: 1 } }
+        ]
+    },
+    {
+        text: 'あなたの今世の使命は何だと感じますか？',
+        choices: [
+            { text: '豊かさを体現し、成功の道を示すこと', scores: { gold: 3, yellow: 1 } },
+            { text: '光となって、人々の魂を癒すこと', scores: { white: 3, pink: 1 } },
+            { text: '深い変容を経て、魂の真実を伝えること', scores: { black: 3, purple: 1 } },
+            { text: '可能性の扉を開き、新時代を創ること', scores: { blue: 3, rainbow: 1 } },
+            { text: '情熱と愛で、世界を変えていくこと', scores: { red: 3, pink: 1 } },
+            { text: '高次元と地上を繋ぐ霊的な橋渡し', scores: { purple: 3, white: 1 } },
+            { text: '知恵を伝え、人々の判断を助けること', scores: { silver: 3, blue: 1 } },
+            { text: '多様な人々を結び、愛の輪を広げること', scores: { rainbow: 3, pink: 1 } },
+            { text: '真の愛を示し、縁を結び続けること', scores: { pink: 3, rainbow: 1 } },
+            { text: '全体を統合し、大きな調和を生み出すこと', scores: { yellow: 3, silver: 1 } }
+        ]
+    },
+    {
+        text: 'あなたが龍神様にお願いしたいことは何ですか？',
+        choices: [
+            { text: '金運・仕事運・成功運を高めたい', scores: { gold: 3, red: 1 } },
+            { text: '魂を浄化し、守護してほしい', scores: { white: 3, silver: 1 } },
+            { text: '過去を手放し、新たに生まれ変わりたい', scores: { black: 3, purple: 1 } },
+            { text: '可能性を広げ、成長の道を開いてほしい', scores: { blue: 3, rainbow: 1 } },
+            { text: '情熱と勝運を授けてほしい', scores: { red: 3, gold: 1 } },
+            { text: '霊性を高め、使命を明確にしてほしい', scores: { purple: 3, white: 1 } },
+            { text: '知恵と冷静な判断力を与えてほしい', scores: { silver: 3, blue: 1 } },
+            { text: '人との縁を結び、奇跡を起こしてほしい', scores: { rainbow: 2, pink: 2 } },
+            { text: '真の愛とツインレイとの統合を助けてほしい', scores: { pink: 3, rainbow: 1 } },
+            { text: '全体のバランスと調和を保ってほしい', scores: { yellow: 3, silver: 1 } }
+        ]
+    }
+];
+
+// ===== スコア管理 =====
+let scores = {};
+let currentQ = 0;
+
+function initScores() {
+    scores = {};
+    Object.keys(DRAGONS).forEach(k => scores[k] = 0);
+}
+
+function startQuiz() {
+    initScores();
+    currentQ = 0;
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = QUESTIONS[currentQ];
+
+    // プログレスドット
+    let dots = '';
+    for (let i = 0; i < QUESTIONS.length; i++) {
+        let cls = i < currentQ ? 'done' : (i === currentQ ? 'active' : '');
+        dots += `<div class="progress-dot ${cls}"></div>`;
+    }
+    document.getElementById('progress').innerHTML = dots;
+    document.getElementById('q-num').textContent = `QUESTION ${currentQ + 1} / ${QUESTIONS.length}`;
+    document.getElementById('q-text').textContent = q.text;
+
+    const choicesEl = document.getElementById('q-choices');
+    choicesEl.innerHTML = '';
+    q.choices.forEach((c, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = c.text;
+        btn.onclick = () => selectChoice(c.scores, btn);
+        choicesEl.appendChild(btn);
+    });
+
+    document.getElementById('quiz').classList.add('fade-in');
+}
+
+function selectChoice(choiceScores, btn) {
+    // 選択演出
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    btn.classList.add('selected');
+
+    // スコア加算
+    Object.entries(choiceScores).forEach(([k, v]) => {
+        if (scores[k] !== undefined) scores[k] += v;
+    });
+
+    setTimeout(() => {
+        currentQ++;
+        if (currentQ < QUESTIONS.length) {
+            renderQuestion();
+        } else {
+            showResult();
+        }
+    }, 400);
+}
+
+function showResult() {
+    // 最高スコアの龍神を選出
+    const top = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+    const dragon = DRAGONS[top];
+
+    document.getElementById('quiz').style.display = 'none';
+    const resultEl = document.getElementById('result');
+    resultEl.style.display = 'block';
+
+    // カードの色設定
+    document.getElementById('result-card').style.setProperty('--dragon-color', dragon.color);
+    document.getElementById('res-swatch').style.background = dragon.color;
+    document.getElementById('res-swatch').style.boxShadow = `0 0 20px ${dragon.color}, 0 0 40px rgba(0,0,0,0.5)`;
+
+    document.getElementById('res-icon').textContent = dragon.icon;
+    document.getElementById('res-name').textContent = dragon.name;
+    document.getElementById('res-name').style.color = dragon.color;
+    document.getElementById('res-en').textContent = dragon.en;
+    document.getElementById('res-message').textContent = dragon.message;
+    document.getElementById('res-voice').textContent = dragon.voice;
+
+    // 特性タグ
+    document.getElementById('res-traits').innerHTML = dragon.traits.map(t =>
+        `<span class="trait-tag">${t}</span>`
+    ).join('');
+
+    // アロマ（ランダム2〜3個）
+    const aromaCount = Math.floor(Math.random() * 2) + 2;
+    const aromaIdx = dragon.aroma.map((_,i)=>i).sort(()=>Math.random()-0.5).slice(0, aromaCount);
+    document.getElementById('res-aroma').innerHTML = aromaIdx.map(i => {
+        const a = dragon.aroma[i];
+        return `<div class="aroma-item">
+            <div class="aroma-name">${a.name}</div>
+            <div class="aroma-en">${a.en}</div>
+            <div class="aroma-reason">${a.reason}</div>
+        </div>`;
+    }).join('');
+
+    resultEl.classList.add('fade-in');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restartQuiz() {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    startQuiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 起動
+startQuiz();
+</script>
+</body>
+</html>
