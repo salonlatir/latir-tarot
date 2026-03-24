@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オーラカラー診断 - 魂の色彩：伶受</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Cinzel:wght@400;700&display=swap');
+
+        :root {
+            --gold: #e0ca82;
+            --gold-dim: #a08840;
+            --bg: #010810;
+            --text: #f0e8d0;
+            --text-dim: #8a7a5a;
+            --border: rgba(224,202,130,0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Noto Serif JP', serif;
+            min-height: 100vh;
+            padding: 20px 15px 40px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(224,202,130,0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(224,202,130,0.02) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ヘッダー */
+        .header {
+            text-align: center;
+            padding: 30px 0 25px;
+        }
+
+        .header-icon {
+            font-size: 2.8em;
+            margin-bottom: 8px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.85; }
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1em;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .header h2 {
+            font-size: 1.4em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 0;
+            margin: 10px 0;
+        }
+
+        .header p {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* 診断カード */
+        .quiz-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 28px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(224,202,130,0.05);
+        }
+
+        .progress-wrap {
+            margin-bottom: 22px;
+        }
+
+        .progress-bar-track {
+            height: 3px;
+            background: rgba(224,202,130,0.15);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75em;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.05em;
+            text-align: center;
+            line-height: 1.9;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.9em;
+            padding: 13px 16px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+        }
+
+        .choice-btn:hover {
+            background: rgba(224,202,130,0.08);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateX(5px);
+        }
+
+        .choice-btn.selected {
+            background: rgba(224,202,130,0.12);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* 結果 */
+        #result { display: none; }
+
+        .aura-visual {
+            text-align: center;
+            padding: 35px 20px 25px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aura-rings {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+        }
+
+        .aura-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid var(--aura-color, var(--gold));
+            opacity: 0.2;
+            animation: expandRing 3s ease-out infinite;
+        }
+
+        .aura-ring:nth-child(1) { inset: 0; animation-delay: 0s; }
+        .aura-ring:nth-child(2) { inset: -15px; animation-delay: 0.8s; }
+        .aura-ring:nth-child(3) { inset: -30px; animation-delay: 1.6s; }
+
+        @keyframes expandRing {
+            0% { opacity: 0.4; transform: scale(0.95); }
+            100% { opacity: 0; transform: scale(1.15); }
+        }
+
+        .aura-core {
+            position: absolute;
+            inset: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--aura-color, var(--gold)) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        .aura-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            z-index: 1;
+        }
+
+        .result-label {
+            font-size: 0.75em;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .result-name {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-shadow: 0 0 20px var(--aura-color, var(--gold));
+        }
+
+        .result-en {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8em;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-bottom: 18px;
+        }
+
+        .result-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .trait-tag {
+            background: rgba(224,202,130,0.08);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.78em;
+            color: var(--gold);
+        }
+
+        .result-message {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--aura-color, var(--gold));
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+            font-size: 0.88em;
+            line-height: 1.9;
+        }
+
+        .aura-voice {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 18px;
+            font-size: 0.87em;
+            line-height: 1.9;
+            font-style: italic;
+            position: relative;
+        }
+
+        .aura-voice::before {
+            content: '✦ あなたのオーラからのメッセージ ✦';
+            display: block;
+            font-style: normal;
+            font-size: 0.78em;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* 第二オーラ */
+        .second-aura {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 18px;
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        .second-aura-label {
+            font-size: 0.75em;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .second-aura-name {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .second-aura-desc {
+            font-size: 0.82em;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        /* アロマ */
+        .aroma-section {
+            background: rgba(224,202,130,0.04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .aroma-title {
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .aroma-items { display: flex; flex-direction: column; gap: 12px; }
+
+        .aroma-item { display: flex; flex-direction: column; gap: 3px; }
+        .aroma-name { font-size: 1em; font-weight: 700; color: var(--gold); }
+        .aroma-en { font-size: 0.75em; color: var(--text-dim); letter-spacing: 1px; }
+        .aroma-reason { font-size: 0.83em; color: var(--text); line-height: 1.7; }
+
+        /* ボタン */
+        .btn-reserve {
+            background: linear-gradient(135deg, #b8962e, #e0ca82, #b8962e);
+            color: #000;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Serif JP', serif;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(224,202,130,0.3);
+        }
+
+        .btn-reserve:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(224,202,130,0.5); }
+
+        .btn-retry {
+            background: transparent;
+            color: var(--text-dim);
+            width: 100%;
+            padding: 12px;
+            font-size: 0.9em;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Noto Serif JP', serif;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .btn-retry:hover { color: var(--gold); border-color: var(--gold); }
+
+        .footer-note {
+            font-size: 0.72em;
+            color: #555;
+            line-height: 1.7;
+            border-top: 1px solid #222;
+            padding-top: 15px;
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-icon">✨</div>
+        <h1>AURA COLOR DIAGNOSIS</h1>
+        <h2>オーラカラー診断</h2>
+        <p>あなたの魂が放つ、本当の色を読み解きます</p>
+    </div>
+
+    <div id="quiz">
+        <div class="quiz-card">
+            <div class="progress-wrap">
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="q-num"></div>
+            </div>
+            <div class="question-text" id="q-text"></div>
+            <div class="choices" id="q-choices"></div>
+        </div>
+    </div>
+
+    <div id="result">
+        <div class="aura-visual" id="aura-visual">
+            <div class="aura-rings" id="aura-rings">
+                <div class="aura-ring"></div>
+                <div class="aura-ring"></div>
+                <div class="aura-ring"></div>
+                <div class="aura-core" id="aura-core"></div>
+                <div class="aura-icon" id="res-icon"></div>
+            </div>
+            <div class="result-label">あなたのオーラカラーは</div>
+            <div class="result-name" id="res-name"></div>
+            <div class="result-en" id="res-en"></div>
+            <div class="result-traits" id="res-traits"></div>
+        </div>
+
+        <div class="result-message" id="res-message"></div>
+        <div class="aura-voice" id="res-voice"></div>
+
+        <div class="second-aura" id="second-aura-box">
+            <div class="second-aura-label">◈ サブオーラカラー ◈</div>
+            <div class="second-aura-name" id="second-name"></div>
+            <div class="second-aura-desc" id="second-desc"></div>
+        </div>
+
+        <div class="aroma-section">
+            <div class="aroma-title">◈ あなたのオーラを輝かせるアロマ ◈</div>
+            <div class="aroma-items" id="res-aroma"></div>
+        </div>
+
+        <div style="text-align:center; margin-bottom:20px;">
+            <p style="font-size:0.85em; color:#ccc; margin-bottom:12px;">オーラカラーの意味をさらに深く読み解きたい方へ。<br>伶受のサイキックタロット・霊視鑑定で、あなたの今と未来を具体的にお伝えします。</p>
+            <p style="color:var(--gold); font-weight:bold; margin-bottom:12px; font-size:0.95em;">◈ 伶受 サイキックタロット鑑定 ◈</p>
+            <a href="https://form.run/@latir" target="_blank" style="text-decoration:none;">
+                <button class="btn-reserve">ご予約はこちら</button>
+            </a>
+        </div>
+
+        <button class="btn-retry" onclick="restartQuiz()">🔄 もう一度診断する</button>
+
+        <div class="footer-note">
+            <p>※ 本ツールは簡易版としてお使いください。</p>
+            <p>※ 診断結果はスピリチュアルな観点に基づく目安であり、個人の行動・選択を保証するものではありません。</p>
+            <p>※ 入力された情報はサーバーに送信・保存されません。</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const AURAS = {
+    red: {
+        name: '赤', en: 'RED AURA', icon: '🔴', color: '#ff4a4a',
+        traits: ['情熱','行動力','リーダーシップ','生命力','勝負運'],
+        message: '赤いオーラはあなたの強烈な生命エネルギーと情熱を表しています。行動力とリーダーシップに溢れ、困難にも真っ向から立ち向かう力を持っています。その熱いエネルギーは周囲を鼓舞し、大きな変化を生み出す力があります。',
+        voice: '燃え盛る炎のように、あなたのエネルギーは誰よりも力強く輝いています。その情熱を信じて、恐れずに前へ進んでください。あなたが動くとき、世界が動きます。',
+        subDesc: '行動と情熱のエネルギーが強く、チャレンジする力に満ちています。',
+        aroma: [
+            { name: 'カシア', en: 'Cassia', reason: '赤いオーラの情熱と行動力をさらに高め、勝運を引き寄せます。' },
+            { name: 'ジンジャー', en: 'Ginger', reason: '赤いオーラの生命エネルギーを内側から燃え上がらせ、意志力を強めます。' },
+            { name: 'ブラックペッパー', en: 'Black Pepper', reason: '赤いオーラの突破力を高め、困難を乗り越える力をサポートします。' }
+        ]
+    },
+    orange: {
+        name: 'オレンジ', en: 'ORANGE AURA', icon: '🟠', color: '#ff8c42',
+        traits: ['創造性','社交性','喜び','自由','豊かさ'],
+        message: 'オレンジのオーラはあなたの創造性と豊かな感情表現を表しています。人を楽しませる才能と社交性に溢れ、どこにいても場を明るくする太陽のような存在です。創造的なエネルギーが豊かさを引き寄せます。',
+        voice: 'あなたのオレンジの光は、出会う人すべての心に温もりをもたらしています。その創造性は無限大。型にはまらず、あなただけの表現で世界を彩ってください。',
+        subDesc: '創造と喜びのエネルギーが強く、人を魅了する才能に溢れています。',
+        aroma: [
+            { name: 'オレンジ', en: 'Wild Orange', reason: 'オレンジのオーラの喜びと創造性のエネルギーと深く共鳴し、豊かさを引き寄せます。' },
+            { name: 'イランイラン', en: 'Ylang Ylang', reason: 'オレンジのオーラの魅力と感情表現を高め、人を惹きつける力を強めます。' },
+            { name: 'ゼラニウム', en: 'Geranium', reason: 'オレンジのオーラの社交性と調和のエネルギーを整え、縁を豊かにします。' }
+        ]
+    },
+    yellow: {
+        name: '黄色', en: 'YELLOW AURA', icon: '💛', color: '#ffd700',
+        traits: ['知性','好奇心','楽観性','コミュニケーション','輝き'],
+        message: '黄色いオーラはあなたの明晰な知性と楽観的なエネルギーを表しています。好奇心旺盛で学ぶことを愛し、コミュニケーション能力が高く、周囲に明るさと希望をもたらす太陽のような存在です。',
+        voice: 'あなたの黄金の輝きは、知恵の光です。その好奇心を絶やすことなく、学び続けてください。あなたの言葉は、多くの人の心に種を蒔き、希望の花を咲かせます。',
+        subDesc: '知性と楽観のエネルギーが強く、明るく前向きな光を放っています。',
+        aroma: [
+            { name: 'レモン', en: 'Lemon', reason: '黄色いオーラの明晰な知性と楽観性をさらに高め、学びの力をサポートします。' },
+            { name: 'ペパーミント', en: 'Peppermint', reason: '黄色いオーラの好奇心と活発なエネルギーを整え、コミュニケーション力を高めます。' },
+            { name: 'ベルガモット', en: 'Bergamot', reason: '黄色いオーラの喜びと輝きのエネルギーを高め、豊かさへの流れを整えます。' }
+        ]
+    },
+    green: {
+        name: '緑', en: 'GREEN AURA', icon: '💚', color: '#50c878',
+        traits: ['癒し','成長','バランス','自然','奉仕'],
+        message: '緑のオーラはあなたの深い癒しの力と成長のエネルギーを表しています。自然と調和し、周囲の人を癒す力を持つ優しい存在です。心のバランスを大切にし、植物のように着実に成長し続ける力があります。',
+        voice: '大地から芽吹く緑のように、あなたのエネルギーは静かに、しかし確実に周囲を癒し育てています。その優しさを誇りに思ってください。あなたがいるだけで、人々の心は安らぎます。',
+        subDesc: '癒しと成長のエネルギーが強く、周囲に安らぎをもたらす存在です。',
+        aroma: [
+            { name: 'サイプレス', en: 'Cypress', reason: '緑のオーラの成長と浄化のエネルギーと共鳴し、自然との調和を深めます。' },
+            { name: 'ティートリー', en: 'Tea Tree', reason: '緑のオーラの癒しと浄化のエネルギーを高め、心身のバランスをサポートします。' },
+            { name: 'ユーカリプタス', en: 'Eucalyptus', reason: '緑のオーラの自然のエネルギーと共鳴し、呼吸とともに癒しをもたらします。' }
+        ]
+    },
+    blue: {
+        name: '青', en: 'BLUE AURA', icon: '💙', color: '#4a9eff',
+        traits: ['直感','誠実','表現力','平和','真実'],
+        message: '青いオーラはあなたの深い直感力と誠実さを表しています。真実を語り、平和を大切にする誠実な魂の持ち主です。高い表現力と共感力があり、言葉や芸術を通じて人の心に深く届く力を持っています。',
+        voice: '澄み渡る空のように、あなたの魂は真実と誠実さで輝いています。その直感を信じてください。あなたが感じることは、魂からのメッセージです。その声に従うとき、人生は美しく開かれていきます。',
+        subDesc: '直感と誠実さのエネルギーが強く、真実を見抜く力に溢れています。',
+        aroma: [
+            { name: 'ラベンダー', en: 'Lavender', reason: '青いオーラの平和と直感のエネルギーを安定させ、内なる声を聞きやすくします。' },
+            { name: 'サンダルウッド', en: 'Sandalwood', reason: '青いオーラの深い精神性と誠実さのエネルギーを高め、直感力を開きます。' },
+            { name: 'フランキンセンス', en: 'Frankincense', reason: '青いオーラの高い意識と表現力を引き出し、魂の声を伝える力をサポートします。' }
+        ]
+    },
+    indigo: {
+        name: 'インディゴ', en: 'INDIGO AURA', icon: '🔵', color: '#4b0082',
+        traits: ['霊視','洞察力','神秘','第三の目','使命'],
+        message: 'インディゴのオーラはあなたの卓越した霊的洞察力と深い使命感を表しています。第三の目が開かれており、目に見えないものを感じ取る力を持っています。魂の深い部分で真実を知っている、特別な使命を持つ魂です。',
+        voice: '深い夜空の色をまとうあなたは、多くの人が見えないものを見ることができます。その霊的な感性は、あなただけの贈り物です。迷わず、その力を世のために使ってください。あなたの使命は、魂の導き手となることです。',
+        subDesc: '霊的洞察と使命のエネルギーが強く、深い智慧を持つ魂です。',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: 'インディゴのオーラの霊的洞察と使命のエネルギーを高め、第三の目を開きます。' },
+            { name: 'クラリセージ', en: 'Clary Sage', reason: 'インディゴのオーラの神秘と直感のエネルギーを深め、霊視力をサポートします。' },
+            { name: 'ミルラ', en: 'Myrrh', reason: 'インディゴのオーラの深い智慧と魂の使命を明確にし、霊的な力を安定させます。' }
+        ]
+    },
+    violet: {
+        name: 'バイオレット', en: 'VIOLET AURA', icon: '💜', color: '#9b59b6',
+        traits: ['スピリチュアル','変革','カリスマ','高次元','覚醒'],
+        message: 'バイオレットのオーラはあなたの高いスピリチュアルな意識と変革のエネルギーを表しています。カリスマ性と強い影響力を持ち、多くの人の意識を変える力があります。魂の覚醒を促す、この時代に必要とされる特別な存在です。',
+        voice: '紫の炎があなたの魂を包んでいます。あなたは変革の時代の先駆者です。その高い意識で、多くの人を目覚めへと導いてください。あなたが覚醒するとき、それはあなた一人の覚醒ではなく、繋がる全ての魂の覚醒となります。',
+        subDesc: '変革とカリスマのエネルギーが強く、周囲の意識を変える力があります。',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: 'バイオレットのオーラの高い霊性と変革のエネルギーを安定させ、覚醒をサポートします。' },
+            { name: 'パチョリ', en: 'Patchouli', reason: 'バイオレットのオーラの変容と深い霊性をグラウンディングし、現実での力を高めます。' },
+            { name: 'ベチバー', en: 'Vetiver', reason: 'バイオレットのオーラの強いエネルギーを安定させ、カリスマ性の基盤を築きます。' }
+        ]
+    },
+    pink: {
+        name: 'ピンク', en: 'PINK AURA', icon: '🌸', color: '#ff69b4',
+        traits: ['愛','共感','癒し','優しさ','ツインレイ'],
+        message: 'ピンクのオーラはあなたの純粋な愛と深い共感能力を表しています。人の痛みに寄り添い、無条件の愛で包み込む癒しの力を持っています。ツインレイや魂の縁と深く繋がっており、愛の周波数が高い特別な魂です。',
+        voice: '桜色の光があなたから溢れています。あなたの愛は本物です。その優しさを自分自身にも向けてください。自分を愛することから、全ての縁は豊かになります。あなたの愛は、世界をより美しくする力があります。',
+        subDesc: '愛と共感のエネルギーが強く、周囲を癒す天使のような存在です。',
+        aroma: [
+            { name: 'イランイラン', en: 'Ylang Ylang', reason: 'ピンクのオーラの愛と縁結びのエネルギーと深く共鳴し、真の愛を引き寄せます。' },
+            { name: 'サンダルウッド', en: 'Sandalwood', reason: 'ピンクのオーラの深い共感と魂の繋がりを高め、ツインレイとの統合をサポートします。' },
+            { name: 'マジョラム', en: 'Marjoram', reason: 'ピンクのオーラの優しさと癒しのエネルギーを深め、無条件の愛を育みます。' }
+        ]
+    },
+    white: {
+        name: 'ホワイト', en: 'WHITE AURA', icon: '🤍', color: '#e8e8f8',
+        traits: ['純粋','神聖','完成','浄化','守護'],
+        message: 'ホワイトのオーラはあなたの魂の純粋さと高い霊的完成度を表しています。全ての色を包含する白い光は、神聖な守護と浄化のエネルギーを持っています。非常に稀なオーラで、魂の成熟度が高い特別な存在です。',
+        voice: '神聖な白い光があなたを包んでいます。あなたは多くの魂を守る使命を持っています。その純粋さを失わないでください。あなたが光であり続けることが、周囲の闇を照らし続けます。',
+        subDesc: '純粋と神聖のエネルギーが強く、魂の完成度が非常に高い存在です。',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: 'ホワイトのオーラの神聖さと純粋さのエネルギーを高め、守護の力を強めます。' },
+            { name: 'ラベンダー', en: 'Lavender', reason: 'ホワイトのオーラの浄化と癒しのエネルギーと共鳴し、魂の純粋さを保ちます。' },
+            { name: 'サンダルウッド', en: 'Sandalwood', reason: 'ホワイトのオーラの深い霊性と完成のエネルギーを安定させ、使命をサポートします。' }
+        ]
+    },
+    gold: {
+        name: 'ゴールド', en: 'GOLD AURA', icon: '✨', color: '#e0ca82',
+        traits: ['豊かさ','カリスマ','知恵','成功','神の加護'],
+        message: 'ゴールドのオーラはあなたの魂に宿る豊かさと神の加護を表しています。非常に稀なオーラで、強いカリスマ性と深い知恵を持ち、周囲の人を自然と引き寄せる力があります。成功と豊かさを体現する魂です。',
+        voice: '黄金の光があなたの魂から溢れています。あなたは豊かさを体現するために生まれてきました。遠慮することなく、大きく夢を描いてください。あなたが輝けば輝くほど、周囲もその恩恵を受け取ることができるのです。',
+        subDesc: '豊かさとカリスマのエネルギーが強く、神の加護を受けた特別な魂です。',
+        aroma: [
+            { name: 'フランキンセンス', en: 'Frankincense', reason: 'ゴールドのオーラの神聖な豊かさと知恵のエネルギーをさらに高めます。' },
+            { name: 'グレープフルーツ', en: 'Grapefruit', reason: 'ゴールドのオーラの勝運と豊かさのエネルギーを引き寄せ、成功への道を開きます。' },
+            { name: 'シナモンバーク', en: 'Cinnamon Bark', reason: 'ゴールドのオーラのカリスマと実行力を高め、豊かさの現実化をサポートします。' }
+        ]
+    }
+};
+
+const QUESTIONS = [
+    {
+        text: 'あなたが最も心地よく感じる時間はいつですか？',
+        choices: [
+            { text: '情熱的に目標に向かって行動している時', scores: { red: 3, orange: 1 } },
+            { text: '人を笑わせたり、楽しい雰囲気を作っている時', scores: { orange: 3, yellow: 1 } },
+            { text: '新しいことを学んだり、知識を深めている時', scores: { yellow: 3, blue: 1 } },
+            { text: '自然の中でゆっくり過ごしている時', scores: { green: 3, blue: 1 } },
+            { text: '誰かの話に耳を傾け、支えている時', scores: { blue: 2, pink: 2 } },
+            { text: '一人で静かに思索にふけっている時', scores: { indigo: 3, violet: 1 } },
+            { text: '瞑想や祈りなどスピリチュアルな実践をしている時', scores: { violet: 3, white: 1 } },
+            { text: '愛する人と深い時間を共有している時', scores: { pink: 3, green: 1 } },
+            { text: '心を静め、魂を浄化している時', scores: { white: 3, indigo: 1 } },
+            { text: '豊かさや成功を感じながら前に進んでいる時', scores: { gold: 3, red: 1 } }
+        ]
+    },
+    {
+        text: '友人からあなたはどんな人だと言われますか？',
+        choices: [
+            { text: 'パワフルで頼りになる人', scores: { red: 3, gold: 1 } },
+            { text: '一緒にいると楽しくなる人', scores: { orange: 3, yellow: 1 } },
+            { text: '物知りで会話が楽しい人', scores: { yellow: 3, blue: 1 } },
+            { text: '穏やかで安心感のある人', scores: { green: 3, blue: 1 } },
+            { text: '誠実で信頼できる人', scores: { blue: 3, green: 1 } },
+            { text: '深くて神秘的な人', scores: { indigo: 3, violet: 1 } },
+            { text: 'カリスマがあって影響力のある人', scores: { violet: 2, gold: 2 } },
+            { text: '優しくて温かい人', scores: { pink: 3, green: 1 } },
+            { text: '純粋で清らかな人', scores: { white: 3, pink: 1 } },
+            { text: '成功していて輝いている人', scores: { gold: 3, orange: 1 } }
+        ]
+    },
+    {
+        text: '今のあなたの心の状態に最も近いものは？',
+        choices: [
+            { text: '燃えている・やる気に満ちている', scores: { red: 3, orange: 1 } },
+            { text: '楽しい・ワクワクしている', scores: { orange: 3, yellow: 1 } },
+            { text: '好奇心旺盛・探求したい', scores: { yellow: 3, blue: 1 } },
+            { text: '穏やか・落ち着いている', scores: { green: 3, white: 1 } },
+            { text: '誠実でいたい・本音で生きたい', scores: { blue: 3, indigo: 1 } },
+            { text: '深く考えている・洞察している', scores: { indigo: 3, violet: 1 } },
+            { text: '変革したい・新しい自分になりたい', scores: { violet: 3, indigo: 1 } },
+            { text: '愛したい・愛されたい', scores: { pink: 3, orange: 1 } },
+            { text: '浄化したい・純粋でいたい', scores: { white: 3, green: 1 } },
+            { text: '豊かになりたい・輝きたい', scores: { gold: 3, red: 1 } }
+        ]
+    },
+    {
+        text: 'あなたが大切にしているものを直感で選んでください。',
+        choices: [
+            { text: '🔥 炎・情熱・勝負', scores: { red: 3 } },
+            { text: '🌅 太陽・笑顔・喜び', scores: { orange: 3 } },
+            { text: '⭐ 星・知識・好奇心', scores: { yellow: 3 } },
+            { text: '🌿 自然・癒し・成長', scores: { green: 3 } },
+            { text: '🌊 海・真実・誠実', scores: { blue: 3 } },
+            { text: '🌙 月・神秘・洞察', scores: { indigo: 3 } },
+            { text: '🔮 水晶・変革・覚醒', scores: { violet: 3 } },
+            { text: '🌸 花・愛・縁', scores: { pink: 3 } },
+            { text: '🕊 光・浄化・純粋', scores: { white: 3 } },
+            { text: '👑 黄金・豊かさ・成功', scores: { gold: 3 } }
+        ]
+    },
+    {
+        text: 'あなたが今世で果たしたい使命は何だと感じますか？',
+        choices: [
+            { text: '情熱で世界を動かし、変化を起こすこと', scores: { red: 3, gold: 1 } },
+            { text: '人々に喜びと豊かさをもたらすこと', scores: { orange: 3, gold: 1 } },
+            { text: '知恵を広め、人々の意識を高めること', scores: { yellow: 3, indigo: 1 } },
+            { text: '癒しの力で、傷ついた人を助けること', scores: { green: 3, pink: 1 } },
+            { text: '真実を伝え、誠実な世界を作ること', scores: { blue: 3, white: 1 } },
+            { text: '霊的な智慧で、魂の道を示すこと', scores: { indigo: 3, violet: 1 } },
+            { text: '意識革命を起こし、新しい時代を創ること', scores: { violet: 3, indigo: 1 } },
+            { text: '深い愛を広め、魂の縁を結ぶこと', scores: { pink: 3, white: 1 } },
+            { text: '光として、多くの魂を守護すること', scores: { white: 3, gold: 1 } },
+            { text: '豊かさを体現し、成功の道を示すこと', scores: { gold: 3, orange: 1 } }
+        ]
+    }
+];
+
+let scores = {};
+let currentQ = 0;
+
+function initScores() {
+    scores = {};
+    Object.keys(AURAS).forEach(k => scores[k] = 0);
+}
+
+function startQuiz() {
+    initScores();
+    currentQ = 0;
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = QUESTIONS[currentQ];
+    const pct = (currentQ / QUESTIONS.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('q-num').textContent = `QUESTION ${currentQ + 1} / ${QUESTIONS.length}`;
+    document.getElementById('q-text').textContent = q.text;
+
+    const choicesEl = document.getElementById('q-choices');
+    choicesEl.innerHTML = '';
+    q.choices.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = c.text;
+        btn.onclick = () => selectChoice(c.scores, btn);
+        choicesEl.appendChild(btn);
+    });
+}
+
+function selectChoice(choiceScores, btn) {
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    btn.classList.add('selected');
+    Object.entries(choiceScores).forEach(([k, v]) => {
+        if (scores[k] !== undefined) scores[k] += v;
+    });
+    setTimeout(() => {
+        currentQ++;
+        if (currentQ < QUESTIONS.length) {
+            renderQuestion();
+        } else {
+            showResult();
+        }
+    }, 400);
+}
+
+function showResult() {
+    const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const topKey = sorted[0][0];
+    const secondKey = sorted[1][0];
+    const aura = AURAS[topKey];
+    const second = AURAS[secondKey];
+
+    document.getElementById('quiz').style.display = 'none';
+    const resultEl = document.getElementById('result');
+    resultEl.style.display = 'block';
+
+    // オーラビジュアル
+    const rings = document.querySelectorAll('.aura-ring');
+    rings.forEach(r => r.style.borderColor = aura.color);
+    document.getElementById('aura-core').style.background =
+        `radial-gradient(circle, ${aura.color} 0%, transparent 70%)`;
+    document.getElementById('aura-visual').style.setProperty('--aura-color', aura.color);
+    document.getElementById('res-message').style.borderLeftColor = aura.color;
+
+    document.getElementById('res-icon').textContent = aura.icon;
+    document.getElementById('res-name').textContent = aura.name;
+    document.getElementById('res-name').style.color = aura.color;
+    document.getElementById('res-en').textContent = aura.en;
+    document.getElementById('res-message').textContent = aura.message;
+    document.getElementById('res-voice').textContent = aura.voice;
+
+    document.getElementById('res-traits').innerHTML = aura.traits.map(t =>
+        `<span class="trait-tag">${t}</span>`
+    ).join('');
+
+    // サブオーラ
+    document.getElementById('second-name').textContent = second.name + 'のオーラも持っています';
+    document.getElementById('second-name').style.color = second.color;
+    document.getElementById('second-desc').textContent = second.subDesc;
+
+    // アロマ（ランダム2〜3個）
+    const count = Math.floor(Math.random() * 2) + 2;
+    const idx = aura.aroma.map((_,i)=>i).sort(()=>Math.random()-0.5).slice(0, count);
+    document.getElementById('res-aroma').innerHTML = idx.map(i => {
+        const a = aura.aroma[i];
+        return `<div class="aroma-item">
+            <div class="aroma-name">${a.name}</div>
+            <div class="aroma-en">${a.en}</div>
+            <div class="aroma-reason">${a.reason}</div>
+        </div>`;
+    }).join('');
+
+    resultEl.classList.add('fade-in');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restartQuiz() {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    startQuiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+startQuiz();
+</script>
+</body>
+</html>
